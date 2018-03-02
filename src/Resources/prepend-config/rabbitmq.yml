@@ -1,0 +1,21 @@
+rabbit_mq:
+    logger: 'monolog.logger.rabbit_mq'
+    connections:
+        default:
+            host: rabbitmq
+
+    queues:
+        pipes.messages:
+            bindings:
+                - exchange: 'pipes.messages'
+                  routing_key: 'pipes.messages'
+
+    exchanges:
+        pipes.messages:
+            type: 'direct'
+            durable: true
+
+    publishers:
+       pipes.messages:
+            routing_key: 'pipes.messages'
+            exchange: 'pipes.messages'

@@ -1,0 +1,35 @@
+framework:
+    csrf_protection:
+        enabled: false
+    default_locale: "%locale%"
+    trusted_hosts: ~
+    fragments: ~
+    http_method_override: true
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    router:
+        strict_requirements: ~
+
+
+parameters:
+    public.services: true
+    stdout_path: "%kernel.logs_dir%/stdout_%kernel.environment%.log"
+    kernel.secret: 'SomeSecretSomething'
+    backend_host: 127.0.0.2
+    secret: "secret: ThisTokenIsNotSoSecretChangeIt"
+    locale: en
+
+    # Swift mailer params
+    mailer_transport: '%env(SMTP_TRANSPORT)%'
+    mailer_host: '%env(SMTP_HOST)%'
+    mailer_port: '%env(SMTP_PORT)%'
+    mailer_user: '%env(SMTP_USER)%'
+    mailer_password: '%env(SMTP_PASSWORD)%'
+
+    # Mailer service params
+    mailer_from: dev@hanaboso.com
+    mailer_async: false
+    mailer_builder_id: generic
+
+    database_type: 'ODM'

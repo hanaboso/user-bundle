@@ -1,0 +1,60 @@
+services:
+    _defaults:
+        public: '%public.services%'
+
+    hbpf.user.handler.user:
+        class: Hanaboso\UserBundle\Handler\UserHandler
+        arguments:
+            - '@hbpf.database_manager_locator'
+            - '@hbpf.user.manager.user'
+            - '@hbpf.user.provider.resource'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    hbpf.user.manager.token:
+        class: Hanaboso\UserBundle\Model\Token\TokenManager
+        arguments:
+           - '@hbpf.database_manager_locator'
+           - '@hbpf.user.provider.resource'
+
+    hbpf.user.manager.user:
+        class: Hanaboso\UserBundle\Model\User\UserManager
+        arguments:
+            - '@hbpf.database_manager_locator'
+            - '@hbpf.user.manager.security'
+            - '@hbpf.user.manager.token'
+            - '@security.encoder_factory.generic'
+            - '@event_dispatcher'
+            - '@hbpf.user.provider.resource'
+            - '@hbpf.user.mailer'
+            - '%activateLink%'
+
+    hbpf.user.manager.security:
+        class: Hanaboso\UserBundle\Model\Security\SecurityManager
+        arguments:
+            - '@hbpf.database_manager_locator'
+            - '@security.encoder_factory'
+            - '@session'
+            - '@security.token_storage'
+            - '@hbpf.user.provider.resource'
+
+    hbpf.user.provider.resource:
+        class: Hanaboso\UserBundle\Provider\ResourceProvider
+        arguments:
+            - '%db_res%'
+
+    hbpf.user.mailer:
+        class: Hanaboso\UserBundle\Model\Mailer\Mailer
+        arguments:
+            - '@rabbit_mq.publisher.pipes.messages'
+            - '@EmailServiceBundle\Handler\MailHandler'
+            - '%mailer_from%'
+            - '%mailer_async%'
+            - '%mailer_builder_id%'
+
+    EmailServiceBundle\Transport\Impl\SwiftMailerTransport:
+        class: EmailServiceBundle\Transport\Impl\SwiftMailerTransport
+        arguments:
+            - '@swiftmailer.mailer.default'
+        calls:
+            - ['setLogger', ['@monolog.logger.mailer']]

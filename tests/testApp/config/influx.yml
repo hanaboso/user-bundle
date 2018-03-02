@@ -1,0 +1,39 @@
+parameters:
+    influx.host: influxdb
+    influx.api_port: 8086
+    influx.udp_port: 8089
+    influx.user: admin
+    influx.password: password
+    influx.database: pipes
+    influx.node_table: pipes_node
+    influx.fpm_table: pipes_monolith_fpm
+    influx.rabbit_table: rabbitmq_queue
+    influx.counter_table: pipes_counter
+
+services:
+    _defaults:
+        public: '%public.services%'
+
+    hbpf.system_metrics_listener:
+        class: Hanaboso\CommonsBundle\Listener\SystemMetricsListener
+        arguments:
+            - '@hbpf.influxdb_sender'
+        calls:
+            - ['setLogger', ['@monolog.logger.commons']]
+        tags:
+            - { name: kernel.event_subscriber, event: kernel.terminate }
+            - { name: kernel.event_subscriber, event: kernel.controller }
+
+    udp_metrics_sender:
+        class: Hanaboso\CommonsBundle\Metrics\UDPSender
+        arguments:
+            - '%influx.host%'
+            - '%influx.udp_port%'
+        calls:
+            - ['setLogger', ['@monolog.logger.commons']]
+
+    hbpf.influxdb_sender:
+        class: Hanaboso\CommonsBundle\Metrics\InfluxDbSender
+        arguments:
+            - '@udp_metrics_sender'
+            - '%influx.fpm_table%'

@@ -1,0 +1,37 @@
+services:
+    _defaults:
+        public: '%public.services%'
+
+    hbpf.command.change_password:
+        class: Hanaboso\UserBundle\Command\ChangePasswordCommand
+        arguments:
+            - '@hbpf.database_manager_locator'
+            - '@hbpf.user.provider.resource'
+            - '@security.encoder_factory.generic'
+        tags:
+            -  { name: console.command }
+
+    hbpf.command.create_user:
+        class: Hanaboso\UserBundle\Command\CreateUserCommand
+        arguments:
+            - '@hbpf.database_manager_locator'
+            - '@hbpf.user.provider.resource'
+            - '@security.encoder_factory.generic'
+        tags:
+            -  { name: console.command }
+
+    hbpf.command.list_user:
+        class: Hanaboso\UserBundle\Command\ListUsersCommand
+        arguments:
+            - '@hbpf.database_manager_locator'
+            - '@hbpf.user.provider.resource'
+        tags:
+            -  { name: console.command }
+
+    hbpf.command.delete_user:
+        class: Hanaboso\UserBundle\Command\DeleteUserCommand
+        arguments:
+            - '@hbpf.database_manager_locator'
+            - '@hbpf.user.provider.resource'
+        tags:
+            -  { name: console.command }

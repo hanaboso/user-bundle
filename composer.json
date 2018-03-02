@@ -1,0 +1,46 @@
+{
+  "name": "hanaboso/user-bundle",
+  "license": "proprietary",
+  "autoload": {
+    "psr-4": {
+      "Hanaboso\\UserBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": "^7.1.3",
+    "hanaboso/commons-bundle": "^1.0",
+    "symfony/framework-bundle": "^4.0",
+    "symfony/security-bundle": "^4.0",
+    "sensio/framework-extra-bundle": "^5.1",
+    "hanaboso/email-service-bundle": "^1.0",
+    "hanaboso/rabbit-mq-bundle": "^1.0"
+  },
+  "require-dev": {
+    "hanaboso/php-check-utils": "^1.0",
+    "phpunit/phpunit": "^7.0",
+    "doctrine/orm": "^2.6",
+    "symfony/browser-kit": "^4.0",
+    "symfony/lts": "^4@dev",
+    "symfony/monolog-bundle": "^3.1",
+    "friendsofsymfony/rest-bundle": "^2.3"
+  },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "git@gitlab.hanaboso.net:hanaboso/commons-bundle.git"
+    },
+    {
+      "type": "git",
+      "url": "git@gitlab.hanaboso.net:hanaboso/email-service-bundle.git"
+    },
+    {
+      "type": "git",
+      "url": "git@gitlab.hanaboso.net:hanaboso/rabbit-mq-bundle.git"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+version: '3'
+services:
+  app:
+    image: dkr.hanaboso.net/pipes/pipes/php-dev:dev
+    user: ${DEV_UID}:${DEV_GID}
+    volumes:
+      - ./:/srv/project
+      - ${SSH_AUTH_SOCK}:/tmp/bound-ssh-agent
+      - ${HOME}/.composer:/srv/.composer
+    environment:
+      - APP_ENV=dev
+      - DEV_UID=${DEV_UID}
+      - DEV_GID=${DEV_GID}
+      - SMTP_TRANSPORT=${SMTP_TRANSPORT}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+    depends_on:
+      - mongo
+      - rabbitmq
+      - influxdb
+      - mariadb
+    links:
+      - mongo
+      - rabbitmq
+      - influxdb
+      - mariadb
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - ${DEV_IP}:27017:27017
+    volumes:
+      - mongo:/data/db
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    volumes:
+      - rabbit-mq:/var/lib/rabbitmq
+    ports:
+      - ${DEV_IP}:15672:15672
+      - ${DEV_IP}:5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+
+  influxdb:
+    image: influxdb:1.2-alpine
+    ports:
+    - ${DEV_IP}:8083:8083
+    - ${DEV_IP}:8086:8086
+    - ${DEV_IP}:8089:8089/udp
+    volumes:
+    - influxdb:/var/lib/influxdb
+    - ./tests/testApp/influx/influxdb.conf:/etc/influxdb/influxdb.conf
+
+  smtp:
+    image: mailhog/mailhog
+    ports:
+      - ${DEV_IP}:1025:1025
+      - ${DEV_IP}:8025:8025
+
+  mariadb:
+      image: mariadb:10.3
+      command: "mysqld --innodb_flush_method=nosync"
+      environment:
+       MYSQL_ROOT_PASSWORD: root
+      ports:
+       - ${DEV_IP}:3306:3306
+      volumes:
+       - mariadb:/var/lib/mysql
+
+volumes:
+  mongo: {}
+  rabbit-mq: {}
+  influxdb: {}
+  mariadb: {}

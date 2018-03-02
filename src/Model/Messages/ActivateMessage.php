@@ -1,0 +1,64 @@
+<?php declare(strict_types=1);
+
+/**
+ * Created by PhpStorm.
+ * User: Pavel Severyn
+ * Date: 14.9.17
+ * Time: 13:25
+ */
+
+namespace Hanaboso\UserBundle\Model\Messages;
+
+use Hanaboso\UserBundle\Entity\TokenInterface;
+use Hanaboso\UserBundle\Model\MessageSubject;
+
+/**
+ * Class ActivateMessage
+ *
+ * @package Hanaboso\UserBundle\Model\Messages
+ */
+class ActivateMessage extends UserMessageAbstract
+{
+
+    /**
+     * @var string
+     */
+    protected $subject = MessageSubject::USER_ACTIVATE;
+
+    /**
+     * @var string|null
+     */
+    protected $template = NULL;
+
+    /**
+     * @var string
+     */
+    protected $host = '%s';
+
+    /**
+     * @param string $host
+     *
+     * @return ActivateMessage
+     */
+    public function setHost(string $host): ActivateMessage
+    {
+        $this->host = $host;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMessage(): array
+    {
+        $this->message['to'] = $this->user->getEmail();
+        /** @var TokenInterface|null $token */
+        $token = $this->user->getToken();
+
+        $this->message['dataContent']['link'] = sprintf($this->host, $token ? $token->getHash() : '');
+
+        return $this->message;
+    }
+
+}

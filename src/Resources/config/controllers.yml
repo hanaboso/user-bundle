@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+        bind:
+            $userHandler: '@hbpf.user.handler.user'
+
+    Hanaboso\UserBundle\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']

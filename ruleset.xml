@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ruleset name="HANABOSO_NOTFICATION_CENTER">
+    <!-- Slevomat coding standards -->
+    <rule ref="./vendor/hanaboso/php-check-utils/ruleset.xml"/>
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+        <properties>
+            <property name="rootNamespaces" type="array" value="src=>Hanaboso\UserBundle,tests=>Tests"/>
+        </properties>
+    </rule>
+
+</ruleset>
