@@ -31,7 +31,6 @@ class UserExtension extends Extension implements PrependExtensionInterface
         };
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/prepend-config'));
-        $loader->load('doctrine.yml');
         $loader->load('rabbitmq.yml');
 
         $container->setParameter('src_dir', __DIR__ . '/../..');
@@ -47,7 +46,6 @@ class UserExtension extends Extension implements PrependExtensionInterface
         $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('resources.yml');
         $loader->load('controllers.yml');
         $loader->load('services.yml');
         $loader->load('parameters.yml');

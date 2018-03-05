@@ -1,0 +1,10 @@
+parameters:
+    resource_enum: Hanaboso\UserBundle\Enum\ResourceEnum
+
+    db_res:
+        resources:
+            # Add new resources to ResourceEnum class
+            user: Hanaboso\UserBundle\Document\User
+            tmp_user: Hanaboso\UserBundle\Document\TmpUser
+            token: Hanaboso\UserBundle\Document\Token
+            file: Hanaboso\CommonsBundle\FileStorage\Document\File

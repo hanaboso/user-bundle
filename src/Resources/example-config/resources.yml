@@ -1,4 +1,6 @@
 parameters:
+    resource_enum: Hanaboso\UserBundle\Enum\ResourceEnum
+
     db_res:
         resources:
             # Add new resources to ResourceEnum class

@@ -1,3 +1,2 @@
 parameters:
-    resource_enum: Hanaboso\UserBundle\Enum\ResourceEnum
     activateLink: '%backend_host%/user/%s/activate'
