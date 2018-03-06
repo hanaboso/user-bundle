@@ -13,7 +13,6 @@ use Hanaboso\UserBundle\Entity\UserInterface;
  * Class UserAbstract
  *
  * @package Hanaboso\UserBundle\Document
- *
  */
 abstract class UserAbstract implements UserInterface
 {
@@ -129,6 +128,8 @@ abstract class UserAbstract implements UserInterface
 
     /**
      * Needed by symfony's UserInterface.
+     *
+     * @throws Exception
      */
     public function eraseCredentials(): void
     {

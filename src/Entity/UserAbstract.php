@@ -11,7 +11,6 @@ use Hanaboso\CommonsBundle\Traits\Entity\IdTrait;
  * Class UserAbstract
  *
  * @package Hanaboso\UserBundle\Entity
- *
  */
 abstract class UserAbstract implements UserInterface
 {
@@ -100,6 +99,8 @@ abstract class UserAbstract implements UserInterface
 
     /**
      * Needed by symfony's UserInterface.
+     *
+     * @throws Exception
      */
     public function eraseCredentials(): void
     {
