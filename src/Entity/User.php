@@ -4,6 +4,7 @@ namespace Hanaboso\UserBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\InheritanceType;
 use Hanaboso\CommonsBundle\Traits\Entity\DeletedTrait;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 
@@ -13,6 +14,7 @@ use Hanaboso\UserBundle\Enum\UserTypeEnum;
  * @package Hanaboso\UserBundle\Entity
  *
  * @ORM\Table(name="`user`")
+ * @InheritanceType("SINGLE_TABLE")
  * @ORM\Entity(repositoryClass="Hanaboso\UserBundle\Repository\Entity\UserRepository")
  */
 class User extends UserAbstract
@@ -138,8 +140,8 @@ class User extends UserAbstract
     public function toArray(): array
     {
         return [
-            'id'       => $this->getId(),
-            'email'    => $this->getEmail(),
+            'id'    => $this->getId(),
+            'email' => $this->getEmail(),
         ];
     }
 
