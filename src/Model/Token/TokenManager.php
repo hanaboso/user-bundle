@@ -9,6 +9,7 @@ use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
+use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Repository\Document\TokenRepository as DocumentTokenRepository;
 use Hanaboso\UserBundle\Repository\Entity\TokenRepository as EntityTokenRepository;
@@ -47,6 +48,7 @@ class TokenManager
      * @param UserInterface $user
      *
      * @return TokenInterface
+     * @throws UserException
      */
     public function create(UserInterface $user): TokenInterface
     {
@@ -68,6 +70,7 @@ class TokenManager
      *
      * @return TokenInterface
      * @throws TokenManagerException
+     * @throws UserException
      */
     public function validate(string $hash): TokenInterface
     {
@@ -88,6 +91,8 @@ class TokenManager
 
     /**
      * @param TokenInterface $token
+     *
+     * @throws UserException
      */
     public function delete(TokenInterface $token): void
     {
@@ -97,6 +102,8 @@ class TokenManager
 
     /**
      * @param UserInterface $user
+     *
+     * @throws UserException
      */
     private function removeExistingTokens(UserInterface $user): void
     {

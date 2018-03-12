@@ -99,6 +99,8 @@ class UserManager
      * @param ResourceProvider         $provider
      * @param Mailer                   $mailer
      * @param string                   $activateLink
+     *
+     * @throws UserException
      */
     public function __construct(
         DatabaseManagerLocator $userDml,
@@ -127,6 +129,8 @@ class UserManager
      * @param array $data
      *
      * @return UserInterface
+     * @throws SecurityManagerException
+     * @throws UserException
      */
     public function login(array $data): UserInterface
     {
@@ -151,6 +155,10 @@ class UserManager
     /**
      * @param array $data
      *
+     * @throws ContainerExceptionInterface
+     * @throws MailerException
+     * @throws NotFoundExceptionInterface
+     * @throws UserException
      * @throws UserManagerException
      */
     public function register(array $data): void
@@ -222,6 +230,7 @@ class UserManager
      * @param array  $data
      *
      * @throws TokenManagerException
+     * @throws UserException
      */
     public function setPassword(string $id, array $data): void
     {
@@ -256,6 +265,7 @@ class UserManager
      * @throws MailerException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws UserException
      */
     public function resetPassword(array $data): void
     {

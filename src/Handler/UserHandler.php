@@ -4,13 +4,20 @@ namespace Hanaboso\UserBundle\Handler;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
+use EmailServiceBundle\Exception\MailerException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
+use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
 use Hanaboso\CommonsBundle\Utils\ControllerUtils;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
+use Hanaboso\UserBundle\Exception\UserException;
+use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
+use Hanaboso\UserBundle\Model\Token\TokenManagerException;
 use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,6 +73,9 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param array $data
      *
      * @return UserInterface
+     * @throws PipesFrameworkException
+     * @throws UserException
+     * @throws SecurityManagerException
      */
     public function login(array $data): UserInterface
     {
@@ -88,6 +98,11 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param array $data
      *
      * @return array
+     * @throws UserException
+     * @throws UserManagerException
+     * @throws MailerException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function register(array $data): array
     {
@@ -100,6 +115,8 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param string $token
      *
      * @return array
+     * @throws UserException
+     * @throws TokenManagerException
      */
     public function activate(string $token): array
     {
@@ -113,6 +130,9 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param array  $data
      *
      * @return array
+     * @throws PipesFrameworkException
+     * @throws UserException
+     * @throws TokenManagerException
      */
     public function setPassword(string $id, array $data): array
     {
@@ -127,6 +147,8 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param array $data
      *
      * @return array
+     * @throws PipesFrameworkException
+     * @throws SecurityManagerException
      */
     public function changePassword(array $data): array
     {
@@ -141,9 +163,17 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param array $data
      *
      * @return array
+     * @throws ContainerExceptionInterface
+     * @throws MailerException
+     * @throws NotFoundExceptionInterface
+     * @throws UserException
+     * @throws UserManagerException
+     * @throws PipesFrameworkException
      */
     public function resetPassword(array $data): array
     {
+        ControllerUtils::checkParameters(['email'], $data);
+
         $this->userManager->resetPassword($data);
 
         return [];
@@ -153,6 +183,9 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param string $id
      *
      * @return UserInterface
+     * @throws SecurityManagerException
+     * @throws UserManagerException
+     * @throws UserException
      */
     public function delete(string $id): UserInterface
     {
@@ -204,6 +237,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      *
      * @return UserInterface
      * @throws UserManagerException
+     * @throws UserException
      */
     private function getUser(string $id): UserInterface
     {
