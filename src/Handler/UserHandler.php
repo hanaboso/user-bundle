@@ -39,17 +39,17 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     /**
      * @var DocumentManager|EntityManager
      */
-    private $dm;
+    protected $dm;
 
     /**
      * @var UserManager
      */
-    private $userManager;
+    protected $userManager;
 
     /**
      * @var ResourceProvider
      */
-    private $provider;
+    protected $provider;
 
     /**
      * UserHandler constructor.
@@ -103,9 +103,12 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @throws MailerException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws PipesFrameworkException
      */
     public function register(array $data): array
     {
+        ControllerUtils::checkParameters(['email'], $data);
+
         $this->userManager->register($data);
 
         return [];
@@ -248,7 +251,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
 
         if (!$user) {
             throw new UserManagerException(
-                sprintf('User \'%s\' not exists.', $id),
+                sprintf('User with id [%s] not found.', $id),
                 UserManagerException::USER_NOT_EXISTS
             );
         }
