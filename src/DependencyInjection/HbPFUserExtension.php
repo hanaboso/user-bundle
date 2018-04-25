@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * @link http://symfony.com/doc/current/cookbook/bundles/extension.html
  */
-class UserExtension extends Extension implements PrependExtensionInterface
+class HbPFUserExtension extends Extension implements PrependExtensionInterface
 {
 
     /**

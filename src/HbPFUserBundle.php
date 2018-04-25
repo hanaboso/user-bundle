@@ -5,11 +5,11 @@ namespace Hanaboso\UserBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class UserBundle
+ * Class HbPFUserBundle
  *
  * @package Hanaboso\UserBundle
  */
-class UserBundle extends Bundle
+class HbPFUserBundle extends Bundle
 {
 
 }
