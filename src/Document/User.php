@@ -97,16 +97,6 @@ class User extends UserAbstract
     }
 
     /**
-     * @param bool $deleted
-     *
-     * @return UserInterface
-     */
-    public function setDeleted(bool $deleted): UserInterface
-    {
-        return $this;
-    }
-
-    /**
      * @return array
      */
     public function toArray(): array

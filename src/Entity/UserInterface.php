@@ -67,9 +67,9 @@ interface UserInterface extends SecurityCoreUserInterface
     /**
      * @param bool $deleted
      *
-     * @return UserInterface
+     * @return mixed
      */
-    public function setDeleted(bool $deleted): UserInterface;
+    public function setDeleted(bool $deleted);
 
     /**
      * @param TmpUserInterface $tmpUser

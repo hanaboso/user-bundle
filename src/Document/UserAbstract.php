@@ -139,9 +139,9 @@ abstract class UserAbstract implements UserInterface
     /**
      * @param bool $deleted
      *
-     * @return UserInterface
+     * @return mixed
      */
-    public function setDeleted(bool $deleted): UserInterface
+    public function setDeleted(bool $deleted)
     {
         return $this;
     }
