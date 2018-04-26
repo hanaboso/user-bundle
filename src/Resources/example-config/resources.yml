@@ -1,5 +1,6 @@
 parameters:
     resource_enum: Hanaboso\UserBundle\Enum\ResourceEnum
+    backend_host: 127.0.0.2
 
     db_res:
         resources:
