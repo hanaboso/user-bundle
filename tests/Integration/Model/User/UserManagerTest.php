@@ -5,6 +5,7 @@ namespace Tests\Integration\Model\User;
 use DateTime;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
@@ -26,7 +27,7 @@ use Tests\PrivateTrait;
  * @ORM\Entity
  * @ORM\Table(name="user_manager_test")
  */
-class UserManagerTest extends DatabaseTestCaseAbstract
+final class UserManagerTest extends DatabaseTestCaseAbstract
 {
 
     use PrivateTrait;
@@ -71,6 +72,7 @@ class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers UserManager::register()
+     * @throws Exception
      */
     public function testRegister(): void
     {
@@ -92,6 +94,7 @@ class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers UserManager::register()
+     * @throws Exception
      */
     public function testRegisterMultiple(): void
     {
@@ -102,6 +105,7 @@ class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers UserManager::register()
+     * @throws Exception
      */
     public function testRegisterInvalidEmail(): void
     {
@@ -114,6 +118,7 @@ class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers UserManager::activate()
+     * @throws Exception
      */
     public function testActivate(): void
     {
@@ -146,6 +151,7 @@ class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers UserManager::activate()
+     * @throws Exception
      */
     public function testActivateNotValid(): void
     {
@@ -163,6 +169,7 @@ class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers UserManager::resetPassword()
+     * @throws Exception
      */
     public function testResetPassword(): void
     {
@@ -181,6 +188,7 @@ class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers UserManager::setPassword()
+     * @throws Exception
      */
     public function testSetPassword(): void
     {
@@ -203,6 +211,7 @@ class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers UserManager::setPassword()
+     * @throws Exception
      */
     public function testSetPasswordNotValid(): void
     {
@@ -219,7 +228,7 @@ class UserManagerTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     private function prepareMailerMock(): void
     {
@@ -231,7 +240,8 @@ class UserManagerTest extends DatabaseTestCaseAbstract
             $this->container->get('event_dispatcher'),
             $this->container->get('hbpf.user.provider.resource'),
             $this->createMock(Mailer::class),
-            'active-link'
+            'active-link',
+            'password-link'
         );
     }
 

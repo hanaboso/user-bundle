@@ -12,6 +12,7 @@ namespace Tests\Unit\Model\Messages;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Messages\ResetPasswordMessage;
 use Hanaboso\UserBundle\Model\MessageSubject;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -19,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @package Tests\Unit\Model\Messages
  */
-class ResetPasswordMessageTest extends TestCase
+final class ResetPasswordMessageTest extends TestCase
 {
 
     /**
@@ -27,17 +28,19 @@ class ResetPasswordMessageTest extends TestCase
      */
     public function testGetMessage(): void
     {
+        /** @var User|MockObject $user */
         $user = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
         $user->method('getEmail')->willReturn('test@example.com');
         $user->method('getUsername')->willReturn('FooTooBoo');
 
         $message = new ResetPasswordMessage($user);
+        $message->setHost('/user/%s/set_password');
         $this->assertEquals(
             [
                 'to'          => 'test@example.com',
                 'subject'     => MessageSubject::USER_RESET_PASSWORD,
                 'content'     => '',
-                'dataContent' => ['username' => 'FooTooBoo'],
+                'dataContent' => ['link' => '/user//set_password'],
                 'template'    => NULL,
                 'from'        => '',
             ], $message->getMessage()

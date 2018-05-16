@@ -30,12 +30,31 @@ class ResetPasswordMessage extends UserMessageAbstract
     protected $template = NULL;
 
     /**
+     * @var string
+     */
+    protected $host = '%s';
+
+    /**
+     * @param string $host
+     *
+     * @return ResetPasswordMessage
+     */
+    public function setHost(string $host): ResetPasswordMessage
+    {
+        $this->host = $host;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getMessage(): array
     {
-        $this->message["to"]                      = $this->user->getEmail();
-        $this->message["dataContent"]["username"] = $this->user->getUsername();
+        $token = $this->user->getToken();
+
+        $this->message["to"]                  = $this->user->getEmail();
+        $this->message['dataContent']['link'] = sprintf($this->host, $token ? $token->getHash() : '');
 
         return $this->message;
     }

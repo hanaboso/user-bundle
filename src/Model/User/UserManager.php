@@ -5,6 +5,8 @@ namespace Hanaboso\UserBundle\Model\User;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use EmailServiceBundle\Exception\MailerException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
@@ -89,6 +91,11 @@ class UserManager
     private $activateLink;
 
     /**
+     * @var string
+     */
+    private $passwordLink;
+
+    /**
      * UserManager constructor.
      *
      * @param DatabaseManagerLocator   $userDml
@@ -99,6 +106,7 @@ class UserManager
      * @param ResourceProvider         $provider
      * @param Mailer                   $mailer
      * @param string                   $activateLink
+     * @param string                   $passwordLink
      *
      * @throws UserException
      */
@@ -110,7 +118,8 @@ class UserManager
         EventDispatcherInterface $eventDispatcher,
         ResourceProvider $provider,
         Mailer $mailer,
-        string $activateLink
+        string $activateLink,
+        string $passwordLink
     )
     {
         $this->dm                = $userDml->get();
@@ -123,6 +132,7 @@ class UserManager
         $this->provider          = $provider;
         $this->mailer            = $mailer;
         $this->activateLink      = $activateLink;
+        $this->passwordLink      = $passwordLink;
     }
 
     /**
@@ -141,7 +151,7 @@ class UserManager
     }
 
     /**
-     *
+     * @throws SecurityManagerException
      */
     public function logout(): void
     {
@@ -155,11 +165,11 @@ class UserManager
     /**
      * @param array $data
      *
-     * @throws ContainerExceptionInterface
      * @throws MailerException
-     * @throws NotFoundExceptionInterface
      * @throws UserException
      * @throws UserManagerException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function register(array $data): void
     {
@@ -198,6 +208,8 @@ class UserManager
      * @param string $token
      *
      * @return UserInterface
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws TokenManagerException
      * @throws UserException
      */
@@ -229,6 +241,8 @@ class UserManager
      * @param string $id
      * @param array  $data
      *
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws TokenManagerException
      * @throws UserException
      */
@@ -247,6 +261,8 @@ class UserManager
     /**
      * @param array $data
      *
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws SecurityManagerException
      */
     public function changePassword(array $data): void
@@ -282,6 +298,7 @@ class UserManager
         $this->tokenManager->create($user);
 
         $msg = new ResetPasswordMessage($user);
+        $msg->setHost($this->passwordLink);
         $this->mailer->send($msg);
 
         $this->eventDispatcher->dispatch(UserEvent::USER_RESET_PASSWORD, new UserEvent($user));
@@ -291,8 +308,10 @@ class UserManager
      * @param UserInterface $user
      *
      * @return UserInterface
-     * @throws UserManagerException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws SecurityManagerException
+     * @throws UserManagerException
      */
     public function delete($user): UserInterface
     {

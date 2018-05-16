@@ -28,6 +28,7 @@ services:
             - '@hbpf.user.provider.resource'
             - '@hbpf.user.mailer'
             - '%activateLink%'
+            - '%passwordLink%'
 
     hbpf.user.manager.security:
         class: Hanaboso\UserBundle\Model\Security\SecurityManager
