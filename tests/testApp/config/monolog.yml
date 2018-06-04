@@ -1,6 +1,6 @@
 monolog:
     use_microseconds: false
-    channels: [commons, ftp, rabbit-mq, mailer]
+    channels: [commons, ftp, rabbit_mq, mailer]
     handlers:
         commons:
             type: service
@@ -21,11 +21,11 @@ monolog:
             id: udp_handler
             level: info
             channels: [ftp]
-        rabbit-mq:
+        rabbit_mq:
             type: service
             id: udp_handler
             level: info
-            channels: [rabbit-mq]
+            channels: [rabbit_mq]
         mailer:
             type: service
             id: udp_handler

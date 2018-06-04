@@ -16,6 +16,7 @@
     "hanaboso/commons-bundle": "^1.0",
     "symfony/framework-bundle": "^4.0",
     "symfony/security-bundle": "^4.0",
+    "symfony/symfony": "4.0.9",
     "sensio/framework-extra-bundle": "^5.1",
     "hanaboso/email-service-bundle": "^1.0",
     "hanaboso/rabbit-mq-bundle": "^1.0"

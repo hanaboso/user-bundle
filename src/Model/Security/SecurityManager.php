@@ -3,9 +3,12 @@
 namespace Hanaboso\UserBundle\Model\Security;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\LockException;
+use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
+use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Model\Token;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
@@ -64,7 +67,7 @@ class SecurityManager
      * @param TokenStorage           $tokenStorage
      * @param ResourceProvider       $provider
      *
-     * @throws \Hanaboso\UserBundle\Exception\UserException
+     * @throws UserException
      */
     public function __construct(
         DatabaseManagerLocator $userDml,
@@ -86,8 +89,10 @@ class SecurityManager
      * @param array $data
      *
      * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
      * @throws SecurityManagerException
-     * @throws \Hanaboso\UserBundle\Exception\UserException
+     * @throws UserException
      */
     public function login(array $data): UserInterface
     {
@@ -97,13 +102,20 @@ class SecurityManager
 
         $user = $this->getUser($data['email']);
         $this->validateUser($user, $data);
+        $this->setToken($user, $data);
 
-        //@todo required role ???
+        return $user;
+    }
+
+    /**
+     * @param UserInterface $user
+     * @param array         $data
+     */
+    public function setToken(UserInterface $user, array $data): void
+    {
         $token = new Token($user, $data['password'], self::SECURED_AREA, ['USER_LOGGED']);
         $this->tokenStorage->setToken($token);
         $this->session->set($this->sessionName, serialize($token));
-
-        return $user;
     }
 
     /**
@@ -125,6 +137,8 @@ class SecurityManager
 
     /**
      * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function getLoggedUser(): UserInterface
@@ -139,6 +153,8 @@ class SecurityManager
     /**
      * @return UserInterface
      * @throws SecurityManagerException
+     * @throws LockException
+     * @throws MappingException
      */
     private function getUserFromSession(): UserInterface
     {
@@ -193,7 +209,7 @@ class SecurityManager
      * @param array         $data
      *
      * @throws SecurityManagerException
-     * @throws \Hanaboso\UserBundle\Exception\UserException
+     * @throws UserException
      */
     private function validateUser(UserInterface $user, array $data): void
     {
