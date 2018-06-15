@@ -2,6 +2,7 @@
 
 namespace Tests\Integration\Document;
 
+use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
@@ -12,11 +13,11 @@ use Tests\DatabaseTestCaseAbstract;
  *
  * @package Tests\Integration\Document
  */
-class DocumentTest extends DatabaseTestCaseAbstract
+final class DocumentTest extends DatabaseTestCaseAbstract
 {
 
     /**
-     *
+     * @throws Exception
      */
     public function testReferences(): void
     {

@@ -3,9 +3,10 @@ monolog:
     channels: [commons, ftp, rabbit_mq, mailer]
     handlers:
         commons:
-            type: service
-            id: udp_handler
+            type:  stream
+            path:  "%stdout_path%"
             level: info
+            formatter: logstash_formatter
             channels: [commons]
 
         # Handler for docker container
@@ -17,36 +18,24 @@ monolog:
             max_files: 10
             channels: '!php'
         ftp:
-            type: service
-            id: udp_handler
+            type:  stream
+            path:  "%stdout_path%"
             level: info
+            formatter: logstash_formatter
             channels: [ftp]
         rabbit_mq:
-            type: service
-            id: udp_handler
+            type:  stream
+            path:  "%stdout_path%"
             level: info
+            formatter: logstash_formatter
             channels: [rabbit_mq]
         mailer:
-            type: service
-            id: udp_handler
+            type:  stream
+            path:  "%stdout_path%"
             level: info
+            formatter: logstash_formatter
             channels: [mailer]
 
 services:
     logstash_formatter:
         class: Hanaboso\CommonsBundle\Monolog\LogstashFormatter
-
-    udp_sender:
-        class: Hanaboso\CommonsBundle\Metrics\UDPSender
-        arguments:
-            - 'logstash'
-            - '5120'
-
-    udp_handler:
-        class: Hanaboso\CommonsBundle\Monolog\UdpHandler
-        arguments:
-            - '@udp_sender'
-            - 'info'
-        calls:
-            - ['setFormatter', ['@logstash_formatter']]
-

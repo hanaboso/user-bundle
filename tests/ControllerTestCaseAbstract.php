@@ -6,7 +6,6 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Security\SecurityManager;
 use Hanaboso\UserBundle\Model\Token;
-use Nette\Utils\Json;
 use stdClass;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -32,7 +31,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     /**
      * @var ContainerInterface
      */
-    protected $container;
+    protected $c;
 
     /**
      * @var DocumentManager
@@ -65,9 +64,9 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     {
         parent::__construct($name, $data, $dataName);
         self::bootKernel();
-        $this->container = self::$kernel->getContainer();
-        $this->dm        = $this->container->get('doctrine_mongodb.odm.default_document_manager');
-        $this->encoder   = new BCryptPasswordEncoder(12);
+        $this->c       = self::$kernel->getContainer();
+        $this->dm      = $this->c->get('doctrine_mongodb.odm.default_document_manager');
+        $this->encoder = new BCryptPasswordEncoder(12);
     }
 
     /**
@@ -78,7 +77,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
      */
     protected function loginUser(string $username, string $password): User
     {
-        $this->session      = $this->container->get('session');
+        $this->session      = $this->c->get('session');
         $this->tokenStorage = $this->client->getContainer()->get('security.token_storage');
         $this->session->invalidate();
         $this->session->start();
@@ -114,7 +113,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     }
 
     /**
-     * @param object $document
+     * @param mixed $document
      */
     protected function persistAndFlush($document): void
     {
@@ -134,7 +133,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
 
         return (object) [
             'status'  => $response->getStatusCode(),
-            'content' => Json::decode($response->getContent()),
+            'content' => json_decode($response->getContent()),
         ];
     }
 
@@ -147,12 +146,12 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
      */
     protected function sendPost(string $url, array $parameters, ?array $content = NULL): stdClass
     {
-        $this->client->request('POST', $url, $parameters, [], [], $content ? Json::encode($content) : '');
+        $this->client->request('POST', $url, $parameters, [], [], $content ? json_encode($content) : '');
         $response = $this->client->getResponse();
 
         return (object) [
             'status'  => $response->getStatusCode(),
-            'content' => Json::decode($response->getContent()),
+            'content' => json_decode($response->getContent()),
         ];
     }
 
@@ -165,12 +164,12 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
      */
     protected function sendPut(string $url, array $parameters, ?array $content = NULL): stdClass
     {
-        $this->client->request('PUT', $url, $parameters, [], [], $content ? Json::encode($content) : '');
+        $this->client->request('PUT', $url, $parameters, [], [], $content ? json_encode($content) : '');
         $response = $this->client->getResponse();
 
         return (object) [
             'status'  => $response->getStatusCode(),
-            'content' => Json::decode($response->getContent()),
+            'content' => json_decode($response->getContent()),
         ];
     }
 
@@ -186,7 +185,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
 
         return (object) [
             'status'  => $response->getStatusCode(),
-            'content' => Json::decode($response->getContent()),
+            'content' => json_decode($response->getContent()),
         ];
     }
 

@@ -1,8 +1,7 @@
 rabbit_mq:
-    logger: 'monolog.logger.rabbit_mq'
     connections:
         default:
-            host: rabbitmq
+            host: '%rabbit_host%'
 
     queues:
         pipes.messages:

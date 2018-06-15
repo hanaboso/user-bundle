@@ -2,6 +2,7 @@
 
 namespace Tests\Integration\Repository\Entity;
 
+use Exception;
 use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository;
 use Tests\DatabaseTestCaseAbstract;
@@ -15,11 +16,11 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
 {
 
     /**
-     *
+     * @throws Exception
      */
     public function testGetArrayOfUsers(): void
     {
-        $em = $this->container->get('doctrine.orm.default_entity_manager');
+        $em = $this->c->get('doctrine.orm.default_entity_manager');
 
         for ($i = 0; $i < 2; $i++) {
             $user = new User();
@@ -40,11 +41,11 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testGetUserCount(): void
     {
-        $em = $this->container->get('doctrine.orm.default_entity_manager');
+        $em   = $this->c->get('doctrine.orm.default_entity_manager');
         $user = new User();
         $user
             ->setEmail('eml')

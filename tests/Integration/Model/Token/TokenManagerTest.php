@@ -4,6 +4,7 @@ namespace Tests\Integration\Model\Token;
 
 use DateTime;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
@@ -18,7 +19,7 @@ use Tests\PrivateTrait;
  *
  * @package Tests\Integration\Model\Token
  */
-class TokenManagerTest extends DatabaseTestCaseAbstract
+final class TokenManagerTest extends DatabaseTestCaseAbstract
 {
 
     use PrivateTrait;
@@ -39,12 +40,13 @@ class TokenManagerTest extends DatabaseTestCaseAbstract
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tokenManager    = $this->container->get('hbpf.user.manager.token');
+        $this->tokenManager    = $this->c->get('hbpf.user.manager.token');
         $this->tokenRepository = $this->dm->getRepository(Token::class);
     }
 
     /**
      * @covers TokenManager::create()
+     * @throws Exception
      */
     public function testCreateUserToken(): void
     {
@@ -63,6 +65,7 @@ class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers TokenManager::create()
+     * @throws Exception
      */
     public function testCreateTmpUserToken(): void
     {
@@ -81,6 +84,7 @@ class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers TokenManager::validate()
+     * @throws Exception
      */
     public function testValidateToken(): void
     {
@@ -94,6 +98,7 @@ class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers TokenManager::validate()
+     * @throws Exception
      */
     public function testValidateInvalidToken(): void
     {
@@ -110,6 +115,7 @@ class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers TokenManager::delete()
+     * @throws Exception
      */
     public function testDeleteUserToken(): void
     {
@@ -126,6 +132,7 @@ class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers TokenManager::delete()
+     * @throws Exception
      */
     public function testDeleteTmpUserToken(): void
     {

@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @package Tests\Unit\Model\Messages
  */
-class RegisterMessageTest extends TestCase
+final class RegisterMessageTest extends TestCase
 {
 
     /**

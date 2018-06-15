@@ -5,9 +5,12 @@ namespace Hanaboso\UserBundle\Command;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
+use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
@@ -53,6 +56,8 @@ class CreateUserCommand extends Command
      * @param DatabaseManagerLocator $userDml
      * @param ResourceProvider       $provider
      * @param EncoderFactory         $encoderFactory
+     *
+     * @throws UserException
      */
     public function __construct(
         DatabaseManagerLocator $userDml,
@@ -80,6 +85,10 @@ class CreateUserCommand extends Command
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @throws UserException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {

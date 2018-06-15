@@ -19,12 +19,10 @@ services:
     depends_on:
       - mongo
       - rabbitmq
-      - influxdb
       - mariadb
     links:
       - mongo
       - rabbitmq
-      - influxdb
       - mariadb
 
   mongo:
@@ -46,22 +44,6 @@ services:
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
       - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
 
-  influxdb:
-    image: influxdb:1.2-alpine
-    ports:
-    - ${DEV_IP}:8083:8083
-    - ${DEV_IP}:8086:8086
-    - ${DEV_IP}:8089:8089/udp
-    volumes:
-    - influxdb:/var/lib/influxdb
-    - ./tests/testApp/influx/influxdb.conf:/etc/influxdb/influxdb.conf
-
-  smtp:
-    image: mailhog/mailhog
-    ports:
-      - ${DEV_IP}:1025:1025
-      - ${DEV_IP}:8025:8025
-
   mariadb:
       image: mariadb:10.3
       command: "mysqld --innodb_flush_method=nosync"
@@ -75,5 +57,4 @@ services:
 volumes:
   mongo: {}
   rabbit-mq: {}
-  influxdb: {}
   mariadb: {}

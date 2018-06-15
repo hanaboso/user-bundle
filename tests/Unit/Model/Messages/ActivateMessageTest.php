@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @package Tests\Unit\Model\Messages
  */
-class ActivateMessageTest extends TestCase
+final class ActivateMessageTest extends TestCase
 {
 
     /**

@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use RabbitMqBundle\Publisher\Publisher;
-use ReflectionException;
 
 /**
  * Class MailerTest
@@ -26,7 +25,6 @@ final class MailerTest extends TestCase
      * @throws MailerException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
      */
     public function testSendSync(): void
     {
@@ -48,7 +46,6 @@ final class MailerTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws MailerException
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
      */
     public function testSendAsync(): void
     {

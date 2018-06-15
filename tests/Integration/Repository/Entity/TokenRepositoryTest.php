@@ -3,6 +3,7 @@
 namespace Tests\Integration\Repository\Entity;
 
 use DateTime;
+use Exception;
 use Hanaboso\UserBundle\Entity\Token;
 use Tests\DatabaseTestCaseAbstract;
 use Tests\PrivateTrait;
@@ -12,17 +13,17 @@ use Tests\PrivateTrait;
  *
  * @package Tests\Integration\Repository\Entity
  */
-class TokenRepositoryTest extends DatabaseTestCaseAbstract
+final class TokenRepositoryTest extends DatabaseTestCaseAbstract
 {
 
     use PrivateTrait;
 
     /**
-     *
+     * @throws Exception
      */
     public function testGetFreshToken(): void
     {
-        $em = $this->container->get('doctrine.orm.default_entity_manager');
+        $em = $this->c->get('doctrine.orm.default_entity_manager');
 
         $token = new Token();
         $em->persist($token);

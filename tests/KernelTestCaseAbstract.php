@@ -24,7 +24,7 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
     /**
      * @var ContainerInterface
      */
-    protected $container;
+    protected $c;
 
     /**
      * @var DocumentManager
@@ -42,8 +42,8 @@ abstract class KernelTestCaseAbstract extends KernelTestCase
     {
         parent::__construct($name, $data, $dataName);
         self::bootKernel();
-        $this->container = self::$kernel->getContainer();
-        $this->dm        = $this->container->get('doctrine_mongodb.odm.default_document_manager');
+        $this->c = self::$kernel->getContainer();
+        $this->dm        = $this->c->get('doctrine_mongodb.odm.default_document_manager');
     }
 
 }

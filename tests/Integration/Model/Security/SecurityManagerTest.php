@@ -3,6 +3,7 @@
 namespace Tests\Integration\Model\Security;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Exception;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Security\SecurityManager;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
@@ -16,7 +17,7 @@ use Tests\DatabaseTestCaseAbstract;
  *
  * @package Tests\Integration\Model\Security
  */
-class SecurityManagerTest extends DatabaseTestCaseAbstract
+final class SecurityManagerTest extends DatabaseTestCaseAbstract
 {
 
     /**
@@ -35,7 +36,7 @@ class SecurityManagerTest extends DatabaseTestCaseAbstract
     private $userRepository;
 
     /**
-     *
+     * @throws Exception
      */
     protected function setUp(): void
     {
@@ -43,17 +44,18 @@ class SecurityManagerTest extends DatabaseTestCaseAbstract
         $this->encoder         = new BCryptPasswordEncoder(12);
         $encodeFactory         = new EncoderFactory([$this->encoder]);
         $this->securityManager = new SecurityManager(
-            $this->container->get('hbpf.database_manager_locator'),
+            $this->c->get('hbpf.database_manager_locator'),
             $encodeFactory,
             $this->session,
-            $this->container->get('security.token_storage'),
-            $this->container->get('hbpf.user.provider.resource')
+            $this->c->get('security.token_storage'),
+            $this->c->get('hbpf.user.provider.resource')
         );
         $this->userRepository  = $this->dm->getRepository(User::class);
     }
 
     /**
      * @covers SecurityManager::login()
+     * @throws Exception
      */
     public function testLogin(): void
     {
@@ -69,6 +71,7 @@ class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers SecurityManager::login()
+     * @throws Exception
      */
     public function testLoginInvalidEmail(): void
     {
@@ -84,6 +87,7 @@ class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers SecurityManager::login()
+     * @throws Exception
      */
     public function testLoginInvalidPassword(): void
     {
@@ -99,6 +103,7 @@ class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers SecurityManager::isLoggedIn()
+     * @throws Exception
      */
     public function testIsLoggedIn(): void
     {
@@ -133,6 +138,7 @@ class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers SecurityManager::logout()
+     * @throws Exception
      */
     public function testLogout(): void
     {
@@ -158,6 +164,7 @@ class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers SecurityManager::getLoggedUser()
+     * @throws Exception
      */
     public function testGetLoggedUser(): void
     {
@@ -175,6 +182,7 @@ class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @covers SecurityManager::getLoggedUser()
+     * @throws Exception
      */
     public function testGetNotLoggedUser(): void
     {

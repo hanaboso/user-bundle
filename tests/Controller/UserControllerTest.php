@@ -2,6 +2,7 @@
 
 namespace Tests\Controller;
 
+use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
@@ -17,7 +18,7 @@ use Tests\ControllerTestCaseAbstract;
  *
  * @package Tests\Controller
  */
-class UserControllerTest extends ControllerTestCaseAbstract
+final class UserControllerTest extends ControllerTestCaseAbstract
 {
 
     /**
@@ -228,7 +229,7 @@ class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testChangePassword(): void
     {
