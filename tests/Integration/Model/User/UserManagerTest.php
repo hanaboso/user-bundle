@@ -15,7 +15,6 @@ use Hanaboso\UserBundle\Model\Token\TokenManagerException;
 use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Tests\DatabaseTestCaseAbstract;
 use Tests\PrivateTrait;
@@ -236,7 +235,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
             $this->c->get('hbpf.database_manager_locator'),
             $this->c->get('hbpf.user.manager.security'),
             $this->c->get('hbpf.user.manager.token'),
-            $this->createMock(EncoderFactory::class),
             $this->c->get('event_dispatcher'),
             $this->c->get('hbpf.user.provider.resource'),
             $this->createMock(Mailer::class),

@@ -16,6 +16,7 @@ use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 /**
  * Class SecurityManager
@@ -29,14 +30,14 @@ class SecurityManager
     public const SECURED_AREA = 'secured_area';
 
     /**
+     * @var string
+     */
+    private $resourceUser = ResourceEnum::USER;
+
+    /**
      * @var OrmRepo|OdmRepo|ObjectRepository
      */
     private $userRepository;
-
-    /**
-     * @var EncoderFactory
-     */
-    private $encoderFactory;
 
     /**
      * @var Session
@@ -59,6 +60,26 @@ class SecurityManager
     private $provider;
 
     /**
+     * @var PasswordEncoderInterface
+     */
+    private $encoder;
+
+    /**
+     * @var EncoderFactory
+     */
+    private $encoderFactory;
+
+    /**
+     * @var DatabaseManagerLocator
+     */
+    private $userDml;
+
+    /**
+     * @var string
+     */
+    private $area;
+
+    /**
      * SecurityManager constructor.
      *
      * @param DatabaseManagerLocator $userDml
@@ -77,12 +98,43 @@ class SecurityManager
         ResourceProvider $provider
     )
     {
-        $this->userRepository = $userDml->get()->getRepository($provider->getResource(ResourceEnum::USER));
-        $this->encoderFactory = $encoderFactory;
         $this->tokenStorage   = $tokenStorage;
         $this->session        = $session;
-        $this->sessionName    = self::SECURITY_KEY . self::SECURED_AREA;
+        $this->encoderFactory = $encoderFactory;
         $this->provider       = $provider;
+        $this->userDml        = $userDml;
+
+        $this->setUserResource($this->resourceUser);
+        $this->setArea(self::SECURED_AREA);
+    }
+
+    /**
+     * @param string $resource
+     *
+     * @return SecurityManager
+     * @throws UserException
+     */
+    public function setUserResource(string $resource): SecurityManager
+    {
+        $this->resourceUser   = $resource;
+        $user                 = $this->provider->getResource($this->resourceUser);
+        $this->userRepository = $this->userDml->get()->getRepository($user);
+        $this->encoder        = $this->encoderFactory->getEncoder($user);
+
+        return $this;
+    }
+
+    /**
+     * @param string $area
+     *
+     * @return SecurityManager
+     */
+    public function setArea(string $area): SecurityManager
+    {
+        $this->area        = $area;
+        $this->sessionName = self::SECURITY_KEY . $this->area;
+
+        return $this;
     }
 
     /**
@@ -113,7 +165,7 @@ class SecurityManager
      */
     public function setToken(UserInterface $user, array $data): void
     {
-        $token = new Token($user, $data['password'], self::SECURED_AREA, ['USER_LOGGED']);
+        $token = new Token($user, $data['password'], $this->area, ['USER_LOGGED']);
         $this->tokenStorage->setToken($token);
         $this->session->set($this->sessionName, serialize($token));
     }
@@ -151,10 +203,27 @@ class SecurityManager
     }
 
     /**
-     * @return UserInterface
+     * @param string $rawPassword
+     *
+     * @return string
      * @throws SecurityManagerException
+     */
+    public function encodePassword(string $rawPassword): string
+    {
+        $this->checkEncoder();
+
+        return $this->encoder->encodePassword($rawPassword, '');
+    }
+
+    /**
+     * ------------------------------------------- HELPERS ---------------------------------
+     */
+
+    /**
+     * @return UserInterface
      * @throws LockException
      * @throws MappingException
+     * @throws SecurityManagerException
      */
     private function getUserFromSession(): UserInterface
     {
@@ -213,19 +282,24 @@ class SecurityManager
      */
     private function validateUser(UserInterface $user, array $data): void
     {
-        $encoder = $this->encoderFactory->getEncoder($this->provider->getResource(ResourceEnum::USER));
-
-        if (!$encoder) {
-            throw new SecurityManagerException(
-                sprintf('User \'%s\' encoder not found.', $data['email']),
-                SecurityManagerException::USER_ENCODER_NOT_FOUND
-            );
-        }
-
-        if (!$encoder->isPasswordValid($user->getPassword(), $data['password'], '')) {
+        $this->checkEncoder();
+        if (!$this->encoder->isPasswordValid($user->getPassword(), $data['password'], '')) {
             throw new SecurityManagerException(
                 sprintf('User \'%s\' or password not valid.', $data['email']),
                 SecurityManagerException::USER_OR_PASSWORD_NOT_VALID
+            );
+        }
+    }
+
+    /**
+     * @throws SecurityManagerException
+     */
+    private function checkEncoder(): void
+    {
+        if (!$this->encoder) {
+            throw new SecurityManagerException(
+                sprintf('Encoder for resource [%s] not found.', $this->resourceUser),
+                SecurityManagerException::USER_ENCODER_NOT_FOUND
             );
         }
     }

@@ -4,6 +4,8 @@ namespace Hanaboso\UserBundle\Model\Token;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -48,6 +50,8 @@ class TokenManager
      * @param UserInterface $user
      *
      * @return TokenInterface
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws UserException
      */
     public function create(UserInterface $user): TokenInterface
@@ -92,7 +96,9 @@ class TokenManager
     /**
      * @param TokenInterface $token
      *
+     * @throws ORMException
      * @throws UserException
+     * @throws OptimisticLockException
      */
     public function delete(TokenInterface $token): void
     {
@@ -104,6 +110,7 @@ class TokenManager
      * @param UserInterface $user
      *
      * @throws UserException
+     * @throws ORMException
      */
     private function removeExistingTokens(UserInterface $user): void
     {

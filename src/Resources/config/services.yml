@@ -23,7 +23,6 @@ services:
             - '@hbpf.database_manager_locator'
             - '@hbpf.user.manager.security'
             - '@hbpf.user.manager.token'
-            - '@security.encoder_factory.generic'
             - '@event_dispatcher'
             - '@hbpf.user.provider.resource'
             - '@hbpf.user.mailer'

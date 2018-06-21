@@ -4,6 +4,8 @@ namespace Hanaboso\UserBundle\Model\User;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\LockException;
+use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -26,11 +28,7 @@ use Hanaboso\UserBundle\Repository\Document\TmpUserRepository as OdmTmpRepo;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\TmpUserRepository as OrmTmpRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 /**
  * Class UserManager
@@ -66,11 +64,6 @@ class UserManager
     private $tmpUserRepository;
 
     /**
-     * @var PasswordEncoderInterface
-     */
-    private $encoder;
-
-    /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
@@ -101,7 +94,6 @@ class UserManager
      * @param DatabaseManagerLocator   $userDml
      * @param SecurityManager          $securityManager
      * @param TokenManager             $tokenManager
-     * @param EncoderFactory           $encoderFactory
      * @param EventDispatcherInterface $eventDispatcher
      * @param ResourceProvider         $provider
      * @param Mailer                   $mailer
@@ -114,7 +106,6 @@ class UserManager
         DatabaseManagerLocator $userDml,
         SecurityManager $securityManager,
         TokenManager $tokenManager,
-        EncoderFactory $encoderFactory,
         EventDispatcherInterface $eventDispatcher,
         ResourceProvider $provider,
         Mailer $mailer,
@@ -127,7 +118,6 @@ class UserManager
         $this->tokenManager      = $tokenManager;
         $this->userRepository    = $this->dm->getRepository($provider->getResource(ResourceEnum::USER));
         $this->tmpUserRepository = $this->dm->getRepository($provider->getResource(ResourceEnum::TMP_USER));
-        $this->encoder           = $encoderFactory->getEncoder($provider->getResource(ResourceEnum::USER));
         $this->eventDispatcher   = $eventDispatcher;
         $this->provider          = $provider;
         $this->mailer            = $mailer;
@@ -139,6 +129,8 @@ class UserManager
      * @param array $data
      *
      * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
      * @throws SecurityManagerException
      * @throws UserException
      */
@@ -151,6 +143,8 @@ class UserManager
     }
 
     /**
+     * @throws LockException
+     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function logout(): void
@@ -245,13 +239,14 @@ class UserManager
      * @throws OptimisticLockException
      * @throws TokenManagerException
      * @throws UserException
+     * @throws SecurityManagerException
      */
     public function setPassword(string $id, array $data): void
     {
         $token = $this->tokenManager->validate($id);
         $token
             ->getUserOrTmpUser()
-            ->setPassword($this->encoder->encodePassword($data['password'], ''))
+            ->setPassword($this->securityManager->encodePassword($data['password']))
             ->setToken(NULL);
 
         $this->dm->remove($token);
@@ -264,24 +259,26 @@ class UserManager
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SecurityManagerException
+     * @throws LockException
+     * @throws MappingException
      */
     public function changePassword(array $data): void
     {
         $loggedUser = $this->securityManager->getLoggedUser();
         $this->eventDispatcher->dispatch(UserEvent::USER_CHANGE_PASSWORD, new UserEvent($loggedUser));
 
-        $loggedUser->setPassword($this->encoder->encodePassword($data['password'], ''));
+        $loggedUser->setPassword($this->securityManager->encodePassword($data['password']));
         $this->dm->flush();
     }
 
     /**
      * @param array $data
      *
-     * @throws UserManagerException
      * @throws MailerException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws UserException
+     * @throws UserManagerException
      */
     public function resetPassword(array $data): void
     {
@@ -308,6 +305,8 @@ class UserManager
      * @param UserInterface $user
      *
      * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws SecurityManagerException
