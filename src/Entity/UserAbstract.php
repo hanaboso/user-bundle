@@ -27,7 +27,7 @@ abstract class UserAbstract implements UserInterface
     /**
      * @var DateTime
      *
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     protected $created;
 

@@ -34,14 +34,14 @@ class User extends UserAbstract
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $password;
+    protected $password;
 
     /**
      * @var DateTime
      *
      * @ORM\Column(type="datetime", columnDefinition="DATETIME ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
      */
-    private $updated;
+    protected $updated;
 
     /**
      * @param TmpUserInterface $tmpUser
