@@ -41,52 +41,52 @@ class UserManager
     /**
      * @var DocumentManager|EntityManager
      */
-    private $dm;
+    protected $dm;
 
     /**
      * @var SecurityManager
      */
-    private $securityManager;
+    protected $securityManager;
 
     /**
      * @var TokenManager
      */
-    private $tokenManager;
+    protected $tokenManager;
 
     /**
      * @var OdmRepo|OrmRepo|ObjectRepository
      */
-    private $userRepository;
+    protected $userRepository;
 
     /**
      * @var OdmTmpRepo|OrmTmpRepo|ObjectRepository
      */
-    private $tmpUserRepository;
+    protected $tmpUserRepository;
 
     /**
      * @var EventDispatcherInterface
      */
-    private $eventDispatcher;
+    protected $eventDispatcher;
+
+    /**
+     * @var Mailer
+     */
+    protected $mailer;
+
+    /**
+     * @var string
+     */
+    protected $activateLink;
+
+    /**
+     * @var string
+     */
+    protected $passwordLink;
 
     /**
      * @var ResourceProvider
      */
     private $provider;
-
-    /**
-     * @var Mailer
-     */
-    private $mailer;
-
-    /**
-     * @var string
-     */
-    private $activateLink;
-
-    /**
-     * @var string
-     */
-    private $passwordLink;
 
     /**
      * UserManager constructor.
