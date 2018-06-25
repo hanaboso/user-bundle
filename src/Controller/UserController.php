@@ -32,7 +32,7 @@ class UserController extends FOSRestController
     /**
      * @var UserHandler
      */
-    private $userHandler;
+    protected $userHandler;
 
     /**
      * UserController constructor.
@@ -56,7 +56,9 @@ class UserController extends FOSRestController
     {
         try {
             return $this->getResponse($this->userHandler->login($request->request->all())->toArray());
-        } catch (SecurityManagerException | UserException | PipesFrameworkException $e) {
+        } catch (SecurityManagerException $e) {
+            return $this->getErrorResponse($e, 401);
+        } catch (UserException | PipesFrameworkException $e) {
             return $this->getErrorResponse($e);
         }
     }
@@ -72,7 +74,7 @@ class UserController extends FOSRestController
         try {
             return $this->getResponse($this->userHandler->logout());
         } catch (SecurityManagerException $e) {
-            return $this->getErrorResponse($e);
+            return $this->getErrorResponse($e, 401);
         }
     }
 
@@ -88,7 +90,9 @@ class UserController extends FOSRestController
     {
         try {
             return $this->getResponse($this->userHandler->register($request->request->all()));
-        } catch (UserManagerException | MailerException | UserException | ContainerExceptionInterface $e) {
+        } catch (UserManagerException $e) {
+            return $this->getErrorResponse($e, 400);
+        } catch (UserException | MailerException | ContainerExceptionInterface $e) {
             return $this->getErrorResponse($e);
         }
     }
@@ -105,7 +109,9 @@ class UserController extends FOSRestController
     {
         try {
             return $this->getResponse($this->userHandler->activate($token));
-        } catch (TokenManagerException | UserException $e) {
+        } catch (TokenManagerException $e) {
+            return $this->getErrorResponse($e, 400);
+        } catch (UserException $e) {
             return $this->getErrorResponse($e);
         }
     }
@@ -140,7 +146,9 @@ class UserController extends FOSRestController
     {
         try {
             return $this->getResponse($this->userHandler->changePassword($request->request->all()));
-        } catch (SecurityManagerException | PipesFrameworkException $e) {
+        } catch (SecurityManagerException $e) {
+            return $this->getErrorResponse($e, 401);
+        } catch (PipesFrameworkException $e) {
             return $this->getErrorResponse($e);
         }
     }
@@ -157,12 +165,13 @@ class UserController extends FOSRestController
     {
         try {
             return $this->getResponse($this->userHandler->resetPassword($request->request->all()));
-        } catch (UserManagerException
-            | ContainerExceptionInterface
-            | MailerException
-            | UserException
-            | PipesFrameworkException
-            | NotFoundExceptionInterface $e) {
+        } catch (UserManagerException $e) {
+            return $this->getErrorResponse($e, 400);
+        } catch (ContainerExceptionInterface
+        | MailerException
+        | UserException
+        | PipesFrameworkException
+        | NotFoundExceptionInterface $e) {
             return $this->getErrorResponse($e);
         }
 

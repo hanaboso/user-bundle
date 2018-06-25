@@ -65,7 +65,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
             'password' => '',
         ]);
 
-        $this->assertEquals(500, $response->status);
+        $this->assertEquals(401, $response->status);
         $content = $response->content;
         $this->assertEquals(SecurityManagerException::class, $content->type);
         $this->assertEquals(2001, $content->error_code);
@@ -86,7 +86,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
             'password' => '',
         ]);
 
-        $this->assertEquals(500, $response->status);
+        $this->assertEquals(401, $response->status);
         $content = $response->content;
         $this->assertEquals(SecurityManagerException::class, $content->type);
         $this->assertEquals(2001, $content->error_code);
@@ -111,7 +111,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $response = $this->sendPost('/user/logout', []);
 
-        $this->assertEquals(500, $response->status);
+        $this->assertEquals(401, $response->status);
         $content = $response->content;
         $this->assertEquals(SecurityManagerException::class, $content->type);
         $this->assertEquals(2001, $content->error_code);
@@ -145,7 +145,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
             'email' => 'email@example.com',
         ]);
 
-        $this->assertEquals(500, $response->status);
+        $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(UserManagerException::class, $content->type);
         $this->assertEquals(2001, $content->error_code);
@@ -181,7 +181,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $response = $this->sendPost(sprintf('/user/%s/activate', Strings::substring($token->getHash(), 1)),
             []);
 
-        $this->assertEquals(500, $response->status);
+        $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(TokenManagerException::class, $content->type);
         $this->assertEquals(2001, $content->error_code);
@@ -291,7 +291,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         ]);
         $content  = $response->content;
 
-        $this->assertEquals(500, $response->status);
+        $this->assertEquals(400, $response->status);
         $this->assertEquals(UserManagerException::class, $content->type);
         $this->assertEquals(2001, $content->error_code);
     }
