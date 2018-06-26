@@ -101,7 +101,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $response = $this->sendPost('/user/logout', []);
 
-        $this->assertEquals(200, $response->status);
+        $this->assertEquals(204, $response->status);
     }
 
     /**
@@ -111,10 +111,8 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $response = $this->sendPost('/user/logout', []);
 
-        $this->assertEquals(401, $response->status);
-        $content = $response->content;
-        $this->assertEquals(SecurityManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->error_code);
+        $this->assertEquals(403, $response->status);
+        $this->assertEquals('User not logged!', $response->content);
     }
 
     /**
@@ -249,7 +247,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $response = $this->sendPost('/user/change_password', ['password' => 'anotherPassw0rd']);
 
-        $this->assertEquals('User not logged.', $response->content->message);
+        $this->assertEquals('User not logged!', $response->content);
     }
 
     /**

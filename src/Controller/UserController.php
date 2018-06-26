@@ -18,6 +18,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Class UserController
@@ -58,7 +59,7 @@ class UserController extends FOSRestController
             return $this->getResponse($this->userHandler->login($request->request->all())->toArray());
         } catch (SecurityManagerException $e) {
             return $this->getErrorResponse($e, 401);
-        } catch (UserException | PipesFrameworkException $e) {
+        } catch (UserException | PipesFrameworkException | Throwable $e) {
             return $this->getErrorResponse($e);
         }
     }
@@ -75,6 +76,8 @@ class UserController extends FOSRestController
             return $this->getResponse($this->userHandler->logout());
         } catch (SecurityManagerException $e) {
             return $this->getErrorResponse($e, 401);
+        } catch (Throwable $e) {
+            return $this->getErrorResponse($e);
         }
     }
 
@@ -92,7 +95,7 @@ class UserController extends FOSRestController
             return $this->getResponse($this->userHandler->register($request->request->all()));
         } catch (UserManagerException $e) {
             return $this->getErrorResponse($e, 400);
-        } catch (UserException | MailerException | ContainerExceptionInterface $e) {
+        } catch (UserException | MailerException | ContainerExceptionInterface | Throwable $e) {
             return $this->getErrorResponse($e);
         }
     }
@@ -111,7 +114,7 @@ class UserController extends FOSRestController
             return $this->getResponse($this->userHandler->activate($token));
         } catch (TokenManagerException $e) {
             return $this->getErrorResponse($e, 400);
-        } catch (UserException $e) {
+        } catch (UserException | Throwable $e) {
             return $this->getErrorResponse($e);
         }
     }
@@ -129,7 +132,7 @@ class UserController extends FOSRestController
     {
         try {
             return $this->getResponse($this->userHandler->setPassword($token, $request->request->all()));
-        } catch (TokenManagerException | UserException | PipesFrameworkException $e) {
+        } catch (TokenManagerException | UserException | PipesFrameworkException | Throwable $e) {
             return $this->getErrorResponse($e);
         }
     }
@@ -148,7 +151,7 @@ class UserController extends FOSRestController
             return $this->getResponse($this->userHandler->changePassword($request->request->all()));
         } catch (SecurityManagerException $e) {
             return $this->getErrorResponse($e, 401);
-        } catch (PipesFrameworkException $e) {
+        } catch (PipesFrameworkException | Throwable $e) {
             return $this->getErrorResponse($e);
         }
     }
@@ -171,7 +174,8 @@ class UserController extends FOSRestController
         | MailerException
         | UserException
         | PipesFrameworkException
-        | NotFoundExceptionInterface $e) {
+        | NotFoundExceptionInterface
+        | Throwable $e) {
             return $this->getErrorResponse($e);
         }
 

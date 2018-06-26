@@ -5,7 +5,7 @@ framework:
     trusted_hosts: ~
     fragments: ~
     http_method_override: true
-    test: ~
+    test: true
     session:
         storage_id: session.storage.mock_file
     router:

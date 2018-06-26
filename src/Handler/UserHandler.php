@@ -3,7 +3,11 @@
 namespace Hanaboso\UserBundle\Handler;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\LockException;
+use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use EmailServiceBundle\Exception\MailerException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
 use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
@@ -16,11 +20,10 @@ use Hanaboso\UserBundle\Model\Token\TokenManagerException;
 use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -74,8 +77,10 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      *
      * @return UserInterface
      * @throws PipesFrameworkException
-     * @throws UserException
      * @throws SecurityManagerException
+     * @throws UserException
+     * @throws LockException
+     * @throws MappingException
      */
     public function login(array $data): UserInterface
     {
@@ -86,6 +91,9 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
 
     /**
      * @return array
+     * @throws LockException
+     * @throws MappingException
+     * @throws SecurityManagerException
      */
     public function logout(): array
     {
@@ -98,12 +106,12 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param array $data
      *
      * @return array
+     * @throws MailerException
+     * @throws PipesFrameworkException
      * @throws UserException
      * @throws UserManagerException
-     * @throws MailerException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws PipesFrameworkException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function register(array $data): array
     {
@@ -118,8 +126,10 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param string $token
      *
      * @return array
-     * @throws UserException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws TokenManagerException
+     * @throws UserException
      */
     public function activate(string $token): array
     {
@@ -133,9 +143,12 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param array  $data
      *
      * @return array
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws PipesFrameworkException
-     * @throws UserException
+     * @throws SecurityManagerException
      * @throws TokenManagerException
+     * @throws UserException
      */
     public function setPassword(string $id, array $data): array
     {
@@ -150,6 +163,10 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param array $data
      *
      * @return array
+     * @throws LockException
+     * @throws MappingException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
      */
@@ -166,12 +183,12 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param array $data
      *
      * @return array
-     * @throws ContainerExceptionInterface
      * @throws MailerException
-     * @throws NotFoundExceptionInterface
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws PipesFrameworkException
      * @throws UserException
      * @throws UserManagerException
-     * @throws PipesFrameworkException
      */
     public function resetPassword(array $data): array
     {
@@ -186,9 +203,13 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param string $id
      *
      * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws SecurityManagerException
-     * @throws UserManagerException
      * @throws UserException
+     * @throws UserManagerException
      */
     public function delete(string $id): UserInterface
     {
@@ -200,11 +221,11 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      *
      * @param Request $request
      *
-     * @return bool
+     * @return Response
      */
-    public function onLogoutSuccess(Request $request): bool
+    public function onLogoutSuccess(Request $request): Response
     {
-        return TRUE;
+        return new Response('ok', 204);
     }
 
     /**
@@ -228,11 +249,14 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     {
         $exception = $event->getException();
 
-        if ($exception instanceof AuthenticationException || $exception instanceof AccessDeniedException || $exception instanceof AuthenticationCredentialsNotFoundException) {
-            $jsonResponse = new JsonResponse($exception->getMessage(), 403);
-
-            $event->setResponse($jsonResponse);
+        if ($exception instanceof AuthenticationException || $exception instanceof AccessDeniedException) {
+            $event->setResponse(new JsonResponse($exception->getMessage(), 403));
         }
+
+        if ($exception instanceof AuthenticationCredentialsNotFoundException) {
+            $event->setResponse(new JsonResponse('User not logged!', 403));
+        }
+
     }
 
     /**
