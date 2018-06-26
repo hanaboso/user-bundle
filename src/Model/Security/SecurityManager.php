@@ -32,7 +32,7 @@ class SecurityManager
     /**
      * @var string
      */
-    private $resourceUser = ResourceEnum::USER;
+    protected $resourceUser = ResourceEnum::USER;
 
     /**
      * @var OrmRepo|OdmRepo|ObjectRepository
