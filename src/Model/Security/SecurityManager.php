@@ -144,7 +144,6 @@ class SecurityManager
      * @throws LockException
      * @throws MappingException
      * @throws SecurityManagerException
-     * @throws UserException
      */
     public function login(array $data): UserInterface
     {
@@ -196,7 +195,7 @@ class SecurityManager
     public function getLoggedUser(): UserInterface
     {
         if (!$this->isLoggedIn()) {
-            $this->userNotLogged();
+            throw new SecurityManagerException('User not logged.', SecurityManagerException::USER_NOT_LOGGED);
         }
 
         return $this->getUserFromSession();
@@ -206,12 +205,9 @@ class SecurityManager
      * @param string $rawPassword
      *
      * @return string
-     * @throws SecurityManagerException
      */
     public function encodePassword(string $rawPassword): string
     {
-        $this->checkEncoder();
-
         return $this->encoder->encodePassword($rawPassword, '');
     }
 
@@ -230,23 +226,15 @@ class SecurityManager
         /** @var Token $token */
         $token = unserialize($this->session->get($this->sessionName));
 
-        /** @var UserInterface $user */
+        /** @var UserInterface|null $user */
         $user = $this->userRepository->find($token->getUser()->getId());
 
         if (!$user) {
             $this->logout();
-            $this->userNotLogged();
+            throw new SecurityManagerException('User not logged.', SecurityManagerException::USER_NOT_LOGGED);
         }
 
         return $user;
-    }
-
-    /**
-     * @throws SecurityManagerException
-     */
-    private function userNotLogged(): void
-    {
-        throw new SecurityManagerException('User not logged.', SecurityManagerException::USER_NOT_LOGGED);
     }
 
     /**
@@ -257,7 +245,7 @@ class SecurityManager
      */
     private function getUser(string $email): UserInterface
     {
-        /** @var UserInterface $user */
+        /** @var UserInterface|null $user */
         $user = $this->userRepository->findOneBy([
             'email'   => $email,
             'deleted' => FALSE,
@@ -278,28 +266,13 @@ class SecurityManager
      * @param array         $data
      *
      * @throws SecurityManagerException
-     * @throws UserException
      */
     private function validateUser(UserInterface $user, array $data): void
     {
-        $this->checkEncoder();
         if (!$this->encoder->isPasswordValid($user->getPassword(), $data['password'], '')) {
             throw new SecurityManagerException(
                 sprintf('User \'%s\' or password not valid.', $data['email']),
                 SecurityManagerException::USER_OR_PASSWORD_NOT_VALID
-            );
-        }
-    }
-
-    /**
-     * @throws SecurityManagerException
-     */
-    private function checkEncoder(): void
-    {
-        if (!$this->encoder) {
-            throw new SecurityManagerException(
-                sprintf('Encoder for resource [%s] not found.', $this->resourceUser),
-                SecurityManagerException::USER_ENCODER_NOT_FOUND
             );
         }
     }

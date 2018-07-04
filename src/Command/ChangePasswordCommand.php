@@ -89,7 +89,7 @@ class ChangePasswordCommand extends Command
 
         $pwd1 = '';
         $user = readline();
-        /** @var UserInterface $user */
+        /** @var UserInterface|null $user */
         $user = $this->repo->findOneBy(['email' => $user]);
 
         if (!$user) {
@@ -98,9 +98,9 @@ class ChangePasswordCommand extends Command
             while (TRUE) {
                 $output->writeln('Set new password:');
                 system('stty -echo');
-                $pwd1 = trim(fgets(STDIN));
+                $pwd1 = trim((string) fgets(STDIN));
                 $output->writeln('Repeat password:');
-                $pwd2 = trim(fgets(STDIN));
+                $pwd2 = trim((string) fgets(STDIN));
                 system('stty echo');
 
                 if ($pwd1 === $pwd2) {

@@ -78,7 +78,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @return UserInterface
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
-     * @throws UserException
      * @throws LockException
      * @throws MappingException
      */
@@ -268,7 +267,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      */
     private function getUser(string $id): UserInterface
     {
-        /** @var UserInterface $user */
+        /** @var UserInterface|null $user */
         $user = $this->dm->getRepository(
             $this->provider->getResource(ResourceEnum::USER)
         )->findOneBy(['id' => $id]);

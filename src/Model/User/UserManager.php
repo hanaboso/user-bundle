@@ -132,7 +132,6 @@ class UserManager
      * @throws LockException
      * @throws MappingException
      * @throws SecurityManagerException
-     * @throws UserException
      */
     public function login(array $data): UserInterface
     {
@@ -174,7 +173,7 @@ class UserManager
             );
         }
 
-        /** @var UserInterface $user */
+        /** @var UserInterface|null $user */
         $user = $this->tmpUserRepository->findOneBy(['email' => $data['email']]);
 
         if (!$user) {
@@ -220,11 +219,13 @@ class UserManager
 
         /** @var UserInterface $class */
         $class = $this->provider->getResource(ResourceEnum::USER);
-        $user  = $class::from($token->getTmpUser())->setToken($token);
+        /** @var TmpUserInterface $tmpUser */
+        $tmpUser = $token->getTmpUser();
+        $user    = $class::from($tmpUser)->setToken($token);
         $this->dm->persist($user);
         $this->eventDispatcher->dispatch(UserEvent::USER_ACTIVATE, new UserEvent($user, NULL, $token->getTmpUser()));
 
-        $this->dm->remove($token->getTmpUser());
+        $this->dm->remove($tmpUser);
         $token->setUser($user)->setTmpUser(NULL);
         $this->dm->flush();
 
@@ -282,7 +283,7 @@ class UserManager
      */
     public function resetPassword(array $data): void
     {
-        /** @var UserInterface $user */
+        /** @var UserInterface|null $user */
         $user = $this->userRepository->findOneBy(['email' => $data['email']]);
 
         if (!$user) {

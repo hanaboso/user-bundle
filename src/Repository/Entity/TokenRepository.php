@@ -4,6 +4,7 @@ namespace Hanaboso\UserBundle\Repository\Entity;
 
 use DateTime;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Hanaboso\UserBundle\Entity\Token;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
@@ -20,6 +21,7 @@ class TokenRepository extends EntityRepository
      * @param string $hash
      *
      * @return Token|null
+     * @throws NonUniqueResultException
      */
     public function getFreshToken(string $hash): ?Token
     {

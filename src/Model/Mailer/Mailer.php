@@ -5,8 +5,6 @@ namespace Hanaboso\UserBundle\Model\Mailer;
 use EmailServiceBundle\Exception\MailerException;
 use EmailServiceBundle\Handler\MailHandler;
 use Hanaboso\UserBundle\Model\Messages\UserMessageAbstract;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use RabbitMqBundle\Publisher\PublisherInterface;
 
 /**
@@ -76,8 +74,6 @@ class Mailer
      * @param UserMessageAbstract $message
      *
      * @throws MailerException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function send(UserMessageAbstract $message): void
     {

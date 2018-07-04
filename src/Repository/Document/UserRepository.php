@@ -3,6 +3,7 @@
 namespace Hanaboso\UserBundle\Repository\Document;
 
 use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\MongoDBException;
 use Hanaboso\UserBundle\Document\User;
 
 /**
@@ -15,6 +16,7 @@ class UserRepository extends DocumentRepository
 
     /**
      * @return array
+     * @throws MongoDBException
      */
     public function getArrayOfUsers(): array
     {
@@ -41,6 +43,7 @@ class UserRepository extends DocumentRepository
 
     /**
      * @return int
+     * @throws MongoDBException
      */
     public function getUserCount(): int
     {

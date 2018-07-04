@@ -2,7 +2,10 @@
 
 namespace Hanaboso\UserBundle\Repository\Entity;
 
+use DateTime;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 
 /**
  * Class UserRepository
@@ -24,7 +27,9 @@ class UserRepository extends EntityRepository
             ->getArrayResult();
 
         foreach ($arr as $index => $row) {
-            $arr[$index]['created'] = $row['created']->format('d-m-Y');
+            /** @var DateTime $created */
+            $created                = $row['created'];
+            $arr[$index]['created'] = $created->format('d-m-Y');
         }
 
         return $arr;
@@ -32,6 +37,8 @@ class UserRepository extends EntityRepository
 
     /**
      * @return int
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function getUserCount(): int
     {

@@ -3,8 +3,10 @@
 namespace Hanaboso\UserBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\MongoDBException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
+use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
@@ -33,6 +35,8 @@ class ListUsersCommand extends Command
      *
      * @param DatabaseManagerLocator $userDml
      * @param ResourceProvider       $provider
+     *
+     * @throws UserException
      */
     public function __construct(
         DatabaseManagerLocator $userDml,
@@ -57,6 +61,8 @@ class ListUsersCommand extends Command
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @throws MongoDBException
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {

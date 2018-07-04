@@ -4,10 +4,16 @@ namespace Hanaboso\UserBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
+use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
@@ -40,6 +46,8 @@ class DeleteUserCommand extends Command
      *
      * @param DatabaseManagerLocator $userDml
      * @param ResourceProvider       $provider
+     *
+     * @throws UserException
      */
     public function __construct(
         DatabaseManagerLocator $userDml,
@@ -64,6 +72,12 @@ class DeleteUserCommand extends Command
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws MongoDBException
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
@@ -74,7 +88,7 @@ class DeleteUserCommand extends Command
             $output->writeln('Deleting user, select user email:');
 
             $email = readline();
-            /** @var UserInterface $user */
+            /** @var UserInterface|null $user */
             $user = $this->repo->findOneBy(['email' => $email]);
 
             if (!$user) {

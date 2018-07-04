@@ -4,6 +4,7 @@ namespace Hanaboso\UserBundle\Model\Token;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
@@ -75,6 +76,7 @@ class TokenManager
      * @return TokenInterface
      * @throws TokenManagerException
      * @throws UserException
+     * @throws NonUniqueResultException
      */
     public function validate(string $hash): TokenInterface
     {
