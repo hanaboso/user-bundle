@@ -89,6 +89,17 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
+     * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
+     * @throws SecurityManagerException
+     */
+    public function loggedUser(): UserInterface
+    {
+        return $this->userManager->loggedUser();
+    }
+
+    /**
      * @return array
      * @throws LockException
      * @throws MappingException
@@ -145,7 +156,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws PipesFrameworkException
-     * @throws SecurityManagerException
      * @throws TokenManagerException
      * @throws UserException
      */

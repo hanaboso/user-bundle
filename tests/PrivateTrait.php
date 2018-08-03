@@ -3,6 +3,7 @@
 namespace Tests;
 
 use ReflectionClass;
+use ReflectionException;
 use ReflectionObject;
 
 /**
@@ -47,6 +48,7 @@ trait PrivateTrait
      * @param array  $parameters
      *
      * @return mixed
+     * @throws ReflectionException
      */
     protected function invokeMethod($object, $methodName, array $parameters = [])
     {

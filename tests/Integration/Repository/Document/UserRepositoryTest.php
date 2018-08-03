@@ -2,6 +2,7 @@
 
 namespace Tests\Integration\Repository\Document;
 
+use Doctrine\ODM\MongoDB\MongoDBException;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Repository\Document\UserRepository;
 use Tests\DatabaseTestCaseAbstract;
@@ -15,7 +16,7 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
 {
 
     /**
-     *
+     * @throws MongoDBException
      */
     public function testGetArrayOfUsers(): void
     {
@@ -37,7 +38,7 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     *
+     * @throws MongoDBException
      */
     public function testGetUserCount(): void
     {

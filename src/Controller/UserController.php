@@ -63,6 +63,22 @@ class UserController extends FOSRestController
     }
 
     /**
+     * @Route("/user/logged_user", methods={"GET", "OPTIONS"})
+     *
+     * @return Response
+     */
+    public function loggedUserAction(): Response
+    {
+        try {
+            return $this->getResponse($this->userHandler->loggedUser()->toArray());
+        } catch (SecurityManagerException $e) {
+            return $this->getErrorResponse($e, 401);
+        } catch (Throwable $e) {
+            return $this->getErrorResponse($e);
+        }
+    }
+
+    /**
      * @Route("/user/logout", methods={"POST", "OPTIONS"})
      *
      * @return Response

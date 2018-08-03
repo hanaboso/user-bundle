@@ -226,8 +226,11 @@ class SecurityManager
         /** @var Token $token */
         $token = unserialize($this->session->get($this->sessionName));
 
+        /** @var UserInterface $user */
+        $user = $token->getUser();
+
         /** @var UserInterface|null $user */
-        $user = $this->userRepository->find($token->getUser()->getId());
+        $user = $this->userRepository->find($user->getId());
 
         if (!$user) {
             $this->logout();

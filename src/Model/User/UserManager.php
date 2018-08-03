@@ -142,6 +142,17 @@ class UserManager
     }
 
     /**
+     * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
+     * @throws SecurityManagerException
+     */
+    public function loggedUser(): UserInterface
+    {
+        return $this->securityManager->getLoggedUser();
+    }
+
+    /**
      * @throws LockException
      * @throws MappingException
      * @throws SecurityManagerException
@@ -240,7 +251,6 @@ class UserManager
      * @throws OptimisticLockException
      * @throws TokenManagerException
      * @throws UserException
-     * @throws SecurityManagerException
      */
     public function setPassword(string $id, array $data): void
     {

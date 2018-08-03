@@ -95,6 +95,42 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     /**
      *
      */
+    public function testLoggedUser(): void
+    {
+        $user = (new User())
+            ->setEmail('email@example.com')
+            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
+        $this->persistAndFlush($user);
+
+        $loginResponse = $this->sendPost('/user/login', [
+            'email'    => $user->getEmail(),
+            'password' => 'passw0rd',
+        ]);
+
+        $this->assertEquals(200, $loginResponse->status);
+        $this->assertEquals($user->getEmail(), $loginResponse->content->email);
+
+        $loggedResponse = $this->sendGet('/user/logged_user');
+
+        $this->assertEquals(200, $loggedResponse->status);
+        $this->assertEquals($user->getEmail(), $loggedResponse->content->email);
+    }
+
+    /**
+     *
+     */
+    public function testLoggedUserNotLogged(): void
+    {
+        $response = $this->sendGet('/user/logged_user');
+
+        $this->assertEquals(403, $response->status);
+        $this->assertEquals('User not logged!', $response->content);
+    }
+
+
+    /**
+     *
+     */
     public function testLogout(): void
     {
         $this->loginUser('email@example.com', 'passw0rd');
