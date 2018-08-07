@@ -56,7 +56,7 @@ class UserController extends FOSRestController
         try {
             return $this->getResponse($this->userHandler->login($request->request->all())->toArray());
         } catch (SecurityManagerException $e) {
-            return $this->getErrorResponse($e, 401);
+            return $this->getErrorResponse($e, 400);
         } catch (PipesFrameworkException | Throwable $e) {
             return $this->getErrorResponse($e);
         }

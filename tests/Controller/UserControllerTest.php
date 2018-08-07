@@ -65,7 +65,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
             'password' => '',
         ]);
 
-        $this->assertEquals(401, $response->status);
+        $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(SecurityManagerException::class, $content->type);
         $this->assertEquals(2001, $content->error_code);
@@ -86,7 +86,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
             'password' => '',
         ]);
 
-        $this->assertEquals(401, $response->status);
+        $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(SecurityManagerException::class, $content->type);
         $this->assertEquals(2001, $content->error_code);
