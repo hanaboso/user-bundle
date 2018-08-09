@@ -123,7 +123,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $response = $this->sendGet('/user/logged_user');
 
-        $this->assertEquals(403, $response->status);
+        $this->assertEquals(401, $response->status);
         $this->assertEquals(['error' => 'User not logged!'], (array) $response->content);
     }
 
@@ -146,7 +146,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $response = $this->sendPost('/user/logout', []);
 
-        $this->assertEquals(403, $response->status);
+        $this->assertEquals(401, $response->status);
         $this->assertEquals(['error' => 'User not logged!'], (array) $response->content);
     }
 
