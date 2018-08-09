@@ -136,7 +136,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $response = $this->sendPost('/user/logout', []);
 
-        $this->assertEquals(204, $response->status);
+        $this->assertEquals(200, $response->status);
     }
 
     /**
