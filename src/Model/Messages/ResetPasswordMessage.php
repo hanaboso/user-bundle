@@ -55,8 +55,34 @@ class ResetPasswordMessage extends UserMessageAbstract
 
         $this->message["to"]                  = $this->user->getEmail();
         $this->message['dataContent']['link'] = sprintf($this->host, $token ? $token->getHash() : '');
+        $this->message['subject']             = $this->subject ?? '';
+        $this->message['template']            = $this->template ?? '';
 
         return $this->message;
+    }
+
+    /**
+     * @param string $subject
+     *
+     * @return ResetPasswordMessage
+     */
+    public function setSubject(string $subject): ResetPasswordMessage
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    /**
+     * @param null|string $template
+     *
+     * @return ResetPasswordMessage
+     */
+    public function setTemplate(?string $template): ResetPasswordMessage
+    {
+        $this->template = $template;
+
+        return $this;
     }
 
 }

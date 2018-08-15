@@ -57,8 +57,34 @@ class ActivateMessage extends UserMessageAbstract
         $token = $this->user->getToken();
 
         $this->message['dataContent']['link'] = sprintf($this->host, $token ? $token->getHash() : '');
+        $this->message['subject']             = $this->subject ?? '';
+        $this->message['template']            = $this->template ?? '';
 
         return $this->message;
+    }
+
+    /**
+     * @param string $subject
+     *
+     * @return ActivateMessage
+     */
+    public function setSubject(string $subject): ActivateMessage
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    /**
+     * @param null|string $template
+     *
+     * @return ActivateMessage
+     */
+    public function setTemplate(?string $template): ActivateMessage
+    {
+        $this->template = $template;
+
+        return $this;
     }
 
 }
