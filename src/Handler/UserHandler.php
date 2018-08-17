@@ -257,13 +257,20 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     public function onCoreException(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();
+        $body      = [
+            'status'     => 'ERROR',
+            'error_code' => $exception->getCode(),
+            'type'       => get_class($exception),
+            'message'    => $exception->getMessage(),
+        ];
 
         if ($exception instanceof AuthenticationException || $exception instanceof AccessDeniedException) {
-            $event->setResponse(new JsonResponse(['error' => $exception->getMessage()], 401));
+            $event->setResponse(new JsonResponse($body, 401));
         }
 
         if ($exception instanceof AuthenticationCredentialsNotFoundException) {
-            $event->setResponse(new JsonResponse(['error' => 'User not logged!'], 401));
+            $body['message'] = 'User not logged!';
+            $event->setResponse(new JsonResponse($body, 401));
         }
 
     }

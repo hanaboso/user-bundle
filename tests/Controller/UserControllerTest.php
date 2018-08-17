@@ -124,7 +124,12 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $response = $this->sendGet('/user/logged_user');
 
         $this->assertEquals(401, $response->status);
-        $this->assertEquals(['error' => 'User not logged!'], (array) $response->content);
+        $this->assertEquals([
+            'status'     => 'ERROR',
+            'error_code' => 0,
+            'type'       => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
+            'message'    => 'User not logged!',
+        ], (array) $response->content);
     }
 
     /**
@@ -147,7 +152,12 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $response = $this->sendPost('/user/logout', []);
 
         $this->assertEquals(401, $response->status);
-        $this->assertEquals(['error' => 'User not logged!'], (array) $response->content);
+        $this->assertEquals([
+            'status'     => 'ERROR',
+            'error_code' => 0,
+            'type'       => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
+            'message'    => 'User not logged!',
+        ], (array) $response->content);
     }
 
     /**
@@ -282,7 +292,12 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $response = $this->sendPost('/user/change_password', ['password' => 'anotherPassw0rd']);
 
-        $this->assertEquals(['error' => 'User not logged!'], (array) $response->content);
+        $this->assertEquals([
+            'status'     => 'ERROR',
+            'error_code' => 0,
+            'type'       => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
+            'message'    => 'User not logged!',
+        ], (array) $response->content);
     }
 
     /**
