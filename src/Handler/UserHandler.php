@@ -234,6 +234,8 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      */
     public function onLogoutSuccess(Request $request): Response
     {
+        $request;
+
         return new Response('{}', 200, ['Content-Type' => 'application/json']);
     }
 

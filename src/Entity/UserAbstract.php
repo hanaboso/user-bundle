@@ -104,7 +104,7 @@ abstract class UserAbstract implements UserInterface
      */
     public function eraseCredentials(): void
     {
-        throw new Exception(__CLASS__ . '::' . __METHOD__ . ' is not implemented');
+        throw new Exception('UserAbstract::eraseCredentials is not implemented');
     }
 
     /**
@@ -114,6 +114,8 @@ abstract class UserAbstract implements UserInterface
      */
     public function setDeleted(bool $deleted): UserInterface
     {
+        $deleted;
+
         return $this;
     }
 

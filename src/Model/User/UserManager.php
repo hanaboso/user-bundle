@@ -278,6 +278,10 @@ class UserManager
         $loggedUser = $this->securityManager->getLoggedUser();
         $this->eventDispatcher->dispatch(UserEvent::USER_CHANGE_PASSWORD, new UserEvent($loggedUser));
 
+        if (isset($data['old_password'])) {
+            $this->securityManager->validateUser($loggedUser, ['password' => $data['old_password']]);
+        }
+
         $loggedUser->setPassword($this->securityManager->encodePassword($data['password']));
         $this->dm->flush();
     }

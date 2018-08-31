@@ -147,22 +147,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     /**
      *
      */
-    public function testLogoutNotLogged(): void
-    {
-        $response = $this->sendPost('/user/logout', []);
-
-        $this->assertEquals(401, $response->status);
-        $this->assertEquals([
-            'status'     => 'ERROR',
-            'error_code' => 0,
-            'type'       => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
-            'message'    => 'User not logged!',
-        ], (array) $response->content);
-    }
-
-    /**
-     *
-     */
     public function testRegister(): void
     {
         $this->prepareMailerMock();

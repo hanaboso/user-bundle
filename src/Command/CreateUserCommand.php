@@ -92,6 +92,7 @@ class CreateUserCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        $input;
         $output->writeln('Creating user, select user email:');
 
         $pwd1  = '';

@@ -31,7 +31,7 @@ class HbPFUserExtension extends Extension implements PrependExtensionInterface
             throw new RuntimeException('You must register ORM or ODM (or both) before.');
         } elseif (!$container->hasExtension('rabbit_mq')) {
             throw new RuntimeException('You must register RabbitMqBundle before.');
-        };
+        }
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/prepend-config'));
         $loader->load('rabbitmq.yml');

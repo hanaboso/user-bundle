@@ -85,6 +85,7 @@ class ChangePasswordCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        $input;
         $output->writeln('Password editing, select user by email:');
 
         $pwd1 = '';

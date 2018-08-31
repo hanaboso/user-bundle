@@ -66,6 +66,7 @@ class ListUsersCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        $input;
         $table = new Table($output);
         $table
             ->setHeaders(['Email', 'Created'])

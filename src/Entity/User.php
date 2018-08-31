@@ -50,10 +50,7 @@ class User extends UserAbstract
      */
     public static function from(TmpUserInterface $tmpUser): UserInterface
     {
-        $user = (new self())
-            ->setEmail($tmpUser->getEmail());
-
-        return $user;
+        return (new self())->setEmail($tmpUser->getEmail());
     }
 
     /**
@@ -131,6 +128,8 @@ class User extends UserAbstract
      */
     public function setDeleted(bool $deleted): UserInterface
     {
+        $deleted;
+
         return $this;
     }
 

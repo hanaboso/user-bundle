@@ -79,7 +79,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
         /** @var Token $token */
         $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
         $this->assertEquals(1, count($this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user])));
-        $this->assertEquals($user->getEmail(), $token->getTmpUser()->getEmail());;
+        $this->assertEquals($user->getEmail(), $token->getTmpUser()->getEmail());
     }
 
     /**

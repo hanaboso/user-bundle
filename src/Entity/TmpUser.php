@@ -48,6 +48,8 @@ class TmpUser extends UserAbstract implements TmpUserInterface
      */
     public function setPassword(string $pwd): UserInterface
     {
+        $pwd;
+
         return $this;
     }
 
@@ -89,6 +91,8 @@ class TmpUser extends UserAbstract implements TmpUserInterface
      */
     public static function from(TmpUserInterface $tmpUser): UserInterface
     {
+        $tmpUser;
+
         return new self();
     }
 

@@ -212,6 +212,22 @@ class SecurityManager
     }
 
     /**
+     * @param UserInterface $user
+     * @param array         $data
+     *
+     * @throws SecurityManagerException
+     */
+    public function validateUser(UserInterface $user, array $data): void
+    {
+        if (!$this->encoder->isPasswordValid($user->getPassword(), $data['password'], '')) {
+            throw new SecurityManagerException(
+                sprintf('User \'%s\' or password not valid.', $user->getEmail()),
+                SecurityManagerException::USER_OR_PASSWORD_NOT_VALID
+            );
+        }
+    }
+
+    /**
      * ------------------------------------------- HELPERS ---------------------------------
      */
 
@@ -262,22 +278,6 @@ class SecurityManager
         }
 
         return $user;
-    }
-
-    /**
-     * @param UserInterface $user
-     * @param array         $data
-     *
-     * @throws SecurityManagerException
-     */
-    private function validateUser(UserInterface $user, array $data): void
-    {
-        if (!$this->encoder->isPasswordValid($user->getPassword(), $data['password'], '')) {
-            throw new SecurityManagerException(
-                sprintf('User \'%s\' or password not valid.', $data['email']),
-                SecurityManagerException::USER_OR_PASSWORD_NOT_VALID
-            );
-        }
     }
 
 }
