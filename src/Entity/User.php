@@ -16,6 +16,7 @@ use Hanaboso\UserBundle\Enum\UserTypeEnum;
  * @ORM\Table(name="`user`")
  * @InheritanceType("SINGLE_TABLE")
  * @ORM\Entity(repositoryClass="Hanaboso\UserBundle\Repository\Entity\UserRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class User extends UserAbstract
 {
@@ -39,7 +40,7 @@ class User extends UserAbstract
     /**
      * @var DateTime
      *
-     * @ORM\Column(type="datetime", columnDefinition="DATETIME ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+     * @ORM\Column(type="datetime")
      */
     protected $updated;
 
@@ -131,6 +132,14 @@ class User extends UserAbstract
         $deleted;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PreFlush()
+     */
+    public function preFlush(): void
+    {
+        $this->updated = new DateTime('now');
     }
 
     /**
