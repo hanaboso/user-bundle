@@ -32,52 +32,52 @@ class SecurityManager
     /**
      * @var string
      */
-    private $resourceUser = ResourceEnum::USER;
+    protected $resourceUser = ResourceEnum::USER;
 
     /**
      * @var OrmRepo|OdmRepo|ObjectRepository
      */
-    private $userRepository;
+    protected $userRepository;
 
     /**
      * @var Session
      */
-    private $session;
+    protected $session;
 
     /**
      * @var TokenStorage
      */
-    private $tokenStorage;
+    protected $tokenStorage;
 
     /**
      * @var string
      */
-    private $sessionName;
+    protected $sessionName;
 
     /**
      * @var ResourceProvider
      */
-    private $provider;
+    protected $provider;
 
     /**
      * @var PasswordEncoderInterface
      */
-    private $encoder;
+    protected $encoder;
 
     /**
      * @var EncoderFactory
      */
-    private $encoderFactory;
+    protected $encoderFactory;
 
     /**
      * @var DatabaseManagerLocator
      */
-    private $userDml;
+    protected $userDml;
 
     /**
      * @var string
      */
-    private $area;
+    protected $area;
 
     /**
      * SecurityManager constructor.
@@ -237,7 +237,7 @@ class SecurityManager
      * @throws MappingException
      * @throws SecurityManagerException
      */
-    private function getUserFromSession(): UserInterface
+    protected function getUserFromSession(): UserInterface
     {
         /** @var Token $token */
         $token = unserialize($this->session->get($this->sessionName));
@@ -262,7 +262,7 @@ class SecurityManager
      * @return UserInterface
      * @throws SecurityManagerException
      */
-    private function getUser(string $email): UserInterface
+    protected function getUser(string $email): UserInterface
     {
         /** @var UserInterface|null $user */
         $user = $this->userRepository->findOneBy([
