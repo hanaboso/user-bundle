@@ -123,7 +123,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testIsLoggedOut(): void
     {

@@ -1,11 +1,12 @@
 services:
     _defaults:
-        autowire: true
-        autoconfigure: true
-        public: false
-        bind:
-            $userHandler: '@hbpf.user.handler.user'
+        public: '%public.services%'
+        autowire: false
+        autoconfigure: false
 
-    Hanaboso\UserBundle\Controller\:
-        resource: '../../Controller'
-        tags: ['controller.service_arguments']
+    Hanaboso\UserBundle\Controller\UserController:
+        class: Hanaboso\UserBundle\Controller\UserController
+        arguments:
+            - '@hbpf.user.handler.user'
+        calls:
+            - ['setContainer', ['@service_container']]

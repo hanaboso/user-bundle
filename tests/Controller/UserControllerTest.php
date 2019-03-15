@@ -32,7 +32,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testLogin(): void
     {
@@ -51,7 +51,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testLoginNotFoundEmail(): void
     {
@@ -72,7 +72,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testLoginNotFoundPassword(): void
     {
@@ -93,7 +93,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testLoggedUser(): void
     {
@@ -117,7 +117,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testLoggedUserNotLogged(): void
     {
@@ -133,7 +133,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testLogout(): void
     {
@@ -145,7 +145,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testRegister(): void
     {
@@ -159,7 +159,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testRegisterNotUniqueEmail(): void
     {
@@ -179,7 +179,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testActivate(): void
     {
@@ -195,7 +195,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testActivateNotValid(): void
     {
@@ -215,7 +215,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testSetPassword(): void
     {
@@ -234,7 +234,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testSetPasswordNotValid(): void
     {
@@ -285,7 +285,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testResetPassword(): void
     {
@@ -306,7 +306,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testResetPasswordNotFoundEmail(): void
     {
@@ -329,7 +329,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testDelete(): void
     {
@@ -347,7 +347,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testDeleteMissing(): void
     {
@@ -362,7 +362,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     public function testDeleteYourself(): void
     {
@@ -377,7 +377,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     *
+     * @throws Exception
      */
     private function prepareMailerMock(): void
     {

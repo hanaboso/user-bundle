@@ -6,10 +6,10 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\LockException;
 use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use EmailServiceBundle\Exception\MailerException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
+use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
 use Hanaboso\CommonsBundle\Utils\ControllerUtils;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -121,7 +121,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @throws UserException
      * @throws UserManagerException
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function register(array $data): array
     {
@@ -137,9 +136,9 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      *
      * @return array
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws TokenManagerException
      * @throws UserException
+     * @throws DateTimeException
      */
     public function activate(string $token): array
     {
@@ -154,10 +153,10 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      *
      * @return array
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws PipesFrameworkException
      * @throws TokenManagerException
      * @throws UserException
+     * @throws DateTimeException
      */
     public function setPassword(string $id, array $data): array
     {
@@ -175,7 +174,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @throws LockException
      * @throws MappingException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
      */
@@ -194,7 +192,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @return array
      * @throws MailerException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws PipesFrameworkException
      * @throws UserException
      * @throws UserManagerException
@@ -215,7 +212,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @throws LockException
      * @throws MappingException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws SecurityManagerException
      * @throws UserException
      * @throws UserManagerException

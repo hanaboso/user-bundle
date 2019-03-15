@@ -7,10 +7,10 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\LockException;
 use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use EmailServiceBundle\Exception\MailerException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
+use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
@@ -173,7 +173,6 @@ class UserManager
      * @throws UserException
      * @throws UserManagerException
      * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function register(array $data): void
     {
@@ -213,9 +212,9 @@ class UserManager
      *
      * @return UserInterface
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws TokenManagerException
      * @throws UserException
+     * @throws DateTimeException
      */
     public function activate(string $token): UserInterface
     {
@@ -248,9 +247,9 @@ class UserManager
      * @param array  $data
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws TokenManagerException
      * @throws UserException
+     * @throws DateTimeException
      */
     public function setPassword(string $id, array $data): void
     {
@@ -268,7 +267,6 @@ class UserManager
      * @param array $data
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws SecurityManagerException
      * @throws LockException
      * @throws MappingException
@@ -291,7 +289,6 @@ class UserManager
      *
      * @throws MailerException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws UserException
      * @throws UserManagerException
      */
@@ -323,7 +320,6 @@ class UserManager
      * @throws LockException
      * @throws MappingException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws SecurityManagerException
      * @throws UserManagerException
      */

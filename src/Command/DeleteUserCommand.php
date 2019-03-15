@@ -8,7 +8,6 @@ use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -42,7 +41,7 @@ class DeleteUserCommand extends Command
     private $repo;
 
     /**
-     * CreateUserCommand constructor.
+     * DeleteUserCommand constructor.
      *
      * @param DatabaseManagerLocator $userDml
      * @param ResourceProvider       $provider
@@ -73,13 +72,13 @@ class DeleteUserCommand extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
+     * @return int|null
      * @throws NoResultException
      * @throws NonUniqueResultException
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws MongoDBException
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         $input;
         $c = $this->repo->getUserCount();
@@ -101,6 +100,8 @@ class DeleteUserCommand extends Command
                 $output->writeln('User deleted.');
             }
         }
+
+        return 0;
     }
 
 }

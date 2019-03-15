@@ -9,6 +9,7 @@
 
 namespace Tests\Unit\Model\Messages;
 
+use Exception;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Messages\ResetPasswordMessage;
 use Hanaboso\UserBundle\Model\MessageSubject;
@@ -25,6 +26,7 @@ final class ResetPasswordMessageTest extends TestCase
 
     /**
      * @covers ResetPasswordMessage::getMessage()
+     * @throws Exception
      */
     public function testGetMessage(): void
     {

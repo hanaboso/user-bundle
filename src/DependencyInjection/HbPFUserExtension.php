@@ -11,16 +11,14 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration.
+ * Class HbPFUserExtension
  *
- * @link http://symfony.com/doc/current/cookbook/bundles/extension.html
+ * @package Hanaboso\UserBundle\DependencyInjection
  */
 class HbPFUserExtension extends Extension implements PrependExtensionInterface
 {
 
     /**
-     * Allow an extension to prepend the extension configurations.
-     *
      * @param ContainerBuilder $container
      *
      * @throws Exception

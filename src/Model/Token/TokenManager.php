@@ -5,9 +5,9 @@ namespace Hanaboso\UserBundle\Model\Token;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
+use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
@@ -20,7 +20,7 @@ use Hanaboso\UserBundle\Repository\Entity\TokenRepository as EntityTokenReposito
 /**
  * Class TokenManager
  *
- * @package Hanaboso\UserBundle\Manager
+ * @package Hanaboso\UserBundle\Model\Token
  */
 class TokenManager
 {
@@ -52,7 +52,6 @@ class TokenManager
      *
      * @return TokenInterface
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws UserException
      */
     public function create(UserInterface $user): TokenInterface
@@ -77,6 +76,7 @@ class TokenManager
      * @throws TokenManagerException
      * @throws UserException
      * @throws NonUniqueResultException
+     * @throws DateTimeException
      */
     public function validate(string $hash): TokenInterface
     {
@@ -100,7 +100,6 @@ class TokenManager
      *
      * @throws ORMException
      * @throws UserException
-     * @throws OptimisticLockException
      */
     public function delete(TokenInterface $token): void
     {

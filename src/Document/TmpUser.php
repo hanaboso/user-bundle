@@ -3,6 +3,7 @@
 namespace Hanaboso\UserBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
@@ -62,6 +63,7 @@ class TmpUser extends UserAbstract implements TmpUserInterface
      * @param TmpUserInterface $tmpUser
      *
      * @return UserInterface
+     * @throws DateTimeException
      */
     public static function from(TmpUserInterface $tmpUser): UserInterface
     {

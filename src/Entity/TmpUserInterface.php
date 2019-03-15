@@ -3,7 +3,7 @@
 namespace Hanaboso\UserBundle\Entity;
 
 /**
- * Class TmpUser
+ * Interface TmpUserInterface
  *
  * @package Hanaboso\UserBundle\Entity
  */

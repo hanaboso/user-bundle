@@ -9,6 +9,7 @@
 
 namespace Tests\Unit\Model\Messages;
 
+use Exception;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Messages\ActivateMessage;
@@ -25,6 +26,7 @@ final class ActivateMessageTest extends TestCase
 
     /**
      * @covers ActivateMessage::getMessage()
+     * @throws Exception
      */
     public function testGetMessage(): void
     {

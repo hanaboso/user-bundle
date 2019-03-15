@@ -5,7 +5,9 @@ namespace Hanaboso\UserBundle\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\InheritanceType;
+use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\CommonsBundle\Traits\Entity\DeletedTrait;
+use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 
 /**
@@ -48,6 +50,7 @@ class User extends UserAbstract
      * @param TmpUserInterface $tmpUser
      *
      * @return UserInterface
+     * @throws DateTimeException
      */
     public static function from(TmpUserInterface $tmpUser): UserInterface
     {
@@ -136,10 +139,11 @@ class User extends UserAbstract
 
     /**
      * @ORM\PreFlush()
+     * @throws DateTimeException
      */
     public function preFlush(): void
     {
-        $this->updated = new DateTime('now');
+        $this->updated = DateTimeUtils::getUTCDateTime();
     }
 
     /**

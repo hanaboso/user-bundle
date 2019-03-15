@@ -2,15 +2,13 @@
 
 namespace Tests\Unit\Model\Mailer;
 
-use EmailServiceBundle\Exception\MailerException;
 use EmailServiceBundle\Handler\MailHandler;
+use Exception;
 use Hanaboso\UserBundle\Entity\Token;
 use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Messages\ActivateMessage;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use RabbitMqBundle\Publisher\Publisher;
 
 /**
@@ -22,9 +20,7 @@ final class MailerTest extends TestCase
 {
 
     /**
-     * @throws MailerException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws Exception
      */
     public function testSendSync(): void
     {
@@ -43,9 +39,7 @@ final class MailerTest extends TestCase
     }
 
     /**
-     * @throws ContainerExceptionInterface
-     * @throws MailerException
-     * @throws NotFoundExceptionInterface
+     * @throws Exception
      */
     public function testSendAsync(): void
     {
@@ -65,6 +59,7 @@ final class MailerTest extends TestCase
 
     /**
      * @return ActivateMessage
+     * @throws Exception
      */
     private function getMessage(): ActivateMessage
     {

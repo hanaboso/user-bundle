@@ -2,8 +2,9 @@
 
 namespace Hanaboso\UserBundle\Repository\Document;
 
-use DateTime;
 use Doctrine\ODM\MongoDB\DocumentRepository;
+use Hanaboso\CommonsBundle\Exception\DateTimeException;
+use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
@@ -20,13 +21,14 @@ class TokenRepository extends DocumentRepository
      * @param string $hash
      *
      * @return Token|null
+     * @throws DateTimeException
      */
     public function getFreshToken(string $hash): ?Token
     {
         /** @var Token $token */
         $token = $this->createQueryBuilder()
             ->field('hash')->equals($hash)
-            ->field('created')->gte(new DateTime('-1 Day'))
+            ->field('created')->gte(DateTimeUtils::getUTCDateTime('-1 Day'))
             ->getQuery()
             ->getSingleResult();
 

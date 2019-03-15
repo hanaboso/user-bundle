@@ -4,6 +4,7 @@ namespace Hanaboso\UserBundle\Document;
 
 use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\CommonsBundle\Traits\Document\DeletedTrait;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -39,6 +40,7 @@ class User extends UserAbstract
      * @param TmpUserInterface $tmpUser
      *
      * @return UserInterface
+     * @throws DateTimeException
      */
     public static function from(TmpUserInterface $tmpUser): UserInterface
     {

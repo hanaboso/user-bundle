@@ -18,6 +18,8 @@ trait PrivateTrait
      * @param object $object
      * @param string $propertyName
      * @param mixed  $value
+     *
+     * @throws ReflectionException
      */
     protected function setProperty($object, $propertyName, $value): void
     {
@@ -32,6 +34,7 @@ trait PrivateTrait
      * @param string $propertyName
      *
      * @return mixed
+     * @throws ReflectionException
      */
     protected function getProperty($object, $propertyName)
     {

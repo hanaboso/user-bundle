@@ -3,6 +3,7 @@
 namespace Tests\Integration\Repository\Document;
 
 use DateTime;
+use Exception;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Repository\Document\TokenRepository;
 use Tests\DatabaseTestCaseAbstract;
@@ -19,7 +20,7 @@ final class TokenRepositoryTest extends DatabaseTestCaseAbstract
     use PrivateTrait;
 
     /**
-     *
+     * @throws Exception
      */
     public function testGetFreshToken(): void
     {

@@ -4,7 +4,9 @@ namespace Hanaboso\UserBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\CommonsBundle\Traits\Entity\IdTrait;
+use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
 use LogicException;
 
 /**
@@ -50,10 +52,12 @@ class Token implements TokenInterface
 
     /**
      * Token constructor.
+     *
+     * @throws DateTimeException
      */
     public function __construct()
     {
-        $this->created = new DateTime();
+        $this->created = DateTimeUtils::getUTCDateTime();
         $this->hash    = uniqid();
     }
 

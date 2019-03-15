@@ -5,7 +5,6 @@ namespace Hanaboso\UserBundle\Command;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -51,7 +50,7 @@ class CreateUserCommand extends Command
     private $provider;
 
     /**
-     * ChangePasswordCommand constructor.
+     * CreateUserCommand constructor.
      *
      * @param DatabaseManagerLocator $userDml
      * @param ResourceProvider       $provider
@@ -86,11 +85,11 @@ class CreateUserCommand extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
+     * @return int|null
      * @throws UserException
      * @throws ORMException
-     * @throws OptimisticLockException
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         $input;
         $output->writeln('Creating user, select user email:');
@@ -126,6 +125,8 @@ class CreateUserCommand extends Command
 
             $output->writeln('User created.');
         }
+
+        return 0;
     }
 
 }

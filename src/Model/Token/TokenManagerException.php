@@ -7,7 +7,7 @@ use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
 /**
  * Class TokenManagerException
  *
- * @package Hanaboso\UserBundle\Manager
+ * @package Hanaboso\UserBundle\Model\Token
  */
 final class TokenManagerException extends PipesFrameworkException
 {

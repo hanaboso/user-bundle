@@ -13,16 +13,18 @@
   },
   "require": {
     "php": "^7.2",
+    "ext-json": "*",
+    "ext-readline": "*",
     "doctrine/orm": "^2.6",
-    "friendsofsymfony/rest-bundle": "^2.3",
-    "hanaboso/commons-bundle": "^1.0",
+    "friendsofsymfony/rest-bundle": "^2.5",
+    "hanaboso/commons-bundle": "^1.1",
     "hanaboso/email-service-bundle": "^1.0",
     "hanaboso/rabbit-mq-bundle": "^1.0"
   },
   "require-dev": {
     "hanaboso/php-check-utils": "^1.0",
     "symfony/monolog-bundle": "^3.3",
-    "symfony/symfony": "^4.1"
+    "symfony/symfony": "^4.2"
   },
   "repositories": [
     {

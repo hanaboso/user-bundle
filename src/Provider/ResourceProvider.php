@@ -7,7 +7,7 @@ use Hanaboso\UserBundle\Exception\UserException;
 /**
  * Class ResourceProvider
  *
- * @package Hanaboso\PipesFramework\Acl\Provider
+ * @package Hanaboso\UserBundle\Provider
  */
 class ResourceProvider
 {

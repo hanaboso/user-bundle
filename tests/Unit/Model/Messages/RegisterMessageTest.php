@@ -9,6 +9,7 @@
 
 namespace Tests\Unit\Model\Messages;
 
+use Exception;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Messages\RegisterMessage;
 use Hanaboso\UserBundle\Model\MessageSubject;
@@ -24,6 +25,7 @@ final class RegisterMessageTest extends TestCase
 
     /**
      * @covers RegisterMessage::getMessage()
+     * @throws Exception
      */
     public function testGetMessage(): void
     {
@@ -37,7 +39,7 @@ final class RegisterMessageTest extends TestCase
                 'content'     => '',
                 'dataContent' => [],
                 'template'    => '',
-                'from'    => '',
+                'from'        => '',
             ], $message->getMessage()
         );
     }

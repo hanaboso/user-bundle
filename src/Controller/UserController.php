@@ -4,7 +4,7 @@ namespace Hanaboso\UserBundle\Controller;
 
 use EmailServiceBundle\Exception\MailerException;
 use Exception;
-use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
 use Hanaboso\CommonsBundle\Traits\ControllerTrait;
 use Hanaboso\UserBundle\Exception\UserException;
@@ -24,7 +24,7 @@ use Throwable;
  *
  * @package Hanaboso\UserBundle\Controller
  */
-class UserController extends FOSRestController
+class UserController extends AbstractFOSRestController
 {
 
     use ControllerTrait;

@@ -5,7 +5,9 @@ namespace Hanaboso\UserBundle\Document;
 use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Exception;
+use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\CommonsBundle\Traits\Document\IdTrait;
+use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
 use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 
@@ -42,10 +44,12 @@ abstract class UserAbstract implements UserInterface
 
     /**
      * UserAbstract constructor.
+     *
+     * @throws DateTimeException
      */
     public function __construct()
     {
-        $this->created = new DateTime();
+        $this->created = DateTimeUtils::getUTCDateTime();
     }
 
     /**

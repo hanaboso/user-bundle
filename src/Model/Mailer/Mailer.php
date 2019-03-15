@@ -49,7 +49,7 @@ class Mailer
      * @param MailHandler        $mailHandler
      * @param string             $from
      * @param bool               $async
-     * @param string             $builderId
+     * @param string|null        $builderId
      */
     public function __construct(
         PublisherInterface $producer,

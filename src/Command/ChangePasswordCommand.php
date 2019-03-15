@@ -5,7 +5,6 @@ namespace Hanaboso\UserBundle\Command;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -80,10 +79,10 @@ class ChangePasswordCommand extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
+     * @return int|null
      * @throws ORMException
-     * @throws OptimisticLockException
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         $input;
         $output->writeln('Password editing, select user by email:');
@@ -114,6 +113,8 @@ class ChangePasswordCommand extends Command
 
             $output->writeln('Password changed.');
         }
+
+        return 0;
     }
 
 }
