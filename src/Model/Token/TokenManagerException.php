@@ -2,14 +2,14 @@
 
 namespace Hanaboso\UserBundle\Model\Token;
 
-use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
+use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
 
 /**
  * Class TokenManagerException
  *
  * @package Hanaboso\UserBundle\Model\Token
  */
-final class TokenManagerException extends PipesFrameworkException
+final class TokenManagerException extends PipesFrameworkExceptionAbstract
 {
 
     protected const OFFSET = 1100;

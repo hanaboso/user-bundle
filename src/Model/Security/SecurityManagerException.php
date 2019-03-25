@@ -2,14 +2,14 @@
 
 namespace Hanaboso\UserBundle\Model\Security;
 
-use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
+use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
 
 /**
  * Class SecurityManagerException
  *
  * @package Hanaboso\UserBundle\Model\Security
  */
-final class SecurityManagerException extends PipesFrameworkException
+final class SecurityManagerException extends PipesFrameworkExceptionAbstract
 {
 
     protected const OFFSET = 1400;

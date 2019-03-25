@@ -2,14 +2,14 @@
 
 namespace Hanaboso\UserBundle\Exception;
 
-use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
+use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
 
 /**
  * Class UserException
  *
  * @package Hanaboso\UserBundle\Exception
  */
-class UserException extends PipesFrameworkException
+class UserException extends PipesFrameworkExceptionAbstract
 {
 
     protected const OFFSET = 1900;

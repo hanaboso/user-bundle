@@ -2,14 +2,14 @@
 
 namespace Hanaboso\UserBundle\Model\User;
 
-use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
+use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
 
 /**
  * Class UserManagerException
  *
  * @package Hanaboso\UserBundle\Model\User
  */
-final class UserManagerException extends PipesFrameworkException
+final class UserManagerException extends PipesFrameworkExceptionAbstract
 {
 
     protected const OFFSET = 1200;
