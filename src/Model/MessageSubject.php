@@ -17,17 +17,8 @@ namespace Hanaboso\UserBundle\Model;
 class MessageSubject
 {
 
-    /**
-     *
-     */
-    public const USER_RESET_PASSWORD = "User reset password";
-    /**
-     *
-     */
-    public const USER_ACTIVATE = "Activate user account";
-    /**
-     *
-     */
-    public const USER_REGISTER = "User account register";
+    public const USER_RESET_PASSWORD = 'User reset password';
+    public const USER_ACTIVATE       = 'Activate user account';
+    public const USER_REGISTER       = 'User account register';
 
 }

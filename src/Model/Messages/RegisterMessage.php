@@ -34,7 +34,7 @@ class RegisterMessage extends UserMessageAbstract
      */
     public function getMessage(): array
     {
-        $this->message["to"] = $this->user->getEmail();
+        $this->message['to'] = $this->user->getEmail();
 
         return $this->message;
     }

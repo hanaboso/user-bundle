@@ -132,7 +132,7 @@ class SecurityManager
     public function setArea(string $area): SecurityManager
     {
         $this->area        = $area;
-        $this->sessionName = self::SECURITY_KEY . $this->area;
+        $this->sessionName = sprintf('%s%s', self::SECURITY_KEY, $this->area);
 
         return $this;
     }

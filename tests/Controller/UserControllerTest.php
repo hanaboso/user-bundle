@@ -68,7 +68,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(SecurityManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->error_code);
+        $this->assertEquals(2001, $content->errorCode);
     }
 
     /**
@@ -89,7 +89,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(SecurityManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->error_code);
+        $this->assertEquals(2001, $content->errorCode);
     }
 
     /**
@@ -126,7 +126,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(401, $response->status);
         $this->assertEquals([
             'status'     => 'ERROR',
-            'error_code' => 0,
+            'errorCode' => 0,
             'type'       => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
             'message'    => 'User not logged!',
         ], (array) $response->content);
@@ -175,7 +175,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->error_code);
+        $this->assertEquals(2001, $content->errorCode);
     }
 
     /**
@@ -211,7 +211,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(TokenManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->error_code);
+        $this->assertEquals(2001, $content->errorCode);
     }
 
     /**
@@ -252,7 +252,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(500, $response->status);
         $content = $response->content;
         $this->assertEquals(TokenManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->error_code);
+        $this->assertEquals(2001, $content->errorCode);
     }
 
     /**
@@ -278,7 +278,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $this->assertEquals([
             'status'     => 'ERROR',
-            'error_code' => 0,
+            'errorCode' => 0,
             'type'       => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
             'message'    => 'User not logged!',
         ], (array) $response->content);
@@ -325,7 +325,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $this->assertEquals(400, $response->status);
         $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->error_code);
+        $this->assertEquals(2001, $content->errorCode);
     }
 
     /**
@@ -358,7 +358,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $this->assertEquals(500, $response->status);
         $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->error_code);
+        $this->assertEquals(2001, $content->errorCode);
     }
 
     /**
@@ -373,7 +373,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $this->assertEquals(500, $response->status);
         $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->error_code);
+        $this->assertEquals(2001, $content->errorCode);
     }
 
     /**

@@ -6,6 +6,7 @@ use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle;
 use EmailServiceBundle\EmailServiceBundle;
+use Exception;
 use Hanaboso\CommonsBundle\HbPFCommonsBundle;
 use Hanaboso\UserBundle\HbPFUserBundle;
 use RabbitMqBundle\RabbitMqBundle;
@@ -14,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
+use Symfony\Component\Config\Exception\LoaderLoadException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -36,19 +38,11 @@ class Kernel extends BaseKernel
      */
     public function getCacheDir(): string
     {
-        return $this->getProjectDir() . '/var/cache/' . $this->environment;
+        return sprintf('%s/var/cache/%s', $this->getProjectDir(), $this->environment);
     }
 
     /**
-     * @return string
-     */
-    public function getLogDir(): string
-    {
-        return $this->getProjectDir() . '/var/log';
-    }
-
-    /**
-     * @return \Generator|\Symfony\Component\HttpKernel\Bundle\BundleInterface[]
+     * @return iterable
      */
     public function registerBundles(): iterable
     {
@@ -77,24 +71,24 @@ class Kernel extends BaseKernel
      * @param ContainerBuilder $container
      * @param LoaderInterface  $loader
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->setParameter('container.dumper.inline_class_loader', TRUE);
-        $confDir = $this->getProjectDir() . '/tests/testApp/config';
-        $loader->load($confDir . '/*' . self::CONFIG_EXTS, 'glob');
+        $confDir = sprintf('%s/tests/testApp/config', $this->getProjectDir());
+        $loader->load(sprintf('%s/*%s', $confDir, self::CONFIG_EXTS), 'glob');
     }
 
     /**
      * @param RouteCollectionBuilder $routes
      *
-     * @throws \Symfony\Component\Config\Exception\FileLoaderLoadException
+     * @throws LoaderLoadException
      */
     protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
-        $confDir = $this->getProjectDir() . '/tests/testApp/routing';
-        $routes->import($confDir . '/*' . self::CONFIG_EXTS, '/', 'glob');
+        $confDir = sprintf('%s/tests/testApp/routing', $this->getProjectDir());
+        $routes->import(sprintf('%s/*%s', $confDir, self::CONFIG_EXTS), '/', 'glob');
     }
 
 }

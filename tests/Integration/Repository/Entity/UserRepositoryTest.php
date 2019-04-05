@@ -24,8 +24,9 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
 
         for ($i = 0; $i < 2; $i++) {
             $user = new User();
-            $user->setPassword('pwd')
-                ->setEmail('user' . $i);
+            $user
+                ->setPassword('pwd')
+                ->setEmail(sprintf('user%s', $i));
             $em->persist($user);
             $em->flush($user);
         }
