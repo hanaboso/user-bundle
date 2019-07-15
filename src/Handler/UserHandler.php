@@ -8,7 +8,7 @@ use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use EmailServiceBundle\Exception\MailerException;
-use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
+use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
 use Hanaboso\CommonsBundle\Utils\ControllerUtils;
@@ -24,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
@@ -250,9 +250,9 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     /**
      * Don't redirect when not authenticated
      *
-     * @param GetResponseForExceptionEvent $event
+     * @param ExceptionEvent $event
      */
-    public function onCoreException(GetResponseForExceptionEvent $event): void
+    public function onCoreException(ExceptionEvent $event): void
     {
         $exception = $event->getException();
         $body      = [

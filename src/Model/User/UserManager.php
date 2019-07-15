@@ -9,7 +9,7 @@ use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use EmailServiceBundle\Exception\MailerException;
-use Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator;
+use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -22,7 +22,14 @@ use Hanaboso\UserBundle\Model\Security\SecurityManager;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Model\Token\TokenManager;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
-use Hanaboso\UserBundle\Model\User\Event\UserEvent;
+use Hanaboso\UserBundle\Model\User\Event\ActivateUserEvent;
+use Hanaboso\UserBundle\Model\User\Event\ChangePasswordUserEvent;
+use Hanaboso\UserBundle\Model\User\Event\DeleteAfterUserEvent;
+use Hanaboso\UserBundle\Model\User\Event\DeleteBeforeUserEvent;
+use Hanaboso\UserBundle\Model\User\Event\LoginUserEvent;
+use Hanaboso\UserBundle\Model\User\Event\LogoutUserEvent;
+use Hanaboso\UserBundle\Model\User\Event\RegisterUserEvent;
+use Hanaboso\UserBundle\Model\User\Event\ResetPasswordUserEvent;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Repository\Document\TmpUserRepository as OdmTmpRepo;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
@@ -136,7 +143,7 @@ class UserManager
     public function login(array $data): UserInterface
     {
         $user = $this->securityManager->login($data);
-        $this->eventDispatcher->dispatch(UserEvent::USER_LOGIN, new UserEvent($user));
+        $this->eventDispatcher->dispatch(new LoginUserEvent($user));
 
         return $user;
     }
@@ -159,10 +166,7 @@ class UserManager
      */
     public function logout(): void
     {
-        $this->eventDispatcher->dispatch(
-            UserEvent::USER_LOGOUT,
-            new UserEvent($this->securityManager->getLoggedUser())
-        );
+        $this->eventDispatcher->dispatch(new LogoutUserEvent($this->securityManager->getLoggedUser()));
         $this->securityManager->logout();
     }
 
@@ -204,7 +208,7 @@ class UserManager
         $msg->setHost($this->activateLink);
         $this->mailer->send($msg);
 
-        $this->eventDispatcher->dispatch(UserEvent::USER_REGISTER, new UserEvent($user));
+        $this->eventDispatcher->dispatch(new RegisterUserEvent($user));
     }
 
     /**
@@ -233,7 +237,7 @@ class UserManager
         $tmpUser = $token->getTmpUser();
         $user    = $class::from($tmpUser)->setToken($token);
         $this->dm->persist($user);
-        $this->eventDispatcher->dispatch(UserEvent::USER_ACTIVATE, new UserEvent($user, NULL, $token->getTmpUser()));
+        $this->eventDispatcher->dispatch(new ActivateUserEvent($user, NULL, $token->getTmpUser()));
 
         $this->dm->remove($tmpUser);
         $token->setUser($user)->setTmpUser(NULL);
@@ -274,7 +278,7 @@ class UserManager
     public function changePassword(array $data): void
     {
         $loggedUser = $this->securityManager->getLoggedUser();
-        $this->eventDispatcher->dispatch(UserEvent::USER_CHANGE_PASSWORD, new UserEvent($loggedUser));
+        $this->eventDispatcher->dispatch(new ChangePasswordUserEvent($loggedUser));
 
         if (isset($data['old_password'])) {
             $this->securityManager->validateUser($loggedUser, ['password' => $data['old_password']]);
@@ -310,7 +314,7 @@ class UserManager
         $msg->setHost($this->passwordLink);
         $this->mailer->send($msg);
 
-        $this->eventDispatcher->dispatch(UserEvent::USER_RESET_PASSWORD, new UserEvent($user));
+        $this->eventDispatcher->dispatch(new ResetPasswordUserEvent($user));
     }
 
     /**
@@ -325,10 +329,7 @@ class UserManager
      */
     public function delete($user): UserInterface
     {
-        $this->eventDispatcher->dispatch(
-            UserEvent::USER_DELETE_BEFORE,
-            new UserEvent($user, $this->securityManager->getLoggedUser())
-        );
+        $this->eventDispatcher->dispatch(new DeleteBeforeUserEvent($user, $this->securityManager->getLoggedUser()));
 
         if ($this->securityManager->getLoggedUser()->getId() === $user->getId()) {
             throw new UserManagerException(
@@ -339,10 +340,7 @@ class UserManager
 
         $user->setDeleted(TRUE);
         $this->dm->flush();
-        $this->eventDispatcher->dispatch(
-            UserEvent::USER_DELETE_AFTER,
-            new UserEvent($user, $this->securityManager->getLoggedUser())
-        );
+        $this->eventDispatcher->dispatch(new DeleteAfterUserEvent($user, $this->securityManager->getLoggedUser()));
 
         return $user;
     }

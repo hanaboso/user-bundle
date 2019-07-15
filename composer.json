@@ -12,19 +12,19 @@
     }
   },
   "require": {
-    "php": "^7.2",
+    "php": "^7.3",
     "ext-json": "*",
     "ext-readline": "*",
     "doctrine/orm": "^2.6",
     "friendsofsymfony/rest-bundle": "^2.5",
     "hanaboso/commons-bundle": "^1.1",
     "hanaboso/email-service-bundle": "^1.0",
-    "hanaboso/rabbit-mq-bundle": "^1.0"
+    "hanaboso/rabbit-mq-bundle": "^1.1"
   },
   "require-dev": {
     "hanaboso/php-check-utils": "^1.0",
-    "symfony/monolog-bundle": "^3.3",
-    "symfony/symfony": "^4.2"
+    "symfony/monolog-bundle": "^3.4",
+    "symfony/symfony": "^4.3"
   },
   "repositories": [
     {

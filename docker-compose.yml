@@ -4,7 +4,7 @@ services:
     image: dkr.hanaboso.net/pipes/pipes/php-dev:dev
     user: ${DEV_UID}:${DEV_GID}
     volumes:
-      - ./:/srv/project
+      - ./:/var/www
       - ${SSH_AUTH_SOCK}:/tmp/bound-ssh-agent
       - ${HOME}/.composer:/srv/.composer
     environment:
@@ -16,14 +16,6 @@ services:
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
-    depends_on:
-      - mongo
-      - rabbitmq
-      - mariadb
-    links:
-      - mongo
-      - rabbitmq
-      - mariadb
 
   mongo:
     image: mongo:latest

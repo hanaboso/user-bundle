@@ -8,14 +8,14 @@ use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Security\SecurityManager;
 use Hanaboso\UserBundle\Model\Token;
 use stdClass;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
+use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
 
 /**
  * Class ControllerTestCaseAbstract
@@ -26,7 +26,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
 {
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 
@@ -51,7 +51,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     protected $tokenStorage;
 
     /**
-     * @var BCryptPasswordEncoder
+     * @var NativePasswordEncoder
      */
     protected $encoder;
 
@@ -68,7 +68,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
         self::bootKernel();
         $this->c       = self::$kernel->getContainer();
         $this->dm      = $this->c->get('doctrine_mongodb.odm.default_document_manager');
-        $this->encoder = new BCryptPasswordEncoder(12);
+        $this->encoder = new NativePasswordEncoder(12);
     }
 
     /**

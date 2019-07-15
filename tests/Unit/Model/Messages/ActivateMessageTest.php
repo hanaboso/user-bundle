@@ -1,12 +1,5 @@
 <?php declare(strict_types=1);
 
-/**
- * Created by PhpStorm.
- * User: Pavel Severyn
- * Date: 17.9.17
- * Time: 14:19
- */
-
 namespace Tests\Unit\Model\Messages;
 
 use Exception;
@@ -14,6 +7,7 @@ use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Messages\ActivateMessage;
 use Hanaboso\UserBundle\Model\MessageSubject;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -32,6 +26,7 @@ final class ActivateMessageTest extends TestCase
     {
         $tkn = new Token();
 
+        /** @var User|MockObject $user */
         $user = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
         $user->method('getEmail')->willReturn('test@example.com');
         $user->method('getToken')->willReturn($tkn);
@@ -43,7 +38,7 @@ final class ActivateMessageTest extends TestCase
                 'content'     => '',
                 'dataContent' => ['link' => $tkn->getHash()],
                 'template'    => '',
-                'from'    => '',
+                'from'        => '',
             ], $message->getMessage()
         );
     }

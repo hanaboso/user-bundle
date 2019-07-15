@@ -5,8 +5,8 @@ namespace Hanaboso\UserBundle\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\InheritanceType;
+use Hanaboso\CommonsBundle\Database\Traits\Entity\DeletedTrait;
 use Hanaboso\CommonsBundle\Exception\DateTimeException;
-use Hanaboso\CommonsBundle\Traits\Entity\DeletedTrait;
 use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 

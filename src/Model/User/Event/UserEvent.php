@@ -3,7 +3,7 @@
 namespace Hanaboso\UserBundle\Model\User\Event;
 
 use Hanaboso\UserBundle\Entity\UserInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class UserEvent

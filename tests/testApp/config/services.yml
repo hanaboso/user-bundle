@@ -3,7 +3,7 @@ services:
         public: '%public.services%'
 
     hbpf.database_manager_locator:
-        class: Hanaboso\CommonsBundle\DatabaseManager\DatabaseManagerLocator
+        class: Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator
         arguments:
             - '@doctrine_mongodb.odm.default_document_manager'
             - '@doctrine.orm.default_entity_manager'

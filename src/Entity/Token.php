@@ -4,8 +4,8 @@ namespace Hanaboso\UserBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Hanaboso\CommonsBundle\Database\Traits\Entity\IdTrait;
 use Hanaboso\CommonsBundle\Exception\DateTimeException;
-use Hanaboso\CommonsBundle\Traits\Entity\IdTrait;
 use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
 use LogicException;
 
