@@ -62,7 +62,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     protected function setUp(): void
     {
         parent::setUp();
-        $this->userManager       = $this->c->get('hbpf.user.manager.user');
+        $this->userManager       = self::$container->get('hbpf.user.manager.user');
         $this->userRepository    = $this->dm->getRepository(User::class);
         $this->tmpUserRepository = $this->dm->getRepository(TmpUser::class);
         $this->tokenRepository   = $this->dm->getRepository(Token::class);
@@ -232,11 +232,11 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     private function prepareMailerMock(): void
     {
         $this->userManager = new UserManager(
-            $this->c->get('hbpf.database_manager_locator'),
-            $this->c->get('hbpf.user.manager.security'),
-            $this->c->get('hbpf.user.manager.token'),
-            $this->c->get('event_dispatcher'),
-            $this->c->get('hbpf.user.provider.resource'),
+            self::$container->get('hbpf.database_manager_locator'),
+            self::$container->get('hbpf.user.manager.security'),
+            self::$container->get('hbpf.user.manager.token'),
+            self::$container->get('event_dispatcher'),
+            self::$container->get('hbpf.user.provider.resource'),
             $this->createMock(Mailer::class),
             'active-link',
             'password-link'

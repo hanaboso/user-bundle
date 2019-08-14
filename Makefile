@@ -1,4 +1,4 @@
-.PHONY: .env docker-up docker-up-force docker-down-clean composer-install composer-update
+.PHONY: .env init-dev test
 
 DC=docker-compose
 DE=docker-compose exec -T app
@@ -12,10 +12,6 @@ DEC=docker-compose exec -T app composer
 	fi;
 
 # Docker
-docker-up: .env
-	$(DC) pull
-	$(DC) up -d
-
 docker-up-force: .env
 	$(DC) pull
 	$(DC) up -d --force-recreate --remove-orphans
@@ -23,21 +19,20 @@ docker-up-force: .env
 docker-down-clean: .env
 	$(DC) down -v
 
-#Composer
+# Composer
 composer-install:
 	$(DE) composer install --ignore-platform-reqs
 
 composer-update:
 	$(DE) composer update --ignore-platform-reqs
 
-composer-require:
-	$(DEC) require ${package}
+composer-outdated:
+	$(DE) composer outdated
 
-composer-require-dev:
-	$(DEC) require --dev ${package}
-
+# Console
 clear-cache:
 	$(DE) sudo rm -rf var/cache
+	$(DE) php bin/console cache:warmup --env=test
 
 database-create:
 	$(DE) php bin/console doctrine:database:drop --force || true
@@ -45,13 +40,13 @@ database-create:
 	$(DE) php bin/console doctrine:schema:create
 
 # App dev
-init-dev: docker-up composer-install
+init-dev: docker-up-force composer-install
 
 codesniffer:
 	$(DE) ./vendor/bin/phpcs --standard=./ruleset.xml --colors -p src/ tests/
 
 phpstan:
-	$(DE) ./vendor/bin/phpstan --memory-limit=200M analyse -c ./vendor/hanaboso/php-check-utils/phpstan.neon -l 7 src/
+	$(DE) ./vendor/bin/phpstan analyse -c ./phpstan.neon -l 7 src/ tests/
 
 phpunit:
 	$(DE) ./vendor/bin/phpunit -c phpunit.xml.dist --colors --stderr tests/Unit
@@ -62,6 +57,6 @@ phpintegration: database-create
 phpcontroller:
 	$(DE) ./vendor/bin/phpunit -c phpunit.xml.dist --colors --stderr tests/Controller
 
-test: docker-up-force composer-install codesniffer phpstan clear-cache phpunit phpintegration phpcontroller
+test: docker-up-force composer-install fasttest
 
-fasttest: codesniffer phpstan clear-cache phpunit phpintegration phpcontroller
+fasttest: clear-cache codesniffer phpstan phpunit phpintegration phpcontroller

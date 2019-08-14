@@ -8,6 +8,7 @@ use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
+use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 use Hanaboso\UserBundle\Model\Token\TokenManager;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
@@ -40,7 +41,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tokenManager    = $this->c->get('hbpf.user.manager.token');
+        $this->tokenManager    = self::$container->get('hbpf.user.manager.token');
         $this->tokenRepository = $this->dm->getRepository(Token::class);
     }
 
@@ -59,8 +60,10 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
 
         /** @var Token $token */
         $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
+        /** @var UserInterface $tokenUser */
+        $tokenUser = $token->getUser();
         $this->assertEquals(1, count($this->tokenRepository->findBy([UserTypeEnum::USER => $user])));
-        $this->assertEquals($user->getEmail(), $token->getUser()->getEmail());
+        $this->assertEquals($user->getEmail(), $tokenUser->getEmail());
     }
 
     /**
@@ -78,8 +81,10 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
 
         /** @var Token $token */
         $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
+        /** @var UserInterface $tokenUser */
+        $tokenUser = $token->getTmpUser();
         $this->assertEquals(1, count($this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user])));
-        $this->assertEquals($user->getEmail(), $token->getTmpUser()->getEmail());
+        $this->assertEquals($user->getEmail(), $tokenUser->getEmail());
     }
 
     /**
@@ -109,6 +114,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
         $this->expectException(TokenManagerException::class);
         $this->expectExceptionCode(TokenManagerException::TOKEN_NOT_VALID);
 
+        /** @var Token $token */
         $token = $this->tokenRepository->find($token->getId());
         $this->tokenManager->validate($token->getId());
     }

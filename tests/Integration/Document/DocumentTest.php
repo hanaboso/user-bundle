@@ -6,6 +6,7 @@ use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
+use Hanaboso\UserBundle\Entity\UserInterface;
 use Tests\DatabaseTestCaseAbstract;
 
 /**
@@ -48,8 +49,17 @@ final class DocumentTest extends DatabaseTestCaseAbstract
             $token->getCreated()->format('d. m. Y H:i:s'),
             $existingToken->getCreated()->format('d. m. Y H:i:s')
         );
-        $this->assertEquals($token->getUser()->getEmail(), $existingToken->getUser()->getEmail());
-        $this->assertEquals($token->getTmpUser()->getEmail(), $existingToken->getTmpUser()->getEmail());
+        /** @var UserInterface $tokenUser */
+        $tokenUser = $token->getUser();
+        /** @var UserInterface $eTokenUser */
+        $eTokenUser = $existingToken->getUser();
+        /** @var UserInterface $tmpTokenUser */
+        $tmpTokenUser = $token->getTmpUser();
+        /** @var UserInterface $eTmpTokenUser */
+        $eTmpTokenUser = $existingToken->getTmpUser();
+
+        $this->assertEquals($tokenUser->getEmail(), $eTokenUser->getEmail());
+        $this->assertEquals($tmpTokenUser->getEmail(), $eTmpTokenUser->getEmail());
     }
 
 }

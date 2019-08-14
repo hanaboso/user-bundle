@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.1/phpunit.xsd"
-         backupGlobals="false"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/8.1/phpunit.xsd"
          colors="true"
          bootstrap="vendor/autoload.php"
-         beStrictAboutTestsThatDoNotTestAnything="false"
-         beStrictAboutOutputDuringTests="false"
-         beStrictAboutChangesToGlobalState="false"
-         convertNoticesToExceptions="false"
-         convertErrorsToExceptions="false"
-         convertWarningsToExceptions="false"
          cacheResult="false"
 >
 
@@ -24,16 +17,6 @@
         <env name="SMTP_PORT" value="1025"/>
         <env name="SMTP_USER" value="null"/>
         <env name="SMTP_PASSWORD" value="null"/>
-        <!-- env name="TRUSTED_PROXIES" value="127.0.0.1,127.0.0.2" -->
-        <!-- env name="TRUSTED_HOSTS" value="localhost,example.com" -->
-        <!-- ###- symfony/framework-bundle ### -->
-
-        <!-- ###+ doctrine/doctrine-bundle ### -->
-        <!-- Format described at http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#connecting-using-a-url -->
-        <!-- For an SQLite database, use: "sqlite:///%kernel.project_dir%/var/data.db" -->
-        <!-- Configure your db driver and server_version in config/packages/doctrine.yaml -->
-        <env name="DATABASE_URL" value="mysql://db_user:db_password@127.0.0.1:3306/db_name"/>
-        <!-- ###- doctrine/doctrine-bundle ### -->
     </php>
 
     <testsuite name="default">

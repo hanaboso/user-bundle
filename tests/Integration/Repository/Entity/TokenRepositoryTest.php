@@ -5,6 +5,7 @@ namespace Tests\Integration\Repository\Entity;
 use DateTime;
 use Exception;
 use Hanaboso\UserBundle\Entity\Token;
+use Hanaboso\UserBundle\Repository\Entity\TokenRepository;
 use Tests\DatabaseTestCaseAbstract;
 use Tests\PrivateTrait;
 
@@ -23,14 +24,16 @@ final class TokenRepositoryTest extends DatabaseTestCaseAbstract
      */
     public function testGetFreshToken(): void
     {
-        $em = $this->c->get('doctrine.orm.default_entity_manager');
+        $em = self::$container->get('doctrine.orm.default_entity_manager');
 
         $token = new Token();
         $em->persist($token);
         $em->flush($token);
         $em->clear();
 
-        self::assertNotNull($em->getRepository(Token::class)->getFreshToken($token->getHash()));
+        /** @var TokenRepository $repo */
+        $repo = $em->getRepository(Token::class);
+        self::assertNotNull($repo->getFreshToken($token->getHash()));
 
         $token = new Token();
         $this->setProperty($token, 'created', new DateTime('-2 days'));
@@ -38,7 +41,7 @@ final class TokenRepositoryTest extends DatabaseTestCaseAbstract
         $em->flush($token);
         $em->clear();
 
-        self::assertNull($em->getRepository(Token::class)->getFreshToken($token->getHash()));
+        self::assertNull($repo->getFreshToken($token->getHash()));
     }
 
 }

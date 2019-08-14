@@ -19,8 +19,6 @@ services:
 
   mongo:
     image: mongo:latest
-    ports:
-      - ${DEV_IP}:27017:27017
     volumes:
       - mongo:/data/db
 
@@ -28,21 +26,16 @@ services:
     image: rabbitmq:management-alpine
     volumes:
       - rabbit-mq:/var/lib/rabbitmq
-    ports:
-      - ${DEV_IP}:15672:15672
-      - ${DEV_IP}:5672:5672
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
       - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
 
   mariadb:
-      image: mariadb:10.3
+      image: mariadb:latest
       command: "mysqld --innodb_flush_method=nosync"
       environment:
        MYSQL_ROOT_PASSWORD: root
-      ports:
-       - ${DEV_IP}:3306:3306
       volumes:
        - mariadb:/var/lib/mysql
 

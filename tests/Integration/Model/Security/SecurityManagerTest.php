@@ -44,11 +44,11 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $this->encoder         = new NativePasswordEncoder(12);
         $encodeFactory         = new EncoderFactory([$this->encoder]);
         $this->securityManager = new SecurityManager(
-            $this->c->get('hbpf.database_manager_locator'),
+            self::$container->get('hbpf.database_manager_locator'),
             $encodeFactory,
             $this->session,
-            $this->c->get('security.token_storage'),
-            $this->c->get('hbpf.user.provider.resource')
+            self::$container->get('security.token_storage'),
+            self::$container->get('hbpf.user.provider.resource')
         );
         $this->userRepository  = $this->dm->getRepository(User::class);
     }

@@ -14,8 +14,8 @@ services:
     hbpf.user.manager.token:
         class: Hanaboso\UserBundle\Model\Token\TokenManager
         arguments:
-           - '@hbpf.database_manager_locator'
-           - '@hbpf.user.provider.resource'
+            - '@hbpf.database_manager_locator'
+            - '@hbpf.user.provider.resource'
 
     hbpf.user.manager.user:
         class: Hanaboso\UserBundle\Model\User\UserManager

@@ -11,7 +11,6 @@ use stdClass;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -29,11 +28,6 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
      * @var KernelBrowser
      */
     protected $client;
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $c;
 
     /**
      * @var DocumentManager
@@ -66,8 +60,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     {
         parent::__construct($name, $data, $dataName);
         self::bootKernel();
-        $this->c       = self::$kernel->getContainer();
-        $this->dm      = $this->c->get('doctrine_mongodb.odm.default_document_manager');
+        $this->dm      = self::$container->get('doctrine_mongodb.odm.default_document_manager');
         $this->encoder = new NativePasswordEncoder(12);
     }
 
@@ -80,8 +73,8 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
      */
     protected function loginUser(string $username, string $password): User
     {
-        $this->session      = $this->c->get('session');
-        $this->tokenStorage = $this->client->getContainer()->get('security.token_storage');
+        $this->session      = self::$container->get('session');
+        $this->tokenStorage = self::$container->get('security.token_storage');
         $this->session->invalidate();
         $this->session->start();
 
@@ -148,7 +141,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
      */
     protected function sendPost(string $url, array $parameters, ?array $content = NULL): stdClass
     {
-        $this->client->request('POST', $url, $parameters, [], [], $content ? json_encode($content) : '');
+        $this->client->request('POST', $url, $parameters, [], [], $content ? (string) json_encode($content) : '');
 
         return $this->returnResponse($this->client->getResponse());
     }
@@ -162,7 +155,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
      */
     protected function sendPut(string $url, array $parameters, ?array $content = NULL): stdClass
     {
-        $this->client->request('PUT', $url, $parameters, [], [], $content ? json_encode($content) : '');
+        $this->client->request('PUT', $url, $parameters, [], [], $content ? (string) json_encode($content) : '');
 
         return $this->returnResponse($this->client->getResponse());
     }
@@ -182,9 +175,9 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     /**
      * @param Response $response
      *
-     * @return object
+     * @return stdClass
      */
-    protected function returnResponse(Response $response): object
+    protected function returnResponse(Response $response): stdClass
     {
         $content = json_decode($response->getContent(), TRUE);
         if (isset($content['error_code'])) {
@@ -192,10 +185,11 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
             unset($content['error_code']);
         }
 
-        return (object) [
-            'status'  => $response->getStatusCode(),
-            'content' => (object) $content,
-        ];
+        $std          = new stdClass();
+        $std->status  = $response->getStatusCode();
+        $std->content = (object) $content;
+
+        return $std;
     }
 
 }

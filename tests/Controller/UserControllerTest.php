@@ -125,10 +125,10 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $this->assertEquals(401, $response->status);
         $this->assertEquals([
-            'status'     => 'ERROR',
+            'status'    => 'ERROR',
             'errorCode' => 0,
-            'type'       => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
-            'message'    => 'User not logged!',
+            'type'      => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
+            'message'   => 'User not logged!',
         ], (array) $response->content);
     }
 
@@ -265,6 +265,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $this->assertEquals(200, $response->status);
         $this->dm->clear();
+        /** @var User $existingUser */
         $existingUser = $this->dm->getRepository(User::class)->find($user->getId());
         $this->assertNotSame($user->getPassword(), $existingUser->getPassword());
     }
@@ -277,10 +278,10 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $response = $this->sendPost('/user/change_password', ['password' => 'anotherPassw0rd']);
 
         $this->assertEquals([
-            'status'     => 'ERROR',
+            'status'    => 'ERROR',
             'errorCode' => 0,
-            'type'       => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
-            'message'    => 'User not logged!',
+            'type'      => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
+            'message'   => 'User not logged!',
         ], (array) $response->content);
     }
 
@@ -381,7 +382,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
      */
     private function prepareMailerMock(): void
     {
-        $this->client->getContainer()->set('hbpf.user.mailer', $this->createMock(Mailer::class));
+        self::$container->set('hbpf.user.mailer', $this->createMock(Mailer::class));
     }
 
 }

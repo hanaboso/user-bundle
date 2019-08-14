@@ -3,8 +3,6 @@
 namespace Hanaboso\UserBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -13,36 +11,24 @@ use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 /**
  * Class ChangePasswordCommand
  *
  * @package Hanaboso\UserBundle\Command
  */
-class ChangePasswordCommand extends Command
+class ChangePasswordCommand extends PasswordCommandAbstract
 {
 
     private const CMD_NAME = 'user:password:change';
 
     /**
-     * @var DocumentManager|EntityManager
-     */
-    private $dm;
-
-    /**
      * @var OrmRepo|OdmRepo|ObjectRepository
      */
     private $repo;
-
-    /**
-     * @var PasswordEncoderInterface
-     */
-    private $encoder;
 
     /**
      * ChangePasswordCommand constructor.
@@ -86,8 +72,6 @@ class ChangePasswordCommand extends Command
     {
         $input;
         $output->writeln('Password editing, select user by email:');
-
-        $pwd1 = '';
         $user = readline();
         /** @var UserInterface|null $user */
         $user = $this->repo->findOneBy(['email' => $user]);
@@ -95,22 +79,7 @@ class ChangePasswordCommand extends Command
         if (!$user) {
             $output->writeln('User with given email doesn\'t exist.');
         } else {
-            while (TRUE) {
-                $output->writeln('Set new password:');
-                system('stty -echo');
-                $pwd1 = trim((string) fgets(STDIN));
-                $output->writeln('Repeat password:');
-                $pwd2 = trim((string) fgets(STDIN));
-                system('stty echo');
-
-                if ($pwd1 === $pwd2) {
-                    break;
-                }
-                $output->writeln('Passwords don\'t match.');
-            }
-            $user->setPassword($this->encoder->encodePassword($pwd1, ''));
-            $this->dm->flush($user);
-
+            $this->setPassword($output, $user);
             $output->writeln('Password changed.');
         }
 

@@ -6,8 +6,8 @@ rabbit_mq:
     queues:
         pipes.messages:
             bindings:
-                - exchange: 'pipes.messages'
-                  routing_key: 'pipes.messages'
+                -   exchange: 'pipes.messages'
+                    routing_key: 'pipes.messages'
 
     exchanges:
         pipes.messages:
@@ -15,6 +15,6 @@ rabbit_mq:
             durable: true
 
     publishers:
-       pipes.messages:
+        pipes.messages:
             routing_key: 'pipes.messages'
             exchange: 'pipes.messages'

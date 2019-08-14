@@ -3,8 +3,6 @@
 namespace Hanaboso\UserBundle\Command;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -13,36 +11,24 @@ use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 /**
  * Class CreateUserCommand
  *
  * @package Hanaboso\UserBundle\Command
  */
-class CreateUserCommand extends Command
+class CreateUserCommand extends PasswordCommandAbstract
 {
 
     private const CMD_NAME = 'user:create';
 
     /**
-     * @var DocumentManager|EntityManager
-     */
-    private $dm;
-
-    /**
      * @var OrmRepo|OdmRepo|ObjectRepository
      */
     private $repo;
-
-    /**
-     * @var PasswordEncoderInterface
-     */
-    private $encoder;
 
     /**
      * @var ResourceProvider
@@ -94,7 +80,6 @@ class CreateUserCommand extends Command
         $input;
         $output->writeln('Creating user, select user email:');
 
-        $pwd1  = '';
         $email = readline();
         /** @var UserInterface|null $user */
         $user = $this->repo->findOneBy(['email' => $email]);
@@ -107,21 +92,7 @@ class CreateUserCommand extends Command
             $user = new $userNamespace();
             $user->setEmail($email);
             $this->dm->persist($user);
-            while (TRUE) {
-                $output->writeln('Set new password:');
-                system('stty -echo');
-                $pwd1 = trim((string) fgets(STDIN));
-                $output->writeln('Repeat password:');
-                $pwd2 = trim((string) fgets(STDIN));
-                system('stty echo');
-
-                if ($pwd1 === $pwd2) {
-                    break;
-                }
-                $output->writeln('Passwords don\'t match.');
-            }
-            $user->setPassword($this->encoder->encodePassword($pwd1, ''));
-            $this->dm->flush($user);
+            $this->setPassword($output, $user);
 
             $output->writeln('User created.');
         }

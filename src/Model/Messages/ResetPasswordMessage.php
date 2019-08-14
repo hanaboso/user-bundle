@@ -1,12 +1,5 @@
 <?php declare(strict_types=1);
 
-/**
- * Created by PhpStorm.
- * User: Pavel Severyn
- * Date: 14.9.17
- * Time: 11:39
- */
-
 namespace Hanaboso\UserBundle\Model\Messages;
 
 use Hanaboso\UserBundle\Model\MessageSubject;

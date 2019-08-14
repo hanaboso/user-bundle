@@ -1,12 +1,5 @@
 <?php declare(strict_types=1);
 
-/**
- * Created by PhpStorm.
- * User: sep
- * Date: 17.9.17
- * Time: 14:47
- */
-
 namespace Tests\Unit\Model\Messages;
 
 use Exception;
