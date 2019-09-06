@@ -179,7 +179,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
      */
     protected function returnResponse(Response $response): stdClass
     {
-        $content = json_decode($response->getContent(), TRUE);
+        $content = json_decode((string) $response->getContent(), TRUE);
         if (isset($content['error_code'])) {
             $content['errorCode'] = $content['error_code'];
             unset($content['error_code']);

@@ -1,0 +1,31 @@
+---
+
+stages:
+    - test
+    - mirror
+    - cleanup
+
+before_script:
+    - export REPO_ROOT=$(pwd)
+    - eval $(ssh-agent)
+    - ssh-add ~/.ssh/bob_the_builder_hanaboso
+
+test:
+    stage: test
+    script:
+        - export COMPOSE_PROJECT_NAME="${CI_PIPELINE_ID}-user-bundle"
+        - make test
+
+mirror:
+    stage: mirror
+    script:
+        - "curl -X POST -F token=${MIRROR_TOKEN} -F ref=master -F variables\\[REPO\\]=hanaboso-user-bundle https://gitlab.hanaboso.net/api/v4/projects/38/trigger/pipeline"
+    only:
+        - master
+
+cleanup:
+    stage: cleanup
+    when: always
+    script:
+        - export COMPOSE_PROJECT_NAME="${CI_PIPELINE_ID}-user-bundle"
+        - make docker-down-clean || echo "cleanup phase failed"

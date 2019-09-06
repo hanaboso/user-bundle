@@ -5,6 +5,7 @@ namespace Hanaboso\UserBundle\Model\Security;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\LockException;
 use Doctrine\ODM\MongoDB\Mapping\MappingException;
+use Exception;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Throwable;
 
 /**
  * Class SecurityManager
@@ -219,7 +221,11 @@ class SecurityManager
      */
     public function validateUser(UserInterface $user, array $data): void
     {
-        if (!$this->encoder->isPasswordValid($user->getPassword(), $data['password'], '')) {
+        try {
+            if (!$this->encoder->isPasswordValid($user->getPassword() ?? '', $data['password'], '')) {
+                throw new Exception('Invalid password');
+            }
+        } catch (Throwable $e) {
             throw new SecurityManagerException(
                 sprintf('User \'%s\' or password not valid.', $user->getEmail()),
                 SecurityManagerException::USER_OR_PASSWORD_NOT_VALID

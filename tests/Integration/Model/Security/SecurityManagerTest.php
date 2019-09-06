@@ -66,7 +66,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
         $user = $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
         $this->assertEquals('email@example.com', $user->getEmail());
-        $this->assertTrue($this->encoder->isPasswordValid($user->getPassword(), 'passw0rd', ''));
+        $this->assertTrue($this->encoder->isPasswordValid($user->getPassword() ?? '', 'passw0rd', ''));
     }
 
     /**
@@ -194,7 +194,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
         $user = $this->securityManager->getLoggedUser();
         $this->assertEquals('email@example.com', $user->getEmail());
-        $this->assertTrue($this->encoder->isPasswordValid($user->getPassword(), 'passw0rd', ''));
+        $this->assertTrue($this->encoder->isPasswordValid($user->getPassword() ?? '', 'passw0rd', ''));
     }
 
     /**
