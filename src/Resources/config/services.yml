@@ -26,6 +26,7 @@ services:
             - '@event_dispatcher'
             - '@hbpf.user.provider.resource'
             - '@hbpf.user.mailer'
+            - '%frontendHost%'
             - '%activateLink%'
             - '%passwordLink%'
 

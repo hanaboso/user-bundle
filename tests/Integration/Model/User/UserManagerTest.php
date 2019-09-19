@@ -238,6 +238,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
             self::$container->get('event_dispatcher'),
             self::$container->get('hbpf.user.provider.resource'),
             $this->createMock(Mailer::class),
+            'host',
             'active-link',
             'password-link'
         );

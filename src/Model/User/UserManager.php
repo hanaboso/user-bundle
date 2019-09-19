@@ -104,6 +104,7 @@ class UserManager
      * @param EventDispatcherInterface $eventDispatcher
      * @param ResourceProvider         $provider
      * @param Mailer                   $mailer
+     * @param string                   $feHost
      * @param string                   $activateLink
      * @param string                   $passwordLink
      *
@@ -116,6 +117,7 @@ class UserManager
         EventDispatcherInterface $eventDispatcher,
         ResourceProvider $provider,
         Mailer $mailer,
+        string $feHost,
         string $activateLink,
         string $passwordLink
     )
@@ -128,8 +130,8 @@ class UserManager
         $this->eventDispatcher   = $eventDispatcher;
         $this->provider          = $provider;
         $this->mailer            = $mailer;
-        $this->activateLink      = $activateLink;
-        $this->passwordLink      = $passwordLink;
+        $this->activateLink      = sprintf('%s/%s', rtrim($feHost, '/'), ltrim($activateLink));
+        $this->passwordLink      = sprintf('%s/%s', rtrim($feHost, '/'), ltrim($passwordLink));
     }
 
     /**

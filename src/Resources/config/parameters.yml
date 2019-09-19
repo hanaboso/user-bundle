@@ -1,3 +1,4 @@
 parameters:
-    activateLink: '%backend_host%/user/%s/activate'
-    passwordLink: '%backend_host%/user/%s/set_password'
+    frontendHost: '%env(FRONTEND_HOST)%'
+    activateLink: '/user/%s/activate'
+    passwordLink: '/user/%s/set_password'
