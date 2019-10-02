@@ -130,8 +130,8 @@ class UserManager
         $this->eventDispatcher   = $eventDispatcher;
         $this->provider          = $provider;
         $this->mailer            = $mailer;
-        $this->activateLink      = sprintf('%s/%s', rtrim($feHost, '/'), ltrim($activateLink));
-        $this->passwordLink      = sprintf('%s/%s', rtrim($feHost, '/'), ltrim($passwordLink));
+        $this->activateLink      = sprintf('%s/%s', rtrim($feHost, '/'), ltrim($activateLink, '/'));
+        $this->passwordLink      = sprintf('%s/%s', rtrim($feHost, '/'), ltrim($passwordLink, '/'));
     }
 
     /**
