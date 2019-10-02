@@ -22,7 +22,6 @@ mirror:
         - "curl -X POST -F token=${MIRROR_TOKEN} -F ref=master -F variables\\[REPO\\]=hanaboso-user-bundle https://gitlab.hanaboso.net/api/v4/projects/38/trigger/pipeline"
     only:
         - master
-        - tags
 
 cleanup:
     stage: cleanup
