@@ -12,8 +12,8 @@ use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
-use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
+use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\UserBundle\Repository\Document\TokenRepository as DocumentTokenRepository;
 use Hanaboso\UserBundle\Repository\Entity\TokenRepository as EntityTokenRepository;
 
@@ -52,7 +52,7 @@ class TokenManager
      *
      * @return TokenInterface
      * @throws ORMException
-     * @throws UserException
+     * @throws ResourceProviderException
      */
     public function create(UserInterface $user): TokenInterface
     {
@@ -74,7 +74,7 @@ class TokenManager
      *
      * @return TokenInterface
      * @throws TokenManagerException
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws NonUniqueResultException
      * @throws DateTimeException
      */
@@ -99,7 +99,7 @@ class TokenManager
      * @param TokenInterface $token
      *
      * @throws ORMException
-     * @throws UserException
+     * @throws ResourceProviderException
      */
     public function delete(TokenInterface $token): void
     {
@@ -110,7 +110,7 @@ class TokenManager
     /**
      * @param UserInterface $user
      *
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws ORMException
      */
     private function removeExistingTokens(UserInterface $user): void

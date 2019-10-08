@@ -2,7 +2,7 @@
 
 namespace Hanaboso\UserBundle\Repository\Document;
 
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 
 /**
  * Class TmpUserRepository

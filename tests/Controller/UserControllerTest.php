@@ -68,7 +68,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(SecurityManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->errorCode);
+        $this->assertEquals(1402, $content->errorCode);
     }
 
     /**
@@ -89,7 +89,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(SecurityManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->errorCode);
+        $this->assertEquals(1402, $content->errorCode);
     }
 
     /**
@@ -175,7 +175,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->errorCode);
+        $this->assertEquals(1203, $content->errorCode);
     }
 
     /**
@@ -211,7 +211,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(400, $response->status);
         $content = $response->content;
         $this->assertEquals(TokenManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->errorCode);
+        $this->assertEquals(1101, $content->errorCode);
     }
 
     /**
@@ -252,7 +252,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertEquals(500, $response->status);
         $content = $response->content;
         $this->assertEquals(TokenManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->errorCode);
+        $this->assertEquals(1101, $content->errorCode);
     }
 
     /**
@@ -326,7 +326,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $this->assertEquals(400, $response->status);
         $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->errorCode);
+        $this->assertEquals(1202, $content->errorCode);
     }
 
     /**
@@ -359,7 +359,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $this->assertEquals(500, $response->status);
         $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->errorCode);
+        $this->assertEquals(1201, $content->errorCode);
     }
 
     /**
@@ -374,7 +374,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $this->assertEquals(500, $response->status);
         $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(2001, $content->errorCode);
+        $this->assertEquals(1204, $content->errorCode);
     }
 
     /**

@@ -14,12 +14,12 @@ use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
 use Hanaboso\CommonsBundle\Utils\ControllerUtils;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
-use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
 use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
+use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,7 +118,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @return array
      * @throws MailerException
      * @throws PipesFrameworkException
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws UserManagerException
      * @throws ORMException
      */
@@ -137,7 +137,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @return array
      * @throws ORMException
      * @throws TokenManagerException
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws DateTimeException
      */
     public function activate(string $token): array
@@ -155,7 +155,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @throws ORMException
      * @throws PipesFrameworkException
      * @throws TokenManagerException
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws DateTimeException
      */
     public function setPassword(string $id, array $data): array
@@ -193,7 +193,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @throws MailerException
      * @throws ORMException
      * @throws PipesFrameworkException
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws UserManagerException
      */
     public function resetPassword(array $data): array
@@ -213,7 +213,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @throws MappingException
      * @throws ORMException
      * @throws SecurityManagerException
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws UserManagerException
      */
     public function delete(string $id): UserInterface
@@ -278,7 +278,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      *
      * @return UserInterface
      * @throws UserManagerException
-     * @throws UserException
+     * @throws ResourceProviderException
      */
     private function getUser(string $id): UserInterface
     {

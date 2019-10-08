@@ -14,7 +14,6 @@ use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
-use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Messages\ActivateMessage;
 use Hanaboso\UserBundle\Model\Messages\ResetPasswordMessage;
@@ -31,6 +30,7 @@ use Hanaboso\UserBundle\Model\User\Event\LogoutUserEvent;
 use Hanaboso\UserBundle\Model\User\Event\RegisterUserEvent;
 use Hanaboso\UserBundle\Model\User\Event\ResetPasswordUserEvent;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
+use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\UserBundle\Repository\Document\TmpUserRepository as OdmTmpRepo;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\TmpUserRepository as OrmTmpRepo;
@@ -108,7 +108,7 @@ class UserManager
      * @param string                   $activateLink
      * @param string                   $passwordLink
      *
-     * @throws UserException
+     * @throws ResourceProviderException
      */
     public function __construct(
         DatabaseManagerLocator $userDml,
@@ -176,7 +176,7 @@ class UserManager
      * @param array $data
      *
      * @throws MailerException
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws UserManagerException
      * @throws ORMException
      */
@@ -219,7 +219,7 @@ class UserManager
      * @return UserInterface
      * @throws ORMException
      * @throws TokenManagerException
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws DateTimeException
      */
     public function activate(string $token): UserInterface
@@ -254,7 +254,7 @@ class UserManager
      *
      * @throws ORMException
      * @throws TokenManagerException
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws DateTimeException
      */
     public function setPassword(string $id, array $data): void
@@ -295,7 +295,7 @@ class UserManager
      *
      * @throws MailerException
      * @throws ORMException
-     * @throws UserException
+     * @throws ResourceProviderException
      * @throws UserManagerException
      */
     public function resetPassword(array $data): void

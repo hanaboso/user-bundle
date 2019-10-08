@@ -12,8 +12,8 @@ use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
-use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
+use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
 use Symfony\Component\Console\Command\Command;
@@ -46,7 +46,7 @@ class DeleteUserCommand extends Command
      * @param DatabaseManagerLocator $userDml
      * @param ResourceProvider       $provider
      *
-     * @throws UserException
+     * @throws ResourceProviderException
      */
     public function __construct(
         DatabaseManagerLocator $userDml,

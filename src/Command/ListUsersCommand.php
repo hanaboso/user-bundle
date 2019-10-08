@@ -6,8 +6,8 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
-use Hanaboso\UserBundle\Exception\UserException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
+use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
 use Symfony\Component\Console\Command\Command;
@@ -36,7 +36,7 @@ class ListUsersCommand extends Command
      * @param DatabaseManagerLocator $userDml
      * @param ResourceProvider       $provider
      *
-     * @throws UserException
+     * @throws ResourceProviderException
      */
     public function __construct(
         DatabaseManagerLocator $userDml,

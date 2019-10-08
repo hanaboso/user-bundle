@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace Hanaboso\UserBundle\Exception;
+namespace Hanaboso\UserBundle\Provider;
 
 use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
 
 /**
- * Class UserException
+ * Class ProviderException
  *
- * @package Hanaboso\UserBundle\Exception
+ * @package Hanaboso\UserBundle\Provider
  */
-class UserException extends PipesFrameworkExceptionAbstract
+class ResourceProviderException extends PipesFrameworkExceptionAbstract
 {
 
     protected const OFFSET = 1900;

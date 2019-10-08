@@ -2,8 +2,6 @@
 
 namespace Hanaboso\UserBundle\Provider;
 
-use Hanaboso\UserBundle\Exception\UserException;
-
 /**
  * Class ResourceProvider
  *
@@ -22,16 +20,16 @@ class ResourceProvider
      *
      * @param array $rules
      *
-     * @throws UserException
+     * @throws ResourceProviderException
      */
     public function __construct(array $rules)
     {
         if (!isset($rules['resources'])) {
-            throw new UserException('Resources not exist', UserException::RULESET_NOT_EXIST);
+            throw new ResourceProviderException('Resources not exist', ResourceProviderException::RULESET_NOT_EXIST);
         }
 
         if (!is_array($rules['resources'])) {
-            throw new UserException('Resources not array', UserException::RULESET_NOT_EXIST);
+            throw new ResourceProviderException('Resources not array', ResourceProviderException::RULESET_NOT_EXIST);
         }
 
         $this->resources = $rules['resources'];
@@ -59,14 +57,14 @@ class ResourceProvider
      * @param string $key
      *
      * @return string
-     * @throws UserException
+     * @throws ResourceProviderException
      */
     public function getResource(string $key): string
     {
         if (!isset($this->resources[$key])) {
-            throw new UserException(
+            throw new ResourceProviderException(
                 sprintf('Resource \'%s\' not exist', $key),
-                UserException::RESOURCE_NOT_EXIST
+                ResourceProviderException::RESOURCE_NOT_EXIST
             );
         }
 

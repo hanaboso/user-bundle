@@ -2,8 +2,8 @@
 
 namespace Hanaboso\UserBundle\Repository\Document;
 
-use Doctrine\ODM\MongoDB\DocumentRepository;
 use Doctrine\ODM\MongoDB\MongoDBException;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Hanaboso\UserBundle\Document\User;
 
 /**
