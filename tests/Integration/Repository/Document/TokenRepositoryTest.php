@@ -1,23 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Integration\Repository\Document;
+namespace UserBundleTests\Integration\Repository\Document;
 
 use DateTime;
 use Exception;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Repository\Document\TokenRepository;
-use Tests\DatabaseTestCaseAbstract;
-use Tests\PrivateTrait;
+use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class TokenRepositoryTest
  *
- * @package Tests\Integration\Repository\Document
+ * @package UserBundleTests\Integration\Repository\Document
  */
 final class TokenRepositoryTest extends DatabaseTestCaseAbstract
 {
-
-    use PrivateTrait;
 
     /**
      * @throws Exception
@@ -25,7 +22,7 @@ final class TokenRepositoryTest extends DatabaseTestCaseAbstract
     public function testGetFreshToken(): void
     {
         $token = new Token();
-        $this->persistAndFlush($token);
+        $this->pfd($token);
         $this->dm->clear();
 
         /** @var TokenRepository $rep */
@@ -34,7 +31,7 @@ final class TokenRepositoryTest extends DatabaseTestCaseAbstract
 
         $token = new Token();
         $this->setProperty($token, 'created', new DateTime('-2 days'));
-        $this->persistAndFlush($token);
+        $this->pfd($token);
         $this->dm->clear();
 
         self::assertNull($rep->getFreshToken($token->getId()));

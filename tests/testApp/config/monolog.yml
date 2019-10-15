@@ -1,19 +1,26 @@
 monolog:
     use_microseconds: false
-    channels: [commons, ftp, rabbit_mq, mailer]
+    channels: [commons, ftp, rabbit_mq, mailer, php]
     handlers:
         commons:
             type:  stream
             path:  "%stdout_path%"
-            level: info
+            level: warning
             formatter: logstash_formatter
             channels: [commons]
+
+        php:
+            type:  stream
+            path:  "%stdout_path%"
+            level: warning
+            formatter: logstash_formatter
+            channels: [php]
 
         # Handler for docker container
         stdout:
             type:  stream
             path:  "%stdout_path%"
-            level: info
+            level: warning
             formatter: logstash_formatter
             max_files: 10
             channels: '!php'
@@ -26,7 +33,7 @@ monolog:
         rabbit_mq:
             type:  stream
             path:  "%stdout_path%"
-            level: info
+            level: warning
             formatter: logstash_formatter
             channels: [rabbit_mq]
         mailer:

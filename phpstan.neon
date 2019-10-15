@@ -9,4 +9,4 @@ parameters:
 	excludes_analyse:
 	ignoreErrors:
 	symfony:
-		container_xml_path: %rootDir%/../../../var/cache/test/testsTests_KernelTestDebugContainer.xml
+		container_xml_path: %rootDir%/../../../var/cache/test/testsUserBundleTests_KernelTestDebugContainer.xml

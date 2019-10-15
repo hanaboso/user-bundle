@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Integration\Repository\Document;
+namespace UserBundleTests\Integration\Repository\Document;
 
 use Exception;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Repository\Document\UserRepository;
-use Tests\DatabaseTestCaseAbstract;
+use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class UserRepositoryTest
  *
- * @package Tests\Integration\Repository\Document
+ * @package UserBundleTests\Integration\Repository\Document
  */
 final class UserRepositoryTest extends DatabaseTestCaseAbstract
 {
@@ -25,7 +25,7 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
             $user
                 ->setPassword('pwd')
                 ->setEmail(sprintf('user%s', $i));
-            $this->persistAndFlush($user);
+            $this->pfd($user);
         }
         $this->dm->clear();
 
@@ -47,12 +47,12 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
         $user
             ->setEmail('eml')
             ->setPassword('pwd');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
         $user = new User();
         $user
             ->setEmail('eml2')
             ->setPassword('pwd');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         /** @var UserRepository $rep */
         $rep = $this->dm->getRepository(User::class);

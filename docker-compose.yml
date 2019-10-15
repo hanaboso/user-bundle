@@ -11,6 +11,7 @@ services:
       - APP_ENV=dev
       - DEV_UID=${DEV_UID}
       - DEV_GID=${DEV_GID}
+      - KERNEL_CLASS=UserBundleTests\Kernel
       - SMTP_TRANSPORT=${SMTP_TRANSPORT}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}

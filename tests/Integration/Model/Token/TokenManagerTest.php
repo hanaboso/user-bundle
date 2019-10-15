@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Integration\Model\Token;
+namespace UserBundleTests\Integration\Model\Token;
 
 use DateTime;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -12,18 +12,15 @@ use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 use Hanaboso\UserBundle\Model\Token\TokenManager;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
-use Tests\DatabaseTestCaseAbstract;
-use Tests\PrivateTrait;
+use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class TokenManagerTest
  *
- * @package Tests\Integration\Model\Token
+ * @package UserBundleTests\Integration\Model\Token
  */
 final class TokenManagerTest extends DatabaseTestCaseAbstract
 {
-
-    use PrivateTrait;
 
     /**
      * @var TokenManager
@@ -52,7 +49,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     public function testCreateUserToken(): void
     {
         $user = (new User())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $this->tokenManager->create($user);
         $this->tokenManager->create($user);
@@ -73,7 +70,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     public function testCreateTmpUserToken(): void
     {
         $user = (new TmpUser())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $this->tokenManager->create($user);
         $this->tokenManager->create($user);
@@ -94,7 +91,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     public function testValidateToken(): void
     {
         $token = new Token();
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
         /** @var Token $token */
         $token = $this->tokenManager->validate($token->getHash());
@@ -109,7 +106,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     {
         $token = new Token();
         $this->setProperty($token, 'created', new DateTime('yesterday midnight'));
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
         $this->expectException(TokenManagerException::class);
         $this->expectExceptionCode(TokenManagerException::TOKEN_NOT_VALID);
@@ -126,7 +123,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     public function testDeleteUserToken(): void
     {
         $user = (new User())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         /** @var Token $token */
         $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
@@ -143,7 +140,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     public function testDeleteTmpUserToken(): void
     {
         $user = (new TmpUser())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         /** @var Token $token */
         $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit\Model\Messages;
+namespace UserBundleTests\Unit\Model\Messages;
 
 use Exception;
 use Hanaboso\UserBundle\Document\User;
@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class ResetPasswordMessageTest
  *
- * @package Tests\Unit\Model\Messages
+ * @package UserBundleTests\Unit\Model\Messages
  */
 final class ResetPasswordMessageTest extends TestCase
 {

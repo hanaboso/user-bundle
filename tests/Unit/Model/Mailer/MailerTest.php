@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit\Model\Mailer;
+namespace UserBundleTests\Unit\Model\Mailer;
 
 use EmailServiceBundle\Handler\MailHandler;
 use Exception;
@@ -14,7 +14,7 @@ use RabbitMqBundle\Publisher\Publisher;
 /**
  * Class MailerTest
  *
- * @package Tests\Unit\Model\Mailer
+ * @package UserBundleTests\Unit\Model\Mailer
  */
 final class MailerTest extends TestCase
 {

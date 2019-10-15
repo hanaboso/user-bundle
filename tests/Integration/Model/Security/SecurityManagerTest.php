@@ -1,24 +1,30 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Integration\Model\Security;
+namespace UserBundleTests\Integration\Model\Security;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Exception;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Security\SecurityManager;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
-use Tests\DatabaseTestCaseAbstract;
+use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class SecurityManagerTest
  *
- * @package Tests\Integration\Model\Security
+ * @package UserBundleTests\Integration\Model\Security
  */
 final class SecurityManagerTest extends DatabaseTestCaseAbstract
 {
+
+    /**
+     * @var Session
+     */
+    private $session;
 
     /**
      * @var PasswordEncoderInterface
@@ -41,7 +47,10 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     protected function setUp(): void
     {
         parent::setUp();
-        $this->encoder         = new NativePasswordEncoder(12);
+        $this->session = new Session();
+        $this->session->invalidate();
+        $this->session->clear();
+        $this->encoder         = new NativePasswordEncoder(3);
         $encodeFactory         = new EncoderFactory([$this->encoder]);
         $this->securityManager = new SecurityManager(
             self::$container->get('hbpf.database_manager_locator'),
@@ -62,7 +71,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $user = $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
         $this->assertEquals('email@example.com', $user->getEmail());
@@ -78,7 +87,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $this->expectException(SecurityManagerException::class);
         $this->expectExceptionCode(SecurityManagerException::USER_OR_PASSWORD_NOT_VALID);
@@ -94,7 +103,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $this->expectException(SecurityManagerException::class);
         $this->expectExceptionCode(SecurityManagerException::USER_OR_PASSWORD_NOT_VALID);
@@ -110,7 +119,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
         $this->assertTrue(
@@ -135,7 +144,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $this->assertFalse($this->session->has(
             sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
@@ -154,7 +163,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
         $this->assertTrue($this->session->has(
@@ -188,7 +197,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
 
@@ -206,7 +215,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $this->expectException(SecurityManagerException::class);
         $this->expectExceptionCode(SecurityManagerException::USER_NOT_LOGGED);

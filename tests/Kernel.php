@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests;
+namespace UserBundleTests;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouteCollectionBuilder;
 /**
  * Class Kernel
  *
- * @package Tests
+ * @package UserBundleTests
  */
 class Kernel extends BaseKernel
 {

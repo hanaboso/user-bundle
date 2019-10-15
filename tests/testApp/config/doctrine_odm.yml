@@ -15,7 +15,7 @@ doctrine_mongodb:
             options:
                 connectTimeoutMS: 5000
                 socketTimeoutMS: 5000
-    default_database: pipes
+    default_database: user
     document_managers:
         default:
             mappings:

@@ -1,41 +1,28 @@
 <?php declare(strict_types=1);
 
-namespace Tests;
+namespace UserBundleTests;
 
-use Symfony\Component\HttpFoundation\Session\Session;
+use Exception;
+use Hanaboso\PhpCheckUtils\PhpUnit\Traits\DatabaseTestTrait;
 
 /**
  * Class DatabaseTestCaseAbstract
  *
- * @package Tests
+ * @package UserBundleTests
  */
 abstract class DatabaseTestCaseAbstract extends KernelTestCaseAbstract
 {
 
-    /**
-     * @var Session
-     */
-    protected $session;
+    use DatabaseTestTrait;
 
     /**
-     *
+     * @throws Exception
      */
     protected function setUp(): void
     {
         parent::setUp();
-        $this->session = new Session();
-        $this->dm->getConnection()->dropDatabase('pipes');
-        $this->session->invalidate();
-        $this->session->clear();
-    }
-
-    /**
-     * @param mixed $document
-     */
-    protected function persistAndFlush($document): void
-    {
-        $this->dm->persist($document);
-        $this->dm->flush($document);
+        $this->dm = self::$container->get('doctrine_mongodb.odm.default_document_manager');
+        $this->clearMongo();
     }
 
 }

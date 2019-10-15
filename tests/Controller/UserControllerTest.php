@@ -1,34 +1,32 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Controller;
+namespace UserBundleTests\Controller;
 
 use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
-use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
-use Hanaboso\UserBundle\Model\Token\TokenManagerException;
-use Hanaboso\UserBundle\Model\User\UserManagerException;
-use Nette\Utils\Strings;
-use Tests\ControllerTestCaseAbstract;
+use UserBundleTests\ControllerTestCaseAbstract;
 
 /**
  * Class UserControllerTest
  *
- * @package Tests\Controller
+ * @package UserBundleTests\Controller
  */
 final class UserControllerTest extends ControllerTestCaseAbstract
 {
 
     /**
-     *
+     * @throws Exception
      */
     protected function setUp(): void
     {
         // Intentionally not calling parent setUp
+        self::bootKernel();
         $this->client = self::createClient([], []);
-        $this->dm->getConnection()->dropDatabase('pipes');
+        $this->dm     = self::$container->get('doctrine_mongodb.odm.default_document_manager');
+        $this->clearMongo();
     }
 
     /**
@@ -39,15 +37,10 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
+        $this->dm->clear();
 
-        $response = $this->sendPost('/user/login', [
-            'email'    => $user->getEmail(),
-            'password' => 'passw0rd',
-        ]);
-
-        $this->assertEquals(200, $response->status);
-        $this->assertEquals($user->getEmail(), $response->content->email);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/loginRequest.json', ['id' => 1]);
     }
 
     /**
@@ -58,17 +51,9 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
-        $response = $this->sendPost('/user/login', [
-            'email'    => '',
-            'password' => '',
-        ]);
-
-        $this->assertEquals(400, $response->status);
-        $content = $response->content;
-        $this->assertEquals(SecurityManagerException::class, $content->type);
-        $this->assertEquals(1402, $content->errorCode);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedLoginRequest.json');
     }
 
     /**
@@ -79,17 +64,9 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
-        $response = $this->sendPost('/user/login', [
-            'email'    => $user->getEmail(),
-            'password' => '',
-        ]);
-
-        $this->assertEquals(400, $response->status);
-        $content = $response->content;
-        $this->assertEquals(SecurityManagerException::class, $content->type);
-        $this->assertEquals(1402, $content->errorCode);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedOnPassLoginRequest.json');
     }
 
     /**
@@ -97,23 +74,9 @@ final class UserControllerTest extends ControllerTestCaseAbstract
      */
     public function testLoggedUser(): void
     {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->loginUser('email@example.com', 'passw0rd');
 
-        $loginResponse = $this->sendPost('/user/login', [
-            'email'    => $user->getEmail(),
-            'password' => 'passw0rd',
-        ]);
-
-        $this->assertEquals(200, $loginResponse->status);
-        $this->assertEquals($user->getEmail(), $loginResponse->content->email);
-
-        $loggedResponse = $this->sendGet('/user/logged_user');
-
-        $this->assertEquals(200, $loggedResponse->status);
-        $this->assertEquals($user->getEmail(), $loggedResponse->content->email);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/loggedRequest.json', ['id' => 1]);
     }
 
     /**
@@ -121,15 +84,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
      */
     public function testLoggedUserNotLogged(): void
     {
-        $response = $this->sendGet('/user/logged_user');
-
-        $this->assertEquals(401, $response->status);
-        $this->assertEquals([
-            'status'    => 'ERROR',
-            'errorCode' => 0,
-            'type'      => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
-            'message'   => 'User not logged!',
-        ], (array) $response->content);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedLoggedRequest.json', ['id' => 1]);
     }
 
     /**
@@ -139,9 +94,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $this->loginUser('email@example.com', 'passw0rd');
 
-        $response = $this->sendPost('/user/logout', []);
-
-        $this->assertEquals(200, $response->status);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/logoutRequest.json');
     }
 
     /**
@@ -151,11 +104,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $this->prepareMailerMock();
 
-        $response = $this->sendPost('/user/register', [
-            'email' => 'email@example.com',
-        ]);
-
-        $this->assertEquals(200, $response->status);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/registerRequest.json');
     }
 
     /**
@@ -166,16 +115,9 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
-        $response = $this->sendPost('/user/register', [
-            'email' => 'email@example.com',
-        ]);
-
-        $this->assertEquals(400, $response->status);
-        $content = $response->content;
-        $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(1203, $content->errorCode);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedRegisterRequest.json');
     }
 
     /**
@@ -184,14 +126,13 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     public function testActivate(): void
     {
         $user = (new TmpUser())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $token = (new Token())->setTmpUser($user);
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
-        $response = $this->sendPost(sprintf('/user/%s/activate', $token->getHash()), []);
-
-        $this->assertEquals(200, $response->status);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/activateRequest.json', [],
+            ['token' => $token->getHash()]);
     }
 
     /**
@@ -200,18 +141,12 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     public function testActivateNotValid(): void
     {
         $user = (new TmpUser())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $token = (new Token())->setTmpUser($user);
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
-        $response = $this->sendPost(sprintf('/user/%s/activate', Strings::substring($token->getHash(), 1)),
-            []);
-
-        $this->assertEquals(400, $response->status);
-        $content = $response->content;
-        $this->assertEquals(TokenManagerException::class, $content->type);
-        $this->assertEquals(1101, $content->errorCode);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedActivateRequest.json', [], ['token' => '123']);
     }
 
     /**
@@ -222,15 +157,13 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->loginUser('email@example.com', 'passw0rd');
 
         $user = (new User())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $token = (new Token())->setUser($user);
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
-        $response = $this->sendPost(sprintf('/user/%s/set_password', $token->getHash()),
-            ['password' => 'newPassword']);
-
-        $this->assertEquals(200, $response->status);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/setPasswordRequest.json', [],
+            ['token' => $token->getHash()]);
     }
 
     /**
@@ -241,18 +174,13 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->loginUser('email@example.com', 'passw0rd');
 
         $user = (new User())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $token = (new Token())->setUser($user);
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
-        $response = $this->sendPost(sprintf('/user/%s/set_password',
-            Strings::substring($token->getHash(), 1)), ['password' => 'newPassword']);
-
-        $this->assertEquals(500, $response->status);
-        $content = $response->content;
-        $this->assertEquals(TokenManagerException::class, $content->type);
-        $this->assertEquals(1101, $content->errorCode);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedSetPasswordRequest.json', [],
+            ['token' => '123']);
     }
 
     /**
@@ -260,11 +188,10 @@ final class UserControllerTest extends ControllerTestCaseAbstract
      */
     public function testChangePassword(): void
     {
-        $user     = $this->loginUser('email@example.com', 'passw0rd');
-        $response = $this->sendPost('/user/change_password', ['password' => 'anotherPassw0rd']);
-
-        $this->assertEquals(200, $response->status);
+        $user = $this->loginUser('email@example.com', 'passw0rd');
         $this->dm->clear();
+
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/changePasswordRequest.json');
         /** @var User $existingUser */
         $existingUser = $this->dm->getRepository(User::class)->find($user->getId());
         $this->assertNotSame($user->getPassword(), $existingUser->getPassword());
@@ -275,14 +202,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
      */
     public function testChangePasswordNotLogged(): void
     {
-        $response = $this->sendPost('/user/change_password', ['password' => 'anotherPassw0rd']);
-
-        $this->assertEquals([
-            'status'    => 'ERROR',
-            'errorCode' => 0,
-            'type'      => 'Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException',
-            'message'   => 'User not logged!',
-        ], (array) $response->content);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedChangePasswordRequest.json');
     }
 
     /**
@@ -294,16 +214,12 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->loginUser('email@example.com', 'passw0rd');
 
         $user = (new User())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $token = (new Token())->setUser($user);
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
-        $response = $this->sendPost('/user/reset_password', [
-            'email' => $user->getEmail(),
-        ]);
-
-        $this->assertEquals(200, $response->status);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/resetPasswordRequest.json');
     }
 
     /**
@@ -314,19 +230,12 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->loginUser('email@example.com', 'passw0rd');
 
         $user = (new User())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $token = (new Token())->setUser($user);
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
-        $response = $this->sendPost('/user/reset_password', [
-            'email' => '',
-        ]);
-        $content  = $response->content;
-
-        $this->assertEquals(400, $response->status);
-        $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(1202, $content->errorCode);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedResetPasswordRequest.json');
     }
 
     /**
@@ -338,13 +247,10 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $user = (new User())
             ->setEmail('email@example.com')
             ->setPassword('passw0rd');
-        $this->persistAndFlush($user);
-        $this->dm->flush();
+        $this->pfd($user);
 
-        $response = $this->sendDelete(sprintf('/user/%s/delete', $user->getId()));
-
-        $this->assertEquals(200, $response->status);
-        $this->assertEquals($user->getEmail(), $response->content->email);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/deleteUserRequest.json', ['id' => '1'],
+            ['id' => $user->getId()]);
     }
 
     /**
@@ -354,12 +260,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $this->loginUser('email@example.com', 'passw0rd');
 
-        $response = $this->sendDelete('/user/0/delete');
-        $content  = $response->content;
-
-        $this->assertEquals(500, $response->status);
-        $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(1201, $content->errorCode);
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedDeleteUserRequest.json');
     }
 
     /**
@@ -369,13 +270,15 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $loggedUser = $this->loginUser('email@example.com', 'passw0rd');
 
-        $response = $this->sendDelete(sprintf('/user/%s/delete', $loggedUser->getId()));
-        $content  = $response->content;
-
-        $this->assertEquals(500, $response->status);
-        $this->assertEquals(UserManagerException::class, $content->type);
-        $this->assertEquals(1204, $content->errorCode);
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/deleteSelfRequest.json',
+            ['message' => 'User \'self\' delete not allowed.'],
+            ['id' => $loggedUser->getId()]);
     }
+
+    /**
+     * ------------------------------------- HELPERS ------------------------------------------
+     */
 
     /**
      * @throws Exception

@@ -1,23 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Integration\Repository\Entity;
+namespace UserBundleTests\Integration\Repository\Entity;
 
 use DateTime;
 use Exception;
 use Hanaboso\UserBundle\Entity\Token;
 use Hanaboso\UserBundle\Repository\Entity\TokenRepository;
-use Tests\DatabaseTestCaseAbstract;
-use Tests\PrivateTrait;
+use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class TokenRepositoryTest
  *
- * @package Tests\Integration\Repository\Entity
+ * @package UserBundleTests\Integration\Repository\Entity
  */
 final class TokenRepositoryTest extends DatabaseTestCaseAbstract
 {
-
-    use PrivateTrait;
 
     /**
      * @throws Exception

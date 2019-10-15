@@ -113,41 +113,6 @@ class UserController extends AbstractFOSRestController
     }
 
     /**
-     * @Route("/user/{token}/activate", requirements={"token": "\w+"}, methods={"POST", "OPTIONS"})
-     *
-     * @param string $token
-     *
-     * @return Response
-     */
-    public function activateAction(string $token): Response
-    {
-        try {
-            return $this->getResponse($this->userHandler->activate($token));
-        } catch (TokenManagerException $e) {
-            return $this->getErrorResponse($e, 400);
-        } catch (ResourceProviderException | Throwable $e) {
-            return $this->getErrorResponse($e);
-        }
-    }
-
-    /**
-     * @Route("/user/{token}/set_password", requirements={"token": "\w+"}, methods={"POST", "OPTIONS"})
-     *
-     * @param Request $request
-     * @param string  $token
-     *
-     * @return Response
-     */
-    public function setPasswordAction(Request $request, string $token): Response
-    {
-        try {
-            return $this->getResponse($this->userHandler->setPassword($token, $request->request->all()));
-        } catch (TokenManagerException | ResourceProviderException | PipesFrameworkException | Throwable $e) {
-            return $this->getErrorResponse($e);
-        }
-    }
-
-    /**
      * @Route("/user/change_password", methods={"POST", "OPTIONS"})
      *
      * @param Request $request
@@ -190,6 +155,43 @@ class UserController extends AbstractFOSRestController
     }
 
     /**
+     * @Route("/user/{token}/activate", requirements={"token": "\w+"}, methods={"POST", "OPTIONS"})
+     *
+     * @param string $token
+     *
+     * @return Response
+     */
+    public function activateAction(string $token): Response
+    {
+        try {
+            return $this->getResponse($this->userHandler->activate($token));
+        } catch (TokenManagerException $e) {
+            return $this->getErrorResponse($e, 400);
+        } catch (ResourceProviderException | Throwable $e) {
+            return $this->getErrorResponse($e);
+        }
+    }
+
+    /**
+     * @Route("/user/{token}/set_password", requirements={"token": "\w+"}, methods={"POST", "OPTIONS"})
+     *
+     * @param Request $request
+     * @param string  $token
+     *
+     * @return Response
+     */
+    public function setPasswordAction(Request $request, string $token): Response
+    {
+        try {
+            return $this->getResponse($this->userHandler->setPassword($token, $request->request->all()));
+        } catch (TokenManagerException $e) {
+            return $this->getErrorResponse($e, 400);
+        } catch (ResourceProviderException | PipesFrameworkException | Throwable $e) {
+            return $this->getErrorResponse($e);
+        }
+    }
+
+    /**
      * @Route("/user/{id}/delete", methods={"DELETE", "OPTIONS"})
      *
      * @param string $id
@@ -200,6 +202,8 @@ class UserController extends AbstractFOSRestController
     {
         try {
             return $this->getResponse($this->userHandler->delete($id)->toArray());
+        } catch (UserManagerException $e) {
+            return $this->getErrorResponse($e, 400);
         } catch (Exception $e) {
             return $this->getErrorResponse($e);
         }

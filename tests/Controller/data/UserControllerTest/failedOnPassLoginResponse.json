@@ -1,0 +1,9 @@
+{
+  "http": 400,
+  "body": {
+    "status": "INTERNAL_SERVER_ERROR",
+    "error_code": 1402,
+    "type": "Hanaboso\\UserBundle\\Model\\Security\\SecurityManagerException",
+    "message": "User 'email@example.com' or password not valid."
+  }
+}

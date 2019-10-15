@@ -1,0 +1,5 @@
+{
+  "http": "GET /user/logged_user",
+  "headers": [],
+  "body": []
+}

@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Integration\Document;
+namespace UserBundleTests\Integration\Document;
 
 use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Entity\UserInterface;
-use Tests\DatabaseTestCaseAbstract;
+use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class DocumentTest
  *
- * @package Tests\Integration\Document
+ * @package UserBundleTests\Integration\Document
  */
 final class DocumentTest extends DatabaseTestCaseAbstract
 {

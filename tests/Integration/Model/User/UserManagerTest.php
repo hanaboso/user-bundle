@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Integration\Model\User;
+namespace UserBundleTests\Integration\Model\User;
 
 use DateTime;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -16,20 +16,17 @@ use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
 use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
-use Tests\DatabaseTestCaseAbstract;
-use Tests\PrivateTrait;
+use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class UserManagerTest
  *
- * @package Tests\Integration\Model\User
+ * @package UserBundleTests\Integration\Model\User
  * @ORM\Entity
  * @ORM\Table(name="user_manager_test")
  */
 final class UserManagerTest extends DatabaseTestCaseAbstract
 {
-
-    use PrivateTrait;
 
     /**
      * @var UserManager
@@ -66,7 +63,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $this->userRepository    = $this->dm->getRepository(User::class);
         $this->tmpUserRepository = $this->dm->getRepository(TmpUser::class);
         $this->tokenRepository   = $this->dm->getRepository(Token::class);
-        $this->encoder           = new NativePasswordEncoder(12);
+        $this->encoder           = new NativePasswordEncoder(3);
     }
 
     /**
@@ -108,7 +105,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testRegisterInvalidEmail(): void
     {
-        $this->persistAndFlush((new User())->setEmail('email@example.com'));
+        $this->pfd((new User())->setEmail('email@example.com'));
 
         $this->expectException(UserManagerException::class);
         $this->expectExceptionCode(UserManagerException::USER_EMAIL_ALREADY_EXISTS);
@@ -122,10 +119,10 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     public function testActivate(): void
     {
         $tmpUser = (new TmpUser())->setEmail('email@example.com');
-        $this->persistAndFlush($tmpUser);
+        $this->pfd($tmpUser);
 
         $token = (new Token())->setTmpUser($tmpUser);
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
         /** @var User[] $users */
         $users = $this->userRepository->findBy(['email' => 'email@example.com']);
@@ -155,11 +152,11 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     public function testActivateNotValid(): void
     {
         $tmpUser = (new TmpUser())->setEmail('email@example.com');
-        $this->persistAndFlush($tmpUser);
+        $this->pfd($tmpUser);
 
         $token = (new Token())->setTmpUser($tmpUser);
         $this->setProperty($token, 'created', new DateTime('yesterday midnight'));
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
         $this->expectException(TokenManagerException::class);
         $this->expectExceptionCode(TokenManagerException::TOKEN_NOT_VALID);
@@ -174,7 +171,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     {
         $this->prepareMailerMock();
         $user = (new User())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $this->userManager->resetPassword(['email' => 'email@example.com']);
 
@@ -192,10 +189,10 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     public function testSetPassword(): void
     {
         $user = (new User())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $token = (new Token())->setUser($user);
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
         $this->userManager->setPassword($token->getHash(), ['password' => 'passw0rd']);
 
@@ -215,11 +212,11 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     public function testSetPasswordNotValid(): void
     {
         $user = (new User())->setEmail('email@example.com');
-        $this->persistAndFlush($user);
+        $this->pfd($user);
 
         $token = (new Token())->setUser($user);
         $this->setProperty($token, 'created', new DateTime('yesterday midnight'));
-        $this->persistAndFlush($token);
+        $this->pfd($token);
 
         $this->expectException(TokenManagerException::class);
         $this->expectExceptionCode(TokenManagerException::TOKEN_NOT_VALID);

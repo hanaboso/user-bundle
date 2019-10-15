@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Integration\Repository\Entity;
+namespace UserBundleTests\Integration\Repository\Entity;
 
 use Exception;
 use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository;
-use Tests\DatabaseTestCaseAbstract;
+use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class UserRepositoryTest
  *
- * @package Tests\Integration\Repository\Entity
+ * @package UserBundleTests\Integration\Repository\Entity
  */
 final class UserRepositoryTest extends DatabaseTestCaseAbstract
 {

@@ -7,7 +7,7 @@ doctrine:
             default:
                 driver:   pdo_mysql
                 host:     'mariadb'
-                dbname:   'pipes'
+                dbname:   'user'
                 user:     'root'
                 password: 'root'
     orm:
