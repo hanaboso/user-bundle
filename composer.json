@@ -23,6 +23,7 @@
   },
   "require-dev": {
     "hanaboso/php-check-utils": "^1.0",
-    "symfony/monolog-bundle": "^3.4"
+    "symfony/monolog-bundle": "^3.4",
+    "symfony/security-bundle": "^4.3"
   }
 }
