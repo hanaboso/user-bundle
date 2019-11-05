@@ -1,5 +1,5 @@
 {
-  "http": "DELETE /user/id/delete",
-  "headers": [],
-  "body": []
+    "http": "DELETE /user/id/delete",
+    "headers": [],
+    "body": []
 }

@@ -39,7 +39,8 @@ final class ActivateMessageTest extends TestCase
                 'dataContent' => ['link' => $tkn->getHash()],
                 'template'    => '',
                 'from'        => '',
-            ], $message->getMessage()
+            ],
+            $message->getMessage()
         );
     }
 

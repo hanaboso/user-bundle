@@ -38,7 +38,8 @@ final class ResetPasswordMessageTest extends TestCase
                 'dataContent' => ['link' => '/user//set_password'],
                 'template'    => NULL,
                 'from'        => '',
-            ], $message->getMessage()
+            ],
+            $message->getMessage()
         );
     }
 

@@ -27,7 +27,7 @@ class HbPFUserExtension extends Extension implements PrependExtensionInterface
     {
         if (!$container->hasExtension('doctrine_mongodb') && !$container->hasExtension('doctrine')) {
             throw new RuntimeException('You must register ORM or ODM (or both) before.');
-        } elseif (!$container->hasExtension('rabbit_mq')) {
+        } else if (!$container->hasExtension('rabbit_mq')) {
             throw new RuntimeException('You must register RabbitMqBundle before.');
         }
 

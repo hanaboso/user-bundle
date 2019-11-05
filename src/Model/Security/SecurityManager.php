@@ -271,10 +271,12 @@ class SecurityManager
     protected function getUser(string $email): UserInterface
     {
         /** @var UserInterface|null $user */
-        $user = $this->userRepository->findOneBy([
-            'email'   => $email,
-            'deleted' => FALSE,
-        ]);
+        $user = $this->userRepository->findOneBy(
+            [
+                'email'   => $email,
+                'deleted' => FALSE,
+            ]
+        );
 
         if (!$user) {
             throw new SecurityManagerException(

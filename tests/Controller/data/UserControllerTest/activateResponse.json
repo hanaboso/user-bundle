@@ -1,6 +1,6 @@
 {
-  "http": 200,
-  "body": {
-    "email": "email@example.com"
-  }
+    "http": 200,
+    "body": {
+        "email": "email@example.com"
+    }
 }

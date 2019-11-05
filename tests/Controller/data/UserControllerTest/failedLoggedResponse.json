@@ -1,9 +1,9 @@
 {
-  "http": 401,
-  "body": {
-    "status": "ERROR",
-    "error_code": 0,
-    "type": "Symfony\\Component\\Security\\Core\\Exception\\AuthenticationCredentialsNotFoundException",
-    "message": "User not logged!"
-  }
+    "http": 401,
+    "body": {
+        "status": "ERROR",
+        "error_code": 0,
+        "type": "Symfony\\Component\\Security\\Core\\Exception\\AuthenticationCredentialsNotFoundException",
+        "message": "User not logged!"
+    }
 }

@@ -124,7 +124,8 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
         $this->assertTrue(
             $this->session->has(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA))
+                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
+            )
         );
 
         $token = unserialize(
@@ -146,12 +147,18 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
             ->setPassword($this->encoder->encodePassword('passw0rd', ''));
         $this->pfd($user);
 
-        $this->assertFalse($this->session->has(
-            sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-        ));
-        $this->assertNull($this->userRepository->find($this->session->get(
-            sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-        )));
+        $this->assertFalse(
+            $this->session->has(
+                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
+            )
+        );
+        $this->assertNull(
+            $this->userRepository->find(
+                $this->session->get(
+                    sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
+                )
+            )
+        );
     }
 
     /**
@@ -166,13 +173,17 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $this->pfd($user);
 
         $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
-        $this->assertTrue($this->session->has(
-            sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-        ));
+        $this->assertTrue(
+            $this->session->has(
+                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
+            )
+        );
 
-        $token = unserialize($this->session->get(
-            sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-        ));
+        $token = unserialize(
+            $this->session->get(
+                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
+            )
+        );
 
         /** @var User $user */
         $user = $this->userRepository->find($token->getUser()->getId());
@@ -180,12 +191,18 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $this->assertTrue($this->encoder->isPasswordValid($user->getPassword(), 'passw0rd', ''));
 
         $this->securityManager->logout();
-        $this->assertFalse($this->session->has(
-            sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-        ));
-        $this->assertNull($this->userRepository->find($this->session->get(
-            sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-        )));
+        $this->assertFalse(
+            $this->session->has(
+                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
+            )
+        );
+        $this->assertNull(
+            $this->userRepository->find(
+                $this->session->get(
+                    sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
+                )
+            )
+        );
     }
 
     /**

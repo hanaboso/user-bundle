@@ -118,7 +118,7 @@ class Token implements TokenInterface
     {
         if ($this->user) {
             return $this->user;
-        } elseif ($this->tmpUser) {
+        } else if ($this->tmpUser) {
             return $this->tmpUser;
         } else {
             throw new LogicException('User is not set.');

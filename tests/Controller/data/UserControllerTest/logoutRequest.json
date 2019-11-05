@@ -1,5 +1,5 @@
 {
-  "http": "POST /user/logout",
-  "headers": [],
-  "body": []
+    "http": "POST /user/logout",
+    "headers": [],
+    "body": []
 }

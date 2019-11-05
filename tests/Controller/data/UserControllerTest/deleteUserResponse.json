@@ -1,7 +1,7 @@
 {
-  "http": 200,
-  "body": {
-    "id": "1",
-    "email": "email@example.com"
-  }
+    "http": 200,
+    "body": {
+        "id": "1",
+        "email": "email@example.com"
+    }
 }

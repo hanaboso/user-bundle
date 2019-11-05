@@ -131,8 +131,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $token = (new Token())->setTmpUser($user);
         $this->pfd($token);
 
-        $this->assertResponse(__DIR__ . '/data/UserControllerTest/activateRequest.json', [],
-            ['token' => $token->getHash()]);
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/activateRequest.json',
+            [],
+            ['token' => $token->getHash()]
+        );
     }
 
     /**
@@ -162,8 +165,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $token = (new Token())->setUser($user);
         $this->pfd($token);
 
-        $this->assertResponse(__DIR__ . '/data/UserControllerTest/setPasswordRequest.json', [],
-            ['token' => $token->getHash()]);
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/setPasswordRequest.json',
+            [],
+            ['token' => $token->getHash()]
+        );
     }
 
     /**
@@ -179,8 +185,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $token = (new Token())->setUser($user);
         $this->pfd($token);
 
-        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedSetPasswordRequest.json', [],
-            ['token' => '123']);
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/failedSetPasswordRequest.json',
+            [],
+            ['token' => '123']
+        );
     }
 
     /**
@@ -249,8 +258,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
             ->setPassword('passw0rd');
         $this->pfd($user);
 
-        $this->assertResponse(__DIR__ . '/data/UserControllerTest/deleteUserRequest.json', ['id' => '1'],
-            ['id' => $user->getId()]);
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/deleteUserRequest.json',
+            ['id' => '1'],
+            ['id' => $user->getId()]
+        );
     }
 
     /**
@@ -273,7 +285,8 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/deleteSelfRequest.json',
             ['message' => 'User \'self\' delete not allowed.'],
-            ['id' => $loggedUser->getId()]);
+            ['id' => $loggedUser->getId()]
+        );
     }
 
     /**
