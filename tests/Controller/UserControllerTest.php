@@ -23,9 +23,8 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     protected function setUp(): void
     {
         // Intentionally not calling parent setUp
-        self::bootKernel();
-        $this->client = self::createClient([], []);
-        $this->dm     = self::$container->get('doctrine_mongodb.odm.default_document_manager');
+        self::startClient();
+        $this->dm = self::$container->get('doctrine_mongodb.odm.default_document_manager');
         $this->clearMongo();
     }
 

@@ -107,7 +107,7 @@ abstract class UserAbstract implements UserInterface
      */
     public function getRoles(): array
     {
-        return [];
+        return ['admin'];
     }
 
     /**

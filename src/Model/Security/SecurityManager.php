@@ -15,7 +15,7 @@ use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\UsageTrackingTokenStorage;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Throwable;
@@ -47,7 +47,7 @@ class SecurityManager
     protected $session;
 
     /**
-     * @var TokenStorage
+     * @var UsageTrackingTokenStorage
      */
     protected $tokenStorage;
 
@@ -84,11 +84,11 @@ class SecurityManager
     /**
      * SecurityManager constructor.
      *
-     * @param DatabaseManagerLocator $userDml
-     * @param EncoderFactory         $encoderFactory
-     * @param Session                $session
-     * @param TokenStorage           $tokenStorage
-     * @param ResourceProvider       $provider
+     * @param DatabaseManagerLocator    $userDml
+     * @param EncoderFactory            $encoderFactory
+     * @param Session                   $session
+     * @param UsageTrackingTokenStorage $tokenStorage
+     * @param ResourceProvider          $provider
      *
      * @throws ResourceProviderException
      */
@@ -96,7 +96,7 @@ class SecurityManager
         DatabaseManagerLocator $userDml,
         EncoderFactory $encoderFactory,
         Session $session,
-        TokenStorage $tokenStorage,
+        UsageTrackingTokenStorage $tokenStorage,
         ResourceProvider $provider
     )
     {
