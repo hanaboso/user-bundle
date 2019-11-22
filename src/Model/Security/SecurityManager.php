@@ -166,7 +166,7 @@ class SecurityManager
      */
     public function setToken(UserInterface $user, array $data): void
     {
-        $token = new Token($user, $data['password'], $this->area, ['USER_LOGGED']);
+        $token = new Token($user, $data['password'], $this->area, ['admin']);
         $this->tokenStorage->setToken($token);
         $this->session->set($this->sessionName, serialize($token));
     }
