@@ -8,6 +8,7 @@ DM=docker-compose exec -T mongo
 .env:
 	sed -e "s/{DEV_UID}/$(shell id -u)/g" \
 		-e "s/{DEV_GID}/$(shell id -u)/g" \
+		-e "s/{SSH_AUTH}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo "\/tmp\/.ssh-auth-sock"; else echo '\/tmp\/.nope'; fi)/g" \
 		.env.dist >> .env; \
 
 # Docker
@@ -30,7 +31,7 @@ composer-outdated:
 
 # Console
 clear-cache:
-	$(DE) sudo rm -rf var/log
+	$(DE) rm -rf var/log
 	$(DE) php tests/testApp/bin/console cache:clear --env=test
 	$(DE) php tests/testApp/bin/console cache:warmup --env=test
 

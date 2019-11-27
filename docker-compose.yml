@@ -1,11 +1,11 @@
 version: '3.3'
 services:
   app:
-    image: dkr.hanaboso.net/pipes/pipes/php-dev:dev
+    image: hanabosocom/php-dev:php-7.3
     user: ${DEV_UID}:${DEV_GID}
     volumes:
       - ./:/var/www
-      - ${SSH_AUTH_SOCK}:/tmp/bound-ssh-agent
+      - ${SSH_AUTH_SOCK}:${SSH_AUTH}
       - ${HOME}/dev/.composer:${HOME}/dev/.composer
     environment:
       - APP_ENV=dev
