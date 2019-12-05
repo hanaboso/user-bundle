@@ -14,6 +14,7 @@ use Hanaboso\UserBundle\Model\User\UserManagerException;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,6 +43,7 @@ class UserController extends AbstractFOSRestController
     public function __construct(UserHandler $userHandler)
     {
         $this->userHandler = $userHandler;
+        $this->logger      = new NullLogger();
     }
 
     /**

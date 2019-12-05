@@ -34,17 +34,17 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     private $userManager;
 
     /**
-     * @var ObjectRepository
+     * @var ObjectRepository<User>
      */
     private $userRepository;
 
     /**
-     * @var ObjectRepository
+     * @var ObjectRepository<TmpUser>
      */
     private $tmpUserRepository;
 
     /**
-     * @var ObjectRepository
+     * @var ObjectRepository<Token>
      */
     private $tokenRepository;
 

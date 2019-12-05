@@ -2,6 +2,7 @@
 
 namespace Hanaboso\UserBundle\Repository\Document;
 
+use Doctrine\ODM\MongoDB\Iterator\Iterator;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Hanaboso\UserBundle\Document\User;
@@ -10,28 +11,30 @@ use Hanaboso\UserBundle\Document\User;
  * Class UserRepository
  *
  * @package Hanaboso\UserBundle\Repository\Document
+ *
+ * @phpstan-extends DocumentRepository<User>
  */
 class UserRepository extends DocumentRepository
 {
 
     /**
-     * @return array
+     * @return mixed[]
      * @throws MongoDBException
      */
     public function getArrayOfUsers(): array
     {
+        /** @var Iterator<User> $arr */
         $arr = $this->createQueryBuilder()
             ->select(['email', 'created'])
             ->field('deleted')
             ->equals(FALSE)
             ->getQuery()
-            ->execute()
-            ->toArray();
+            ->execute();
 
         $res = [];
 
         /** @var User $user */
-        foreach ($arr as $user) {
+        foreach ($arr->toArray() as $user) {
             $res[] = [
                 'email'   => $user->getEmail(),
                 'created' => $user->getCreated()->format('d-m-Y'),
@@ -47,12 +50,15 @@ class UserRepository extends DocumentRepository
      */
     public function getUserCount(): int
     {
-        return $this->createQueryBuilder()
+        /** @var int $count */
+        $count = $this->createQueryBuilder()
             ->field('deleted')
             ->equals(FALSE)
             ->count()
             ->getQuery()
             ->execute();
+
+        return $count;
     }
 
 }

@@ -75,7 +75,7 @@ class TmpUser extends UserAbstract implements TmpUserInterface
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function toArray(): array
     {

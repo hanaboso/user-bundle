@@ -103,7 +103,7 @@ abstract class UserAbstract implements UserInterface
     /**
      * Needed by symfony's UserInterface.
      *
-     * @return array
+     * @return mixed[]
      */
     public function getRoles(): array
     {

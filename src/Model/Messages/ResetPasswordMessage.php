@@ -40,7 +40,7 @@ class ResetPasswordMessage extends UserMessageAbstract
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getMessage(): array
     {
@@ -67,7 +67,7 @@ class ResetPasswordMessage extends UserMessageAbstract
     }
 
     /**
-     * @param null|string $template
+     * @param string|null $template
      *
      * @return ResetPasswordMessage
      */

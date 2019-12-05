@@ -22,7 +22,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 {
 
     /**
-     * @var Session
+     * @var Session<mixed>
      */
     private $session;
 
@@ -37,7 +37,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     private $securityManager;
 
     /**
-     * @var ObjectRepository
+     * @var ObjectRepository<User>
      */
     private $userRepository;
 

@@ -5,9 +5,9 @@ doctrine_mongodb:
     auto_generate_proxy_classes: true
     auto_generate_hydrator_classes: true
     auto_generate_persistent_collection_classes: 3
-    proxy_namespace: Proxies
+    proxy_namespace: ODMProxies
     proxy_dir: "%kernel.cache_dir%/doctrine/odm/mongodb/Proxies"
-    hydrator_namespace: Hydrators
+    hydrator_namespace: ODMHydrators
     hydrator_dir: "%kernel.cache_dir%/doctrine/odm/mongodb/Hydrators"
     connections:
         default:

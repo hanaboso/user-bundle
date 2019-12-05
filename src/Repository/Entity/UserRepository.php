@@ -11,12 +11,14 @@ use Doctrine\ORM\NoResultException;
  * Class UserRepository
  *
  * @package Hanaboso\UserBundle\Repository\Entity
+ *
+ * @phpstan-extends EntityRepository<\Hanaboso\UserBundle\Entity\User>
  */
 class UserRepository extends EntityRepository
 {
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getArrayOfUsers(): array
     {

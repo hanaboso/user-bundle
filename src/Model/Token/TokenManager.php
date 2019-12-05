@@ -3,6 +3,7 @@
 namespace Hanaboso\UserBundle\Model\Token;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -53,12 +54,13 @@ class TokenManager
      * @return TokenInterface
      * @throws ORMException
      * @throws ResourceProviderException
+     * @throws MongoDBException
      */
     public function create(UserInterface $user): TokenInterface
     {
         $class = $this->provider->getResource(ResourceEnum::TOKEN);
-        /** @var TokenInterface $token */
         $this->removeExistingTokens($user);
+        /** @var TokenInterface $token */
         $token = new $class();
         $user->getType() === UserTypeEnum::USER ? $token->setUser($user) : $token->setTmpUser($user);
         $user->setToken($token);
@@ -80,8 +82,10 @@ class TokenManager
      */
     public function validate(string $hash): TokenInterface
     {
+        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\Token|\Hanaboso\UserBundle\Document\Token> $tokenClass */
+        $tokenClass = $this->provider->getResource(ResourceEnum::TOKEN);
         /** @var EntityTokenRepository|DocumentTokenRepository $repo */
-        $repo  = $this->dm->getRepository($this->provider->getResource(ResourceEnum::TOKEN));
+        $repo  = $this->dm->getRepository($tokenClass);
         $token = $repo->getFreshToken($hash);
 
         if (!$token) {
@@ -100,6 +104,7 @@ class TokenManager
      *
      * @throws ORMException
      * @throws ResourceProviderException
+     * @throws MongoDBException
      */
     public function delete(TokenInterface $token): void
     {
@@ -115,8 +120,10 @@ class TokenManager
      */
     private function removeExistingTokens(UserInterface $user): void
     {
+        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\Token|\Hanaboso\UserBundle\Document\Token> $tokenClass */
+        $tokenClass = $this->provider->getResource(ResourceEnum::TOKEN);
         /** @var EntityTokenRepository|DocumentTokenRepository $repo */
-        $repo = $this->dm->getRepository($this->provider->getResource(ResourceEnum::TOKEN));
+        $repo = $this->dm->getRepository($tokenClass);
         foreach ($repo->getExistingTokens($user) as $token) {
             $this->dm->remove($token);
         }

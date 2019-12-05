@@ -17,7 +17,7 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore
         connection: default
         proxy_dir: "%kernel.cache_dir%/doctrine/orm/Proxies"
-        proxy_namespace: Proxies
+        proxy_namespace: ORMProxies
         mappings:
             UserEntity:
                 type: annotation

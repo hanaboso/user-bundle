@@ -23,7 +23,7 @@ class RegisterMessage extends UserMessageAbstract
     protected $template = NULL;
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getMessage(): array
     {

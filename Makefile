@@ -51,7 +51,7 @@ codesniffer:
 	$(DE) ./vendor/bin/phpcs --standard=./ruleset.xml --colors -p src/ tests/
 
 phpstan:
-	$(DE) ./vendor/bin/phpstan analyse -c ./phpstan.neon -l 7 src/ tests/
+	$(DE) ./vendor/bin/phpstan analyse -c ./phpstan.neon -l 8 src/ tests/
 
 phpunit:
 	$(DE) ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 --runner=WrapperRunner tests/Unit

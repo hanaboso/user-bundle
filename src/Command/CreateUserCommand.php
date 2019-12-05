@@ -2,7 +2,7 @@
 
 namespace Hanaboso\UserBundle\Command;
 
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -26,7 +26,7 @@ class CreateUserCommand extends PasswordCommandAbstract
     private const CMD_NAME = 'user:create';
 
     /**
-     * @var OrmRepo|OdmRepo|ObjectRepository
+     * @var OrmRepo|OdmRepo
      */
     private $repo;
 
@@ -51,9 +51,12 @@ class CreateUserCommand extends PasswordCommandAbstract
     )
     {
         parent::__construct();
+
+        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\User|\Hanaboso\UserBundle\Document\User> $userClass */
+        $userClass      = $provider->getResource(ResourceEnum::USER);
         $this->dm       = $userDml->get();
-        $this->repo     = $this->dm->getRepository($provider->getResource(ResourceEnum::USER));
-        $this->encoder  = $encoderFactory->getEncoder($provider->getResource(ResourceEnum::USER));
+        $this->repo     = $this->dm->getRepository($userClass);
+        $this->encoder  = $encoderFactory->getEncoder($userClass);
         $this->provider = $provider;
     }
 
@@ -74,6 +77,7 @@ class CreateUserCommand extends PasswordCommandAbstract
      * @return int|null
      * @throws ResourceProviderException
      * @throws ORMException
+     * @throws MongoDBException
      */
     protected function execute(InputInterface $input, OutputInterface $output): ?int
     {

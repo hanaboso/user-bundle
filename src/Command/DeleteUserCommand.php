@@ -2,7 +2,6 @@
 
 namespace Hanaboso\UserBundle\Command;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
@@ -36,7 +35,7 @@ class DeleteUserCommand extends Command
     private $dm;
 
     /**
-     * @var OrmRepo|OdmRepo|ObjectRepository
+     * @var OrmRepo|OdmRepo
      */
     private $repo;
 
@@ -48,14 +47,14 @@ class DeleteUserCommand extends Command
      *
      * @throws ResourceProviderException
      */
-    public function __construct(
-        DatabaseManagerLocator $userDml,
-        ResourceProvider $provider
-    )
+    public function __construct(DatabaseManagerLocator $userDml, ResourceProvider $provider)
     {
         parent::__construct();
+
+        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\User|\Hanaboso\UserBundle\Document\User> $userClass */
+        $userClass  = $provider->getResource(ResourceEnum::USER);
         $this->dm   = $userDml->get();
-        $this->repo = $this->dm->getRepository($provider->getResource(ResourceEnum::USER));
+        $this->repo = $this->dm->getRepository($userClass);
     }
 
     /**

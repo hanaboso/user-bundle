@@ -60,7 +60,7 @@ interface UserInterface extends SecurityCoreUserInterface
     public function setToken(?TokenInterface $token): UserInterface;
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function toArray(): array;
 

@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityRepository;
  * Class TmpUserRepository
  *
  * @package Hanaboso\UserBundle\Repository\Entity
+ *
+ * @phpstan-extends EntityRepository<\Hanaboso\UserBundle\Entity\TmpUser>
  */
 class TmpUserRepository extends EntityRepository
 {

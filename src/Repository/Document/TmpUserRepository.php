@@ -8,6 +8,8 @@ use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
  * Class TmpUserRepository
  *
  * @package Hanaboso\UserBundle\Repository\Document
+ *
+ * @phpstan-extends DocumentRepository<\Hanaboso\UserBundle\Document\TmpUser>
  */
 class TmpUserRepository extends DocumentRepository
 {

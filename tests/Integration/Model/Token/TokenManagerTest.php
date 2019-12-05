@@ -28,7 +28,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     private $tokenManager;
 
     /**
-     * @var ObjectRepository
+     * @var ObjectRepository<Token>
      */
     private $tokenRepository;
 

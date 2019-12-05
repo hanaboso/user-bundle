@@ -36,11 +36,11 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     /**
      * ControllerTestCaseAbstract constructor.
      *
-     * @param null   $name
-     * @param array  $data
-     * @param string $dataName
+     * @param string|null $name
+     * @param mixed[]     $data
+     * @param string      $dataName
      */
-    public function __construct($name = NULL, array $data = [], $dataName = '')
+    public function __construct(?string $name = NULL, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
         $this->encoder = new NativePasswordEncoder(3);

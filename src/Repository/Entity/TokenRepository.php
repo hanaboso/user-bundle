@@ -14,6 +14,8 @@ use Hanaboso\UserBundle\Enum\UserTypeEnum;
  * Class TokenRepository
  *
  * @package Hanaboso\UserBundle\Repository\Entity
+ *
+ * @phpstan-extends EntityRepository<Token>
  */
 class TokenRepository extends EntityRepository
 {
@@ -42,7 +44,7 @@ class TokenRepository extends EntityRepository
     /**
      * @param UserInterface $user
      *
-     * @return array
+     * @return Token[]
      */
     public function getExistingTokens(UserInterface $user): array
     {

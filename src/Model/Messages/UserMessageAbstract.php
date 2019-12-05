@@ -28,7 +28,7 @@ abstract class UserMessageAbstract
     protected $from = '';
 
     /**
-     * @var array
+     * @var mixed[]
      */
     protected $message = [
         'to'          => '',
@@ -69,7 +69,7 @@ abstract class UserMessageAbstract
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     abstract public function getMessage(): array;
 

@@ -2,9 +2,6 @@
 
 namespace Hanaboso\UserBundle\Model\Security;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ODM\MongoDB\LockException;
-use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Exception;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -37,12 +34,12 @@ class SecurityManager
     protected $resourceUser = ResourceEnum::USER;
 
     /**
-     * @var OrmRepo|OdmRepo|ObjectRepository
+     * @var OrmRepo|OdmRepo
      */
     protected $userRepository;
 
     /**
-     * @var Session
+     * @var Session<mixed>
      */
     protected $session;
 
@@ -86,7 +83,7 @@ class SecurityManager
      *
      * @param DatabaseManagerLocator    $userDml
      * @param EncoderFactory            $encoderFactory
-     * @param Session                   $session
+     * @param Session<mixed>            $session
      * @param UsageTrackingTokenStorage $tokenStorage
      * @param ResourceProvider          $provider
      *
@@ -118,10 +115,11 @@ class SecurityManager
      */
     public function setUserResource(string $resource): SecurityManager
     {
+        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\User|\Hanaboso\UserBundle\Document\User> $userClass */
+        $userClass            = $this->provider->getResource($this->resourceUser);
         $this->resourceUser   = $resource;
-        $user                 = $this->provider->getResource($this->resourceUser);
-        $this->userRepository = $this->userDml->get()->getRepository($user);
-        $this->encoder        = $this->encoderFactory->getEncoder($user);
+        $this->userRepository = $this->userDml->get()->getRepository($userClass);
+        $this->encoder        = $this->encoderFactory->getEncoder($userClass);
 
         return $this;
     }
@@ -140,11 +138,9 @@ class SecurityManager
     }
 
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function login(array $data): UserInterface
@@ -162,7 +158,7 @@ class SecurityManager
 
     /**
      * @param UserInterface $user
-     * @param array         $data
+     * @param mixed[]       $data
      */
     public function setToken(UserInterface $user, array $data): void
     {
@@ -190,8 +186,6 @@ class SecurityManager
 
     /**
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function getLoggedUser(): UserInterface
@@ -215,7 +209,7 @@ class SecurityManager
 
     /**
      * @param UserInterface $user
-     * @param array         $data
+     * @param mixed[]       $data
      *
      * @throws SecurityManagerException
      */
@@ -239,8 +233,6 @@ class SecurityManager
 
     /**
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     protected function getUserFromSession(): UserInterface

@@ -2,10 +2,8 @@
 
 namespace Hanaboso\UserBundle\Model\User;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\LockException;
-use Doctrine\ODM\MongoDB\Mapping\MappingException;
+use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use EmailServiceBundle\Exception\MailerException;
@@ -61,12 +59,12 @@ class UserManager
     protected $tokenManager;
 
     /**
-     * @var OdmRepo|OrmRepo|ObjectRepository
+     * @var OdmRepo|OrmRepo
      */
     protected $userRepository;
 
     /**
-     * @var OdmTmpRepo|OrmTmpRepo|ObjectRepository
+     * @var OdmTmpRepo|OrmTmpRepo
      */
     protected $tmpUserRepository;
 
@@ -122,11 +120,16 @@ class UserManager
         string $passwordLink
     )
     {
+        /** @phpstan-var class-string<\Hanaboso\UserBundle\Document\User|\Hanaboso\UserBundle\Entity\User> $userClass */
+        $userClass = $provider->getResource(ResourceEnum::USER);
+        /** @phpstan-var class-string<\Hanaboso\UserBundle\Document\TmpUser|\Hanaboso\UserBundle\Entity\User> $tmpUserClass */
+        $tmpUserClass = $provider->getResource(ResourceEnum::TMP_USER);
+
         $this->dm                = $userDml->get();
         $this->securityManager   = $securityManager;
         $this->tokenManager      = $tokenManager;
-        $this->userRepository    = $this->dm->getRepository($provider->getResource(ResourceEnum::USER));
-        $this->tmpUserRepository = $this->dm->getRepository($provider->getResource(ResourceEnum::TMP_USER));
+        $this->userRepository    = $this->dm->getRepository($userClass);
+        $this->tmpUserRepository = $this->dm->getRepository($tmpUserClass);
         $this->eventDispatcher   = $eventDispatcher;
         $this->provider          = $provider;
         $this->mailer            = $mailer;
@@ -135,11 +138,9 @@ class UserManager
     }
 
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function login(array $data): UserInterface
@@ -152,8 +153,6 @@ class UserManager
 
     /**
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function loggedUser(): UserInterface
@@ -162,8 +161,6 @@ class UserManager
     }
 
     /**
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function logout(): void
@@ -173,12 +170,13 @@ class UserManager
     }
 
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
      * @throws MailerException
      * @throws ResourceProviderException
      * @throws UserManagerException
      * @throws ORMException
+     * @throws MongoDBException
      */
     public function register(array $data): void
     {
@@ -221,6 +219,7 @@ class UserManager
      * @throws TokenManagerException
      * @throws ResourceProviderException
      * @throws DateTimeException
+     * @throws MongoDBException
      */
     public function activate(string $token): UserInterface
     {
@@ -249,13 +248,14 @@ class UserManager
     }
 
     /**
-     * @param string $id
-     * @param array  $data
+     * @param string  $id
+     * @param mixed[] $data
      *
      * @throws ORMException
      * @throws TokenManagerException
      * @throws ResourceProviderException
      * @throws DateTimeException
+     * @throws MongoDBException
      */
     public function setPassword(string $id, array $data): void
     {
@@ -270,12 +270,11 @@ class UserManager
     }
 
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
+     * @throws MongoDBException
      * @throws ORMException
      * @throws SecurityManagerException
-     * @throws LockException
-     * @throws MappingException
      */
     public function changePassword(array $data): void
     {
@@ -291,12 +290,13 @@ class UserManager
     }
 
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
      * @throws MailerException
      * @throws ORMException
      * @throws ResourceProviderException
      * @throws UserManagerException
+     * @throws MongoDBException
      */
     public function resetPassword(array $data): void
     {
@@ -323,8 +323,7 @@ class UserManager
      * @param UserInterface $user
      *
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
+     * @throws MongoDBException
      * @throws ORMException
      * @throws SecurityManagerException
      * @throws UserManagerException

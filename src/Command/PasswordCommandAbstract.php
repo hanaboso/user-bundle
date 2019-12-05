@@ -3,6 +3,7 @@
 namespace Hanaboso\UserBundle\Command;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -12,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 /**
- * Class AbstractPasswordCommand
+ * Class PasswordCommandAbstract
  *
  * @package Hanaboso\UserBundle\Command
  */
@@ -35,6 +36,7 @@ abstract class PasswordCommandAbstract extends Command
      *
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws MongoDBException
      */
     protected function setPassword(OutputInterface $output, UserInterface $user): void
     {
@@ -53,7 +55,7 @@ abstract class PasswordCommandAbstract extends Command
             $output->writeln('Passwords don\'t match.');
         }
         $user->setPassword($this->encoder->encodePassword($pwd1, ''));
-        $this->dm->flush($user);
+        $this->dm->flush();
     }
 
 }

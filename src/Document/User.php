@@ -96,7 +96,7 @@ class User extends UserAbstract
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function toArray(): array
     {

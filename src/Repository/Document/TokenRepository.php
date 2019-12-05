@@ -13,6 +13,8 @@ use Hanaboso\UserBundle\Enum\UserTypeEnum;
  * Class TokenRepository
  *
  * @package Hanaboso\UserBundle\Repository\Document
+ *
+ * @phpstan-extends DocumentRepository<Token>
  */
 class TokenRepository extends DocumentRepository
 {
@@ -38,7 +40,7 @@ class TokenRepository extends DocumentRepository
     /**
      * @param UserInterface $user
      *
-     * @return array
+     * @return Token[]
      */
     public function getExistingTokens(UserInterface $user): array
     {

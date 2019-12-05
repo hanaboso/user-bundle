@@ -11,14 +11,14 @@ class ResourceProvider
 {
 
     /**
-     * @var array
+     * @var mixed[]
      */
     private $resources;
 
     /**
      * ResourceProvider constructor.
      *
-     * @param array $rules
+     * @param mixed[] $rules
      *
      * @throws ResourceProviderException
      */
@@ -36,7 +36,7 @@ class ResourceProvider
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getResources(): array
     {

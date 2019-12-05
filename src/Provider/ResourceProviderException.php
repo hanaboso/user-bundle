@@ -5,7 +5,7 @@ namespace Hanaboso\UserBundle\Provider;
 use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
 
 /**
- * Class ProviderException
+ * Class ResourceProviderException
  *
  * @package Hanaboso\UserBundle\Provider
  */

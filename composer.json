@@ -17,12 +17,12 @@
     "ext-readline": "*",
     "doctrine/orm": "^2.7",
     "friendsofsymfony/rest-bundle": "^2.6",
-    "hanaboso/commons-bundle": "^1.2",
+    "hanaboso/commons-bundle": "^1.3",
     "hanaboso/email-service-bundle": "^1.0",
     "hanaboso/rabbit-mq-bundle": "^1.1"
   },
   "require-dev": {
-    "hanaboso/php-check-utils": "^1.0",
+    "hanaboso/php-check-utils": "^1.1",
     "symfony/monolog-bundle": "^3.5",
     "symfony/security-bundle": "^4.4"
   }

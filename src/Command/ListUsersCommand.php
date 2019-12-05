@@ -2,7 +2,6 @@
 
 namespace Hanaboso\UserBundle\Command;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
@@ -26,7 +25,7 @@ class ListUsersCommand extends Command
     private const CMD_NAME = 'user:list';
 
     /**
-     * @var OrmRepo|OdmRepo|ObjectRepository
+     * @var OrmRepo|OdmRepo
      */
     private $repo;
 
@@ -38,14 +37,14 @@ class ListUsersCommand extends Command
      *
      * @throws ResourceProviderException
      */
-    public function __construct(
-        DatabaseManagerLocator $userDml,
-        ResourceProvider $provider
-    )
+    public function __construct(DatabaseManagerLocator $userDml, ResourceProvider $provider)
     {
         parent::__construct();
+
+        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\User|\Hanaboso\UserBundle\Document\User> $userClass */
+        $userClass  = $provider->getResource(ResourceEnum::USER);
         $dm         = $userDml->get();
-        $this->repo = $dm->getRepository($provider->getResource(ResourceEnum::USER));
+        $this->repo = $dm->getRepository($userClass);
     }
 
     /**

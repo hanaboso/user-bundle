@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   app:
-    image: hanabosocom/php-dev:php-7.3
+    image: hanabosocom/php-dev:php-7.4
     user: ${DEV_UID}:${DEV_GID}
     volumes:
       - ./:/var/www

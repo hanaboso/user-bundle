@@ -3,8 +3,7 @@
 namespace Hanaboso\UserBundle\Handler;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\LockException;
-use Doctrine\ODM\MongoDB\Mapping\MappingException;
+use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use EmailServiceBundle\Exception\MailerException;
@@ -73,13 +72,11 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
      * @return UserInterface
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
-     * @throws LockException
-     * @throws MappingException
      */
     public function login(array $data): UserInterface
     {
@@ -90,8 +87,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
 
     /**
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function loggedUser(): UserInterface
@@ -100,9 +95,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
-     * @return array
-     * @throws LockException
-     * @throws MappingException
+     * @return mixed[]
      * @throws SecurityManagerException
      */
     public function logout(): array
@@ -113,14 +106,15 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
-     * @return array
+     * @return mixed[]
      * @throws MailerException
      * @throws PipesFrameworkException
      * @throws ResourceProviderException
      * @throws UserManagerException
      * @throws ORMException
+     * @throws MongoDBException
      */
     public function register(array $data): array
     {
@@ -134,11 +128,12 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     /**
      * @param string $token
      *
-     * @return array
+     * @return mixed[]
      * @throws ORMException
      * @throws TokenManagerException
      * @throws ResourceProviderException
      * @throws DateTimeException
+     * @throws MongoDBException
      */
     public function activate(string $token): array
     {
@@ -148,15 +143,16 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
-     * @param string $id
-     * @param array  $data
+     * @param string  $id
+     * @param mixed[] $data
      *
-     * @return array
+     * @return mixed[]
      * @throws ORMException
      * @throws PipesFrameworkException
      * @throws TokenManagerException
      * @throws ResourceProviderException
      * @throws DateTimeException
+     * @throws MongoDBException
      */
     public function setPassword(string $id, array $data): array
     {
@@ -168,11 +164,10 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
-     * @return array
-     * @throws LockException
-     * @throws MappingException
+     * @return mixed[]
+     * @throws MongoDBException
      * @throws ORMException
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
@@ -187,14 +182,15 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
-     * @return array
+     * @return mixed[]
      * @throws MailerException
      * @throws ORMException
      * @throws PipesFrameworkException
      * @throws ResourceProviderException
      * @throws UserManagerException
+     * @throws MongoDBException
      */
     public function resetPassword(array $data): array
     {
@@ -209,11 +205,10 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param string $id
      *
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
+     * @throws MongoDBException
      * @throws ORMException
-     * @throws SecurityManagerException
      * @throws ResourceProviderException
+     * @throws SecurityManagerException
      * @throws UserManagerException
      */
     public function delete(string $id): UserInterface
@@ -236,7 +231,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public static function getSubscribedEvents(): array
     {
@@ -282,10 +277,10 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      */
     private function getUser(string $id): UserInterface
     {
+        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\User|\Hanaboso\UserBundle\Document\User> $userClass */
+        $userClass = $this->provider->getResource(ResourceEnum::USER);
         /** @var UserInterface|null $user */
-        $user = $this->dm->getRepository(
-            $this->provider->getResource(ResourceEnum::USER)
-        )->findOneBy(['id' => $id]);
+        $user = $this->dm->getRepository($userClass)->findOneBy(['id' => $id]);
 
         if (!$user) {
             throw new UserManagerException(
