@@ -1,6 +1,5 @@
 parameters:
     resource_enum: Hanaboso\UserBundle\Enum\ResourceEnum
-    rabbit_host: rabbitmq
 
     db_res:
         resources:

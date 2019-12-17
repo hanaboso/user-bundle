@@ -1,16 +1,9 @@
-parameters:
-    mailer_transport: '%env(SMTP_TRANSPORT)%'
-    mailer_host: '%env(SMTP_HOST)%'
-    mailer_port: '%env(SMTP_PORT)%'
-    mailer_user: '%env(SMTP_USER)%'
-    mailer_password: '%env(SMTP_PASSWORD)%'
-
 swiftmailer:
-    transport: '%mailer_transport%'
-    host: '%mailer_host%'
-    port: '%mailer_port%'
-    username: '%mailer_user%'
-    password: '%mailer_password%'
+    transport: 'smtp'
+    host: '%env(string:SMTP_HOST)%'
+    port: '%env(int:SMTP_PORT)%'
+    username: '%env(string:SMTP_USER)%'
+    password: '%env(string:SMTP_PASSWORD)%'
     spool: { type: memory }
     disable_delivery: false
     auth_mode: 'plain'

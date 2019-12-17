@@ -1,8 +1,4 @@
 rabbit_mq:
-    connections:
-        default:
-            host: '%rabbit_host%'
-
     queues:
         pipes.messages:
             bindings:

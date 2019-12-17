@@ -33,7 +33,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     private $tokenRepository;
 
     /**
-     *
+     * @throws Exception
      */
     protected function setUp(): void
     {

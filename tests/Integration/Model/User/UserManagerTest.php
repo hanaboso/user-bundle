@@ -54,7 +54,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     private $encoder;
 
     /**
-     *
+     * @throws Exception
      */
     protected function setUp(): void
     {

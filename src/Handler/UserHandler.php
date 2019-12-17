@@ -249,7 +249,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      */
     public function onCoreException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         $body      = [
             'status'     => 'ERROR',
             'error_code' => $exception->getCode(),

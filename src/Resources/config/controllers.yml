@@ -1,8 +1,6 @@
 services:
     _defaults:
         public: '%public.services%'
-        autowire: false
-        autoconfigure: false
 
     Hanaboso\UserBundle\Controller\UserController:
         class: Hanaboso\UserBundle\Controller\UserController

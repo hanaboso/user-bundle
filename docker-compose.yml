@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.5'
 services:
   app:
     image: hanabosocom/php-dev:php-7.4
@@ -13,12 +13,10 @@ services:
       - DEV_GID=${DEV_GID}
       - COMPOSER_HOME=${HOME}/dev/.composer
       - KERNEL_CLASS=UserBundleTests\Kernel
-      - SMTP_TRANSPORT=${SMTP_TRANSPORT}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
-      - FRONTEND_HOST=host
 
   mongo:
     image: mongo:latest
