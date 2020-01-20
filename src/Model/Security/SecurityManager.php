@@ -2,6 +2,8 @@
 
 namespace Hanaboso\UserBundle\Model\Security;
 
+use Doctrine\ODM\MongoDB\LockException;
+use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Exception;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -141,6 +143,8 @@ class SecurityManager
      * @param mixed[] $data
      *
      * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function login(array $data): UserInterface
@@ -186,6 +190,8 @@ class SecurityManager
 
     /**
      * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function getLoggedUser(): UserInterface
@@ -234,6 +240,8 @@ class SecurityManager
     /**
      * @return UserInterface
      * @throws SecurityManagerException
+     * @throws MappingException
+     * @throws LockException
      */
     protected function getUserFromSession(): UserInterface
     {
@@ -248,6 +256,7 @@ class SecurityManager
 
         if (!$user) {
             $this->logout();
+
             throw new SecurityManagerException('User not logged.', SecurityManagerException::USER_NOT_LOGGED);
         }
 

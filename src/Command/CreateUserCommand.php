@@ -11,8 +11,10 @@ use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
+use LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
 /**
@@ -74,32 +76,47 @@ class CreateUserCommand extends PasswordCommandAbstract
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return int|null
+     * @return int
      * @throws ResourceProviderException
      * @throws ORMException
      * @throws MongoDBException
      */
-    protected function execute(InputInterface $input, OutputInterface $output): ?int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $input;
-        $output->writeln('Creating user, select user email:');
 
-        $email = readline();
-        /** @var UserInterface|null $user */
-        $user = $this->repo->findOneBy(['email' => $email]);
+        $helper = $this->getHelper('question');
+        $email  = $helper->ask(
+            $input,
+            $output,
+            (new Question('Creating user, select user email: '))
+                ->setValidator(
+                    function (?string $email): string {
+                        /** @var UserInterface|null $user */
+                        $user = $this->repo->findOneBy(['email' => $email]);
 
-        if ($user) {
-            $output->writeln('User with given email exist.');
-        } else {
-            $userNamespace = $this->provider->getResource(ResourceEnum::USER);
+                        if (!$email) {
+                            throw new LogicException('Email cannot be empty!');
+                        }
 
-            $user = new $userNamespace();
-            $user->setEmail($email);
-            $this->dm->persist($user);
-            $this->setPassword($output, $user);
+                        if ($user) {
+                            throw new LogicException('User with given email already exist!');
+                        }
 
-            $output->writeln('User created.');
-        }
+                        return $email;
+                    }
+                )
+        );
+
+        $userNamespace = $this->provider->getResource(ResourceEnum::USER);
+
+        /** @var UserInterface $user */
+        $user = new $userNamespace();
+        $user->setEmail($email);
+        $this->dm->persist($user);
+        $this->setPassword($input, $output, $user);
+
+        $output->writeln('User created.');
 
         return 0;
     }

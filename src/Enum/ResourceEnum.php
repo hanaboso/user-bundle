@@ -2,7 +2,7 @@
 
 namespace Hanaboso\UserBundle\Enum;
 
-use Hanaboso\CommonsBundle\Enum\EnumAbstract;
+use Hanaboso\Utils\Enum\EnumAbstract;
 
 /**
  * Class ResourceEnum
@@ -19,7 +19,7 @@ class ResourceEnum extends EnumAbstract
     /**
      * @var string[]
      */
-    protected static $choices = [
+    protected static array $choices = [
         self::USER     => 'User entity',
         self::TMP_USER => 'TmpUser entity',
         self::TOKEN    => 'Token entity',

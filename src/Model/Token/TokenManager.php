@@ -8,15 +8,14 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
-use Hanaboso\UserBundle\Enum\UserTypeEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\UserBundle\Repository\Document\TokenRepository as DocumentTokenRepository;
 use Hanaboso\UserBundle\Repository\Entity\TokenRepository as EntityTokenRepository;
+use Hanaboso\Utils\Exception\DateTimeException;
 
 /**
  * Class TokenManager
@@ -62,7 +61,7 @@ class TokenManager
         $this->removeExistingTokens($user);
         /** @var TokenInterface $token */
         $token = new $class();
-        $user->getType() === UserTypeEnum::USER ? $token->setUser($user) : $token->setTmpUser($user);
+        $token->setUserOrTmpUser($user);
         $user->setToken($token);
 
         $this->dm->persist($token);
@@ -96,7 +95,6 @@ class TokenManager
         }
 
         return $token;
-
     }
 
     /**

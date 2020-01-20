@@ -5,10 +5,10 @@ namespace Hanaboso\UserBundle\Document;
 use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Hanaboso\CommonsBundle\Database\Traits\Document\DeletedTrait;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
+use Hanaboso\Utils\Exception\DateTimeException;
 
 /**
  * Class User
@@ -35,17 +35,6 @@ class User extends UserAbstract
      * @ODM\Field(type="date")
      */
     private $updated;
-
-    /**
-     * @param TmpUserInterface $tmpUser
-     *
-     * @return UserInterface
-     * @throws DateTimeException
-     */
-    public static function from(TmpUserInterface $tmpUser): UserInterface
-    {
-        return (new self())->setEmail($tmpUser->getEmail());
-    }
 
     /**
      * @return string
@@ -106,5 +95,15 @@ class User extends UserAbstract
         ];
     }
 
-}
+    /**
+     * @param TmpUserInterface $tmpUser
+     *
+     * @return UserInterface
+     * @throws DateTimeException
+     */
+    public static function from(TmpUserInterface $tmpUser): UserInterface
+    {
+        return (new self())->setEmail($tmpUser->getEmail());
+    }
 
+}

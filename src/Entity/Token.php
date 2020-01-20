@@ -5,8 +5,9 @@ namespace Hanaboso\UserBundle\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Hanaboso\CommonsBundle\Database\Traits\Entity\IdTrait;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
-use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
+use Hanaboso\UserBundle\Enum\UserTypeEnum;
+use Hanaboso\Utils\Date\DateTimeUtils;
+use Hanaboso\Utils\Exception\DateTimeException;
 use LogicException;
 
 /**
@@ -37,7 +38,7 @@ class Token implements TokenInterface
     private $user;
 
     /**
-     * @var UserInterface|TmpUserInterface|null
+     * @var TmpUserInterface|null
      *
      * @ORM\OneToOne(targetEntity="Hanaboso\UserBundle\Entity\TmpUser", mappedBy="token")
      */
@@ -57,7 +58,7 @@ class Token implements TokenInterface
      */
     public function __construct()
     {
-        $this->created = DateTimeUtils::getUTCDateTime();
+        $this->created = DateTimeUtils::getUtcDateTime();
         $this->hash    = uniqid();
     }
 
@@ -90,19 +91,19 @@ class Token implements TokenInterface
     }
 
     /**
-     * @return UserInterface|TmpUserInterface|null
+     * @return TmpUserInterface|null
      */
-    public function getTmpUser(): ?UserInterface
+    public function getTmpUser(): ?TmpUserInterface
     {
         return $this->tmpUser;
     }
 
     /**
-     * @param UserInterface|null $tmpUser
+     * @param TmpUserInterface|null $tmpUser
      *
      * @return TokenInterface
      */
-    public function setTmpUser(?UserInterface $tmpUser): TokenInterface
+    public function setTmpUser(?TmpUserInterface $tmpUser): TokenInterface
     {
         $this->tmpUser = $tmpUser;
 
@@ -121,6 +122,26 @@ class Token implements TokenInterface
         } else {
             throw new LogicException('User is not set.');
         }
+    }
+
+    /**
+     * @param UserInterface|TmpUserInterface $user
+     *
+     * @return TokenInterface
+     */
+    public function setUserOrTmpUser(UserInterface $user): TokenInterface
+    {
+        if ($user->getType() === UserTypeEnum::USER) {
+            $this->setUser($user);
+        } else if ($user->getType() === UserTypeEnum::TMP_USER) {
+            /** @var TmpUserInterface $tmpUser */
+            $tmpUser = $user;
+            $this->setTmpUser($tmpUser);
+        } else {
+            throw new LogicException(sprintf("Unknown user type '%s'!", $user->getType()));
+        }
+
+        return $this;
     }
 
     /**

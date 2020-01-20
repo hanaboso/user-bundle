@@ -14,13 +14,17 @@ use PHPUnit\Framework\TestCase;
  * Class ActivateMessageTest
  *
  * @package UserBundleTests\Unit\Model\Messages
+ *
+ * @covers  \Hanaboso\UserBundle\Model\Messages\ActivateMessage
+ * @covers  \Hanaboso\UserBundle\Model\Messages\UserMessageAbstract
  */
 final class ActivateMessageTest extends TestCase
 {
 
     /**
-     * @covers ActivateMessage::getMessage()
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Messages\ActivateMessage::getMessage
      */
     public function testGetMessage(): void
     {
@@ -30,8 +34,12 @@ final class ActivateMessageTest extends TestCase
         $user = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
         $user->method('getEmail')->willReturn('test@example.com');
         $user->method('getToken')->willReturn($tkn);
-        $message = new ActivateMessage($user);
-        $this->assertEquals(
+        $message = (new ActivateMessage($user))
+            ->setHost($tkn->getHash())
+            ->setSubject('Activate user account')
+            ->setTemplate('')
+            ->setFrom('');
+        self::assertEquals(
             [
                 'to'          => 'test@example.com',
                 'subject'     => MessageSubject::USER_ACTIVATE,

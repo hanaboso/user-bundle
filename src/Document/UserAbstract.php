@@ -6,10 +6,11 @@ use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Exception;
 use Hanaboso\CommonsBundle\Database\Traits\Document\IdTrait;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
-use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
 use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
+use Hanaboso\Utils\Date\DateTimeUtils;
+use Hanaboso\Utils\Exception\DateTimeException;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Class UserAbstract
@@ -49,7 +50,7 @@ abstract class UserAbstract implements UserInterface
      */
     public function __construct()
     {
-        $this->created = DateTimeUtils::getUTCDateTime();
+        $this->created = DateTimeUtils::getUtcDateTime();
     }
 
     /**
@@ -103,7 +104,7 @@ abstract class UserAbstract implements UserInterface
     /**
      * Needed by symfony's UserInterface.
      *
-     * @return mixed[]
+     * @return Role[]|string[]
      */
     public function getRoles(): array
     {
@@ -137,7 +138,7 @@ abstract class UserAbstract implements UserInterface
      */
     public function eraseCredentials(): void
     {
-        throw new Exception('UserAbstract::eraseCredentials is not implemented');
+        throw new Exception(sprintf('%s is not implemented!', __METHOD__));
     }
 
     /**

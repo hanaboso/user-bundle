@@ -2,7 +2,7 @@
 
 namespace Hanaboso\UserBundle\Provider;
 
-use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
+use Hanaboso\Utils\Exception\PipesFrameworkExceptionAbstract;
 
 /**
  * Class ResourceProviderException
@@ -12,9 +12,9 @@ use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
 class ResourceProviderException extends PipesFrameworkExceptionAbstract
 {
 
-    protected const OFFSET = 1900;
-
     public const RESOURCE_NOT_EXIST = self::OFFSET + 1;
     public const RULESET_NOT_EXIST  = self::OFFSET + 2;
+
+    protected const OFFSET = 1_900;
 
 }

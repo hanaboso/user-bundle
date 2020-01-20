@@ -1,0 +1,7 @@
+{
+    "http": "POST /user/login",
+    "headers": [],
+    "body": {
+        "email": "email@example.com"
+    }
+}

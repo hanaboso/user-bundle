@@ -11,12 +11,16 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  * Class UserRepositoryTest
  *
  * @package UserBundleTests\Integration\Repository\Document
+ *
+ * @covers \Hanaboso\UserBundle\Repository\Document\UserRepository
  */
 final class UserRepositoryTest extends DatabaseTestCaseAbstract
 {
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Repository\Document\UserRepository::getArrayOfUsers
      */
     public function testGetArrayOfUsers(): void
     {

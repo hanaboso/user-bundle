@@ -3,10 +3,10 @@
 namespace Hanaboso\UserBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
+use Hanaboso\Utils\Exception\DateTimeException;
 
 /**
  * Class TmpUser

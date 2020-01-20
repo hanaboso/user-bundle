@@ -5,6 +5,7 @@ namespace Hanaboso\UserBundle\Model\Mailer;
 use EmailServiceBundle\Exception\MailerException;
 use EmailServiceBundle\Handler\MailHandler;
 use Hanaboso\UserBundle\Model\Messages\UserMessageAbstract;
+use Hanaboso\Utils\String\Json;
 use RabbitMqBundle\Publisher\PublisherInterface;
 
 /**
@@ -78,7 +79,7 @@ class Mailer
     public function send(UserMessageAbstract $message): void
     {
         if ($this->async) {
-            $this->producer->publish(json_encode($message->getMessage()));
+            $this->producer->publish(Json::encode($message->getMessage()));
         } else {
             $data         = $message->getMessage();
             $data['from'] = $this->from;

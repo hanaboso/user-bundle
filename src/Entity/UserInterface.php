@@ -14,6 +14,13 @@ interface UserInterface extends SecurityCoreUserInterface
 {
 
     /**
+     * @param TmpUserInterface $tmpUser
+     *
+     * @return UserInterface
+     */
+    public static function from(TmpUserInterface $tmpUser): UserInterface;
+
+    /**
      * @return string
      */
     public function getId(): string;
@@ -70,12 +77,5 @@ interface UserInterface extends SecurityCoreUserInterface
      * @return mixed
      */
     public function setDeleted(bool $deleted);
-
-    /**
-     * @param TmpUserInterface $tmpUser
-     *
-     * @return UserInterface
-     */
-    public static function from(TmpUserInterface $tmpUser): UserInterface;
 
 }

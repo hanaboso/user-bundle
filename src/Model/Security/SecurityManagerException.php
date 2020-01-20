@@ -2,7 +2,7 @@
 
 namespace Hanaboso\UserBundle\Model\Security;
 
-use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
+use Hanaboso\Utils\Exception\PipesFrameworkExceptionAbstract;
 
 /**
  * Class SecurityManagerException
@@ -12,10 +12,10 @@ use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
 final class SecurityManagerException extends PipesFrameworkExceptionAbstract
 {
 
-    protected const OFFSET = 1400;
-
     public const USER_NOT_LOGGED            = self::OFFSET + 1;
     public const USER_OR_PASSWORD_NOT_VALID = self::OFFSET + 2;
     public const USER_ENCODER_NOT_FOUND     = self::OFFSET + 3;
+
+    protected const OFFSET = 1_400;
 
 }

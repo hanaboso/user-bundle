@@ -32,19 +32,26 @@ interface TokenInterface
     /**
      * @return TmpUserInterface|null
      */
-    public function getTmpUser(): ?UserInterface;
+    public function getTmpUser(): ?TmpUserInterface;
 
     /**
-     * @param UserInterface|null $tmpUser
+     * @param TmpUserInterface|null $tmpUser
      *
      * @return TokenInterface
      */
-    public function setTmpUser(?UserInterface $tmpUser): TokenInterface;
+    public function setTmpUser(?TmpUserInterface $tmpUser): TokenInterface;
 
     /**
      * @return UserInterface|TmpUserInterface
      */
     public function getUserOrTmpUser(): UserInterface;
+
+    /**
+     * @param UserInterface|TmpUserInterface $user
+     *
+     * @return TokenInterface
+     */
+    public function setUserOrTmpUser(UserInterface $user): TokenInterface;
 
     /**
      * @return string

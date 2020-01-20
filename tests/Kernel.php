@@ -61,6 +61,7 @@ class Kernel extends BaseKernel
         ];
         foreach ($contents as $class => $envs) {
             $envs;
+
             yield new $class();
         }
     }

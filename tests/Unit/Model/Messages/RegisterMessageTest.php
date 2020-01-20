@@ -13,13 +13,17 @@ use PHPUnit\Framework\TestCase;
  * Class RegisterMessageTest
  *
  * @package UserBundleTests\Unit\Model\Messages
+ *
+ * @covers  \Hanaboso\UserBundle\Model\Messages\RegisterMessage
+ * @covers  \Hanaboso\UserBundle\Model\Messages\UserMessageAbstract
  */
 final class RegisterMessageTest extends TestCase
 {
 
     /**
-     * @covers RegisterMessage::getMessage()
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Messages\RegisterMessage::getMessage
      */
     public function testGetMessage(): void
     {
@@ -27,7 +31,7 @@ final class RegisterMessageTest extends TestCase
         $user = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
         $user->method('getEmail')->willReturn('test@example.com');
         $message = new RegisterMessage($user);
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'to'          => 'test@example.com',
                 'subject'     => MessageSubject::USER_REGISTER,

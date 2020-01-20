@@ -3,11 +3,11 @@
 namespace Hanaboso\UserBundle\Repository\Document;
 
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
-use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
+use Hanaboso\Utils\Date\DateTimeUtils;
+use Hanaboso\Utils\Exception\DateTimeException;
 
 /**
  * Class TokenRepository
@@ -30,7 +30,7 @@ class TokenRepository extends DocumentRepository
         /** @var Token $token */
         $token = $this->createQueryBuilder()
             ->field('hash')->equals($hash)
-            ->field('created')->gte(DateTimeUtils::getUTCDateTime('-1 Day'))
+            ->field('created')->gte(DateTimeUtils::getUtcDateTime('-1 Day'))
             ->getQuery()
             ->getSingleResult();
 

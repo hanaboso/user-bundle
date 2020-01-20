@@ -6,8 +6,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Hanaboso\CommonsBundle\Database\Traits\Entity\IdTrait;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
-use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
+use Hanaboso\Utils\Date\DateTimeUtils;
+use Hanaboso\Utils\Exception\DateTimeException;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Class UserAbstract
@@ -40,7 +41,7 @@ abstract class UserAbstract implements UserInterface
      */
     public function __construct()
     {
-        $this->created = DateTimeUtils::getUTCDateTime();
+        $this->created = DateTimeUtils::getUtcDateTime();
     }
 
     /**
@@ -74,7 +75,7 @@ abstract class UserAbstract implements UserInterface
     /**
      * Needed by symfony's UserInterface.
      *
-     * @return mixed[]
+     * @return Role[]|string[]
      */
     public function getRoles(): array
     {

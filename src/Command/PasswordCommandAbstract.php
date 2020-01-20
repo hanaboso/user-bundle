@@ -5,11 +5,13 @@ namespace Hanaboso\UserBundle\Command;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Hanaboso\UserBundle\Entity\UserInterface;
+use LogicException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 /**
@@ -31,30 +33,49 @@ abstract class PasswordCommandAbstract extends Command
     protected $encoder;
 
     /**
+     * @param InputInterface  $input
      * @param OutputInterface $output
      * @param UserInterface   $user
      *
      * @throws ORMException
-     * @throws OptimisticLockException
      * @throws MongoDBException
      */
-    protected function setPassword(OutputInterface $output, UserInterface $user): void
+    protected function setPassword(InputInterface $input, OutputInterface $output, UserInterface $user): void
     {
-        $pwd1 = '';
-        while (TRUE) {
-            $output->writeln('Set new password:');
-            system('stty -echo');
-            $pwd1 = trim((string) fgets(STDIN));
-            $output->writeln('Repeat password:');
-            $pwd2 = trim((string) fgets(STDIN));
-            system('stty echo');
+        $helper   = $this->getHelper('question');
+        $password = $helper->ask(
+            $input,
+            $output,
+            (new Question('User password: '))
+                ->setValidator(
+                    static function (?string $answer): string {
+                        if (!$answer) {
+                            throw new LogicException('Password cannot be empty!');
+                        }
 
-            if ($pwd1 === $pwd2) {
-                break;
-            }
-            $output->writeln('Passwords don\'t match.');
-        }
-        $user->setPassword($this->encoder->encodePassword($pwd1, ''));
+                        return $answer;
+                    }
+                )
+                ->setHidden(TRUE)
+        );
+
+        $password = $helper->ask(
+            $input,
+            $output,
+            (new Question('User password again: '))
+                ->setValidator(
+                    static function (?string $answer) use ($password): ?string {
+                        if ($answer !== $password) {
+                            throw new LogicException('Both passwords must be same!');
+                        }
+
+                        return $answer;
+                    }
+                )
+                ->setHidden(TRUE)
+        );
+
+        $user->setPassword($this->encoder->encodePassword($password, ''));
         $this->dm->flush();
     }
 

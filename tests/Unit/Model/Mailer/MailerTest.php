@@ -15,23 +15,27 @@ use RabbitMqBundle\Publisher\Publisher;
  * Class MailerTest
  *
  * @package UserBundleTests\Unit\Model\Mailer
+ *
+ * @covers  \Hanaboso\UserBundle\Model\Mailer\Mailer
  */
 final class MailerTest extends TestCase
 {
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Mailer\Mailer::send
      */
     public function testSendSync(): void
     {
         $producer = $this->createMock(Publisher::class);
         $producer
-            ->expects($this->never())
+            ->expects(self::never())
             ->method('publish');
 
         $mailHandler = $this->createMock(MailHandler::class);
         $mailHandler
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('send');
 
         $mailer = new Mailer($producer, $mailHandler, 'from@email.com', FALSE);
@@ -40,17 +44,19 @@ final class MailerTest extends TestCase
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Mailer\Mailer::send
      */
     public function testSendAsync(): void
     {
         $producer = $this->createMock(Publisher::class);
         $producer
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('publish');
 
         $mailHandler = $this->createMock(MailHandler::class);
         $mailHandler
-            ->expects($this->never())
+            ->expects(self::never())
             ->method('send');
 
         $mailer = new Mailer($producer, $mailHandler, 'from@email.com');

@@ -3,8 +3,8 @@
 namespace Hanaboso\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
+use Hanaboso\Utils\Exception\DateTimeException;
 
 /**
  * Class TmpUser

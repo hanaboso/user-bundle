@@ -1,7 +1,7 @@
 {
     "name": "hanaboso/user-bundle",
     "license": "proprietary",
-    "version": "1.3.1",
+    "version": "1.3.2",
     "autoload": {
         "psr-4": {
             "Hanaboso\\UserBundle\\": "src/"
@@ -13,14 +13,13 @@
         }
     },
     "require": {
-        "php": "^7.3",
+        "php": "^7.4",
         "ext-json": "*",
-        "ext-readline": "*",
         "doctrine/orm": "^2.7",
         "friendsofsymfony/rest-bundle": "^2.6",
-        "hanaboso/commons-bundle": "^1.3",
-        "hanaboso/email-service-bundle": "^1.0",
-        "hanaboso/rabbit-mq-bundle": "^1.1"
+        "hanaboso/commons-bundle": "^2.0",
+        "hanaboso/email-service-bundle": "^1.1",
+        "hanaboso/rabbit-mq-bundle": "^1.3"
     },
     "require-dev": {
         "hanaboso/php-check-utils": "^1.1",

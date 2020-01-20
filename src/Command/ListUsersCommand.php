@@ -61,10 +61,10 @@ class ListUsersCommand extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return int|null
+     * @return int
      * @throws MongoDBException
      */
-    protected function execute(InputInterface $input, OutputInterface $output): ?int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $input;
         $table = new Table($output);

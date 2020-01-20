@@ -4,11 +4,11 @@ namespace Hanaboso\UserBundle\Repository\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
-use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
 use Hanaboso\UserBundle\Entity\Token;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
+use Hanaboso\Utils\Date\DateTimeUtils;
+use Hanaboso\Utils\Exception\DateTimeException;
 
 /**
  * Class TokenRepository
@@ -34,7 +34,7 @@ class TokenRepository extends EntityRepository
             ->where('t.hash = :hash')
             ->andWhere('t.created > :created')
             ->setParameter('hash', $hash)
-            ->setParameter('created', DateTimeUtils::getUTCDateTime('-1 day'))
+            ->setParameter('created', DateTimeUtils::getUtcDateTime('-1 day'))
             ->getQuery()
             ->getOneOrNullResult();
 

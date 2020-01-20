@@ -1,0 +1,5 @@
+{
+    "http": "DELETE /user/0/delete",
+    "headers": [],
+    "body": []
+}

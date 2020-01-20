@@ -45,6 +45,11 @@ abstract class UserMessageAbstract
     protected $user;
 
     /**
+     * @return mixed[]
+     */
+    abstract public function getMessage(): array;
+
+    /**
      * UserMessageAbstract constructor.
      *
      * @param UserInterface $user
@@ -67,10 +72,5 @@ abstract class UserMessageAbstract
 
         return $this;
     }
-
-    /**
-     * @return mixed[]
-     */
-    abstract public function getMessage(): array;
 
 }

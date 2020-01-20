@@ -18,6 +18,8 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  * Class TokenManagerTest
  *
  * @package UserBundleTests\Integration\Model\Token
+ *
+ * @covers  \Hanaboso\UserBundle\Model\Token\TokenManager
  */
 final class TokenManagerTest extends DatabaseTestCaseAbstract
 {
@@ -34,17 +36,8 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->tokenManager    = self::$container->get('hbpf.user.manager.token');
-        $this->tokenRepository = $this->dm->getRepository(Token::class);
-    }
-
-    /**
-     * @covers TokenManager::create()
-     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::create
      */
     public function testCreateUserToken(): void
     {
@@ -59,13 +52,14 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
         $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
         /** @var UserInterface $tokenUser */
         $tokenUser = $token->getUser();
-        $this->assertEquals(1, count($this->tokenRepository->findBy([UserTypeEnum::USER => $user])));
-        $this->assertEquals($user->getEmail(), $tokenUser->getEmail());
+        self::assertCount(1, $this->tokenRepository->findBy([UserTypeEnum::USER => $user]));
+        self::assertEquals($user->getEmail(), $tokenUser->getEmail());
     }
 
     /**
-     * @covers TokenManager::create()
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::create
      */
     public function testCreateTmpUserToken(): void
     {
@@ -80,27 +74,27 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
         $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
         /** @var UserInterface $tokenUser */
         $tokenUser = $token->getTmpUser();
-        $this->assertEquals(1, count($this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user])));
-        $this->assertEquals($user->getEmail(), $tokenUser->getEmail());
+        self::assertCount(1, $this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user]));
+        self::assertEquals($user->getEmail(), $tokenUser->getEmail());
     }
 
     /**
-     * @covers TokenManager::validate()
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::validate
      */
     public function testValidateToken(): void
     {
         $token = new Token();
         $this->pfd($token);
 
-        /** @var Token $token */
-        $token = $this->tokenManager->validate($token->getHash());
-        $this->assertInstanceOf(Token::class, $token);
+        self::assertInstanceOf(Token::class, $this->tokenManager->validate($token->getHash()));
     }
 
     /**
-     * @covers TokenManager::validate()
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::validate
      */
     public function testValidateInvalidToken(): void
     {
@@ -117,8 +111,9 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     * @covers TokenManager::delete()
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::delete
      */
     public function testDeleteUserToken(): void
     {
@@ -127,15 +122,16 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
 
         /** @var Token $token */
         $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
-        $this->assertEquals(1, count($this->tokenRepository->findBy([UserTypeEnum::USER => $user])));
+        self::assertCount(1, $this->tokenRepository->findBy([UserTypeEnum::USER => $user]));
 
         $this->tokenManager->delete($token);
-        $this->assertEquals(0, count($this->tokenRepository->findBy([UserTypeEnum::USER => $user])));
+        self::assertCount(0, $this->tokenRepository->findBy([UserTypeEnum::USER => $user]));
     }
 
     /**
-     * @covers TokenManager::delete()
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::delete
      */
     public function testDeleteTmpUserToken(): void
     {
@@ -144,10 +140,21 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
 
         /** @var Token $token */
         $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
-        $this->assertEquals(1, count($this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user])));
+        self::assertCount(1, $this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user]));
 
         $this->tokenManager->delete($token);
-        $this->assertEquals(0, count($this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user])));
+        self::assertCount(0, $this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user]));
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->tokenManager    = self::$container->get('hbpf.user.manager.token');
+        $this->tokenRepository = $this->dm->getRepository(Token::class);
     }
 
 }

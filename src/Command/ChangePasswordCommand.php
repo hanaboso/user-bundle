@@ -11,8 +11,10 @@ use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
+use LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
 /**
@@ -68,24 +70,35 @@ class ChangePasswordCommand extends PasswordCommandAbstract
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return int|null
+     * @return int
      * @throws ORMException
      * @throws MongoDBException
      */
-    protected function execute(InputInterface $input, OutputInterface $output): ?int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $input;
-        $output->writeln('Password editing, select user by email:');
-        $user = readline();
-        /** @var UserInterface|null $user */
-        $user = $this->repo->findOneBy(['email' => $user]);
 
-        if (!$user) {
-            $output->writeln('User with given email doesn\'t exist.');
-        } else {
-            $this->setPassword($output, $user);
-            $output->writeln('Password changed.');
-        }
+        $helper = $this->getHelper('question');
+        $user   = $helper->ask(
+            $input,
+            $output,
+            (new Question('User email: '))
+                ->setValidator(
+                    function (?string $email): UserInterface {
+                        /** @var UserInterface|null $email */
+                        $email = $this->repo->findOneBy(['email' => $email]);
+
+                        if (!$email) {
+                            throw new LogicException('There is no user for given email!');
+                        }
+
+                        return $email;
+                    }
+                )
+        );
+
+        $this->setPassword($input, $output, $user);
+        $output->writeln('Password changed.');
 
         return 0;
     }

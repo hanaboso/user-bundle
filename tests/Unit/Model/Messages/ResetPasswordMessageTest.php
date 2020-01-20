@@ -13,13 +13,17 @@ use PHPUnit\Framework\TestCase;
  * Class ResetPasswordMessageTest
  *
  * @package UserBundleTests\Unit\Model\Messages
+ *
+ * @covers  \Hanaboso\UserBundle\Model\Messages\ResetPasswordMessage
+ * @covers  \Hanaboso\UserBundle\Model\Messages\UserMessageAbstract
  */
 final class ResetPasswordMessageTest extends TestCase
 {
 
     /**
-     * @covers ResetPasswordMessage::getMessage()
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Messages\ResetPasswordMessage::getMessage
      */
     public function testGetMessage(): void
     {
@@ -28,9 +32,12 @@ final class ResetPasswordMessageTest extends TestCase
         $user->method('getEmail')->willReturn('test@example.com');
         $user->method('getUsername')->willReturn('FooTooBoo');
 
-        $message = new ResetPasswordMessage($user);
-        $message->setHost('/user/%s/set_password');
-        $this->assertEquals(
+        $message = (new ResetPasswordMessage($user))
+            ->setHost('/user/%s/set_password')
+            ->setSubject('User reset password')
+            ->setTemplate('')
+            ->setFrom('');
+        self::assertEquals(
             [
                 'to'          => 'test@example.com',
                 'subject'     => MessageSubject::USER_RESET_PASSWORD,

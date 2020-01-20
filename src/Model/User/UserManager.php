@@ -3,12 +3,13 @@
 namespace Hanaboso\UserBundle\Model\User;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\LockException;
+use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use EmailServiceBundle\Exception\MailerException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
@@ -33,6 +34,7 @@ use Hanaboso\UserBundle\Repository\Document\TmpUserRepository as OdmTmpRepo;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\TmpUserRepository as OrmTmpRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
+use Hanaboso\Utils\Exception\DateTimeException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -142,6 +144,8 @@ class UserManager
      *
      * @return UserInterface
      * @throws SecurityManagerException
+     * @throws LockException
+     * @throws MappingException
      */
     public function login(array $data): UserInterface
     {
@@ -153,6 +157,8 @@ class UserManager
 
     /**
      * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function loggedUser(): UserInterface
@@ -161,6 +167,8 @@ class UserManager
     }
 
     /**
+     * @throws LockException
+     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function logout(): void
@@ -218,8 +226,8 @@ class UserManager
      * @throws ORMException
      * @throws TokenManagerException
      * @throws ResourceProviderException
-     * @throws DateTimeException
      * @throws MongoDBException
+     * @throws DateTimeException
      */
     public function activate(string $token): UserInterface
     {
@@ -275,6 +283,7 @@ class UserManager
      * @throws MongoDBException
      * @throws ORMException
      * @throws SecurityManagerException
+     * @throws MappingException
      */
     public function changePassword(array $data): void
     {
@@ -327,6 +336,7 @@ class UserManager
      * @throws ORMException
      * @throws SecurityManagerException
      * @throws UserManagerException
+     * @throws MappingException
      */
     public function delete($user): UserInterface
     {

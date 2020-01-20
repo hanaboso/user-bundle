@@ -2,7 +2,7 @@
 
 namespace Hanaboso\UserBundle\Model\Token;
 
-use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
+use Hanaboso\Utils\Exception\PipesFrameworkExceptionAbstract;
 
 /**
  * Class TokenManagerException
@@ -12,9 +12,9 @@ use Hanaboso\CommonsBundle\Exception\PipesFrameworkExceptionAbstract;
 final class TokenManagerException extends PipesFrameworkExceptionAbstract
 {
 
-    protected const OFFSET = 1100;
-
     public const TOKEN_NOT_VALID    = self::OFFSET + 1;
     public const TOKEN_ALREADY_USED = self::OFFSET + 2;
+
+    protected const OFFSET = 1_100;
 
 }

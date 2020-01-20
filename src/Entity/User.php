@@ -6,9 +6,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\InheritanceType;
 use Hanaboso\CommonsBundle\Database\Traits\Entity\DeletedTrait;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
-use Hanaboso\CommonsBundle\Utils\DateTimeUtils;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
+use Hanaboso\Utils\Date\DateTimeUtils;
+use Hanaboso\Utils\Exception\DateTimeException;
 
 /**
  * Class User
@@ -45,17 +45,6 @@ class User extends UserAbstract
      * @ORM\Column(type="datetime")
      */
     protected $updated;
-
-    /**
-     * @param TmpUserInterface $tmpUser
-     *
-     * @return UserInterface
-     * @throws DateTimeException
-     */
-    public static function from(TmpUserInterface $tmpUser): UserInterface
-    {
-        return (new self())->setEmail($tmpUser->getEmail());
-    }
 
     /**
      * @return string
@@ -143,7 +132,7 @@ class User extends UserAbstract
      */
     public function preFlush(): void
     {
-        $this->updated = DateTimeUtils::getUTCDateTime();
+        $this->updated = DateTimeUtils::getUtcDateTime();
     }
 
     /**
@@ -155,6 +144,17 @@ class User extends UserAbstract
             'id'    => $this->getId(),
             'email' => $this->getEmail(),
         ];
+    }
+
+    /**
+     * @param TmpUserInterface $tmpUser
+     *
+     * @return UserInterface
+     * @throws DateTimeException
+     */
+    public static function from(TmpUserInterface $tmpUser): UserInterface
+    {
+        return (new self())->setEmail($tmpUser->getEmail());
     }
 
 }

@@ -3,33 +3,30 @@
 namespace UserBundleTests\Controller;
 
 use Exception;
+use Hanaboso\UserBundle\Controller\UserController;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
+use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
+use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
+use PHPUnit\Framework\MockObject\MockObject;
 use UserBundleTests\ControllerTestCaseAbstract;
 
 /**
  * Class UserControllerTest
  *
  * @package UserBundleTests\Controller
+ *
+ * @covers  \Hanaboso\UserBundle\Controller\UserController
  */
 final class UserControllerTest extends ControllerTestCaseAbstract
 {
 
     /**
      * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        // Intentionally not calling parent setUp
-        self::startClient();
-        $this->dm = self::$container->get('doctrine_mongodb.odm.default_document_manager');
-        $this->clearMongo();
-    }
-
-    /**
-     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::loginAction
      */
     public function testLogin(): void
     {
@@ -44,6 +41,8 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::loginAction
      */
     public function testLoginNotFoundEmail(): void
     {
@@ -57,6 +56,8 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::loginAction
      */
     public function testLoginNotFoundPassword(): void
     {
@@ -70,6 +71,18 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::loginAction
+     */
+    public function testLoginMissingParameter(): void
+    {
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/missingParameterLoginRequest.json');
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
      */
     public function testLoggedUser(): void
     {
@@ -80,14 +93,36 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
      */
     public function testLoggedUserNotLogged(): void
     {
-        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedLoggedRequest.json', ['id' => 1]);
+        $this->loginUser('email@example.com', 'passw0rd');
+
+        $this->prepareHandlerMock('loggedUser', SecurityManagerException::class);
+
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedLoggedRequest.json');
     }
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
+     */
+    public function testLoggedUserException(): void
+    {
+        $this->loginUser('email@example.com', 'passw0rd');
+
+        $this->prepareHandlerMock('loggedUser');
+
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/exceptionLoggedRequest.json');
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::logoutAction
      */
     public function testLogout(): void
     {
@@ -98,6 +133,60 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::logoutAction
+     */
+    public function testLogoutDirect(): void
+    {
+        $this->loginUser('email@example.com', 'passw0rd');
+
+        /** @var UserController $controller */
+        $controller = self::$container->get('Hanaboso\UserBundle\Controller\UserController');
+        $response   = $controller->logoutAction();
+
+        self::assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::logoutAction
+     */
+    public function testLogoutDirectExceptionSecurity(): void
+    {
+        $this->loginUser('email@example.com', 'passw0rd');
+
+        $this->prepareHandlerMock('logout', SecurityManagerException::class);
+
+        /** @var UserController $controller */
+        $controller = self::$container->get('Hanaboso\UserBundle\Controller\UserController');
+        $response   = $controller->logoutAction();
+
+        self::assertEquals(401, $response->getStatusCode());
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::logoutAction
+     */
+    public function testLogoutDirectException(): void
+    {
+        $this->loginUser('email@example.com', 'passw0rd');
+
+        $this->prepareHandlerMock('logout');
+
+        /** @var UserController $controller */
+        $controller = self::$container->get('Hanaboso\UserBundle\Controller\UserController');
+        $response   = $controller->logoutAction();
+
+        self::assertEquals(500, $response->getStatusCode());
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::registerAction
      */
     public function testRegister(): void
     {
@@ -108,6 +197,8 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::registerAction
      */
     public function testRegisterNotUniqueEmail(): void
     {
@@ -121,9 +212,24 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::registerAction
+     */
+    public function testRegisterException(): void
+    {
+        $this->prepareHandlerMock('register');
+
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/exceptionRegisterRequest.json');
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::activateAction
      */
     public function testActivate(): void
     {
+        /** @var TmpUser $user */
         $user = (new TmpUser())->setEmail('email@example.com');
         $this->pfd($user);
 
@@ -139,9 +245,12 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::activateAction
      */
     public function testActivateNotValid(): void
     {
+        /** @var TmpUser $user */
         $user = (new TmpUser())->setEmail('email@example.com');
         $this->pfd($user);
 
@@ -153,6 +262,24 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::activateAction
+     */
+    public function testActivateException(): void
+    {
+        $this->prepareHandlerMock('activate');
+
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/exceptionActivateRequest.json',
+            [],
+            ['token' => 'Unknown']
+        );
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::setPasswordAction
      */
     public function testSetPassword(): void
     {
@@ -173,6 +300,8 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::setPasswordAction
      */
     public function testSetPasswordNotValid(): void
     {
@@ -193,6 +322,24 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::setPasswordAction
+     */
+    public function testSetPasswordException(): void
+    {
+        $this->prepareHandlerMock('setPassword');
+
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/exceptionSetPasswordRequest.json',
+            [],
+            ['token' => 'Unknown']
+        );
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::changePasswordAction
      */
     public function testChangePassword(): void
     {
@@ -202,19 +349,41 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(__DIR__ . '/data/UserControllerTest/changePasswordRequest.json');
         /** @var User $existingUser */
         $existingUser = $this->dm->getRepository(User::class)->find($user->getId());
-        $this->assertNotSame($user->getPassword(), $existingUser->getPassword());
+        self::assertNotSame($user->getPassword(), $existingUser->getPassword());
     }
 
     /**
+     * @throws Exception
      *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::changePasswordAction
      */
     public function testChangePasswordNotLogged(): void
     {
+        $this->loginUser('email@example.com', 'passw0rd');
+
+        $this->prepareHandlerMock('changePassword', SecurityManagerException::class);
+
         $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedChangePasswordRequest.json');
     }
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::changePasswordAction
+     */
+    public function testChangePasswordException(): void
+    {
+        $this->loginUser('email@example.com', 'passw0rd');
+
+        $this->prepareHandlerMock('changePassword');
+
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/exceptionChangePasswordRequest.json');
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::resetPasswordAction
      */
     public function testResetPassword(): void
     {
@@ -232,6 +401,8 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::resetPasswordAction
      */
     public function testResetPasswordNotFoundEmail(): void
     {
@@ -248,6 +419,20 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::resetPasswordAction
+     */
+    public function testResetPasswordException(): void
+    {
+        $this->prepareHandlerMock('resetPassword');
+
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/exceptionResetPasswordRequest.json');
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::deleteAction
      */
     public function testDelete(): void
     {
@@ -266,6 +451,8 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::deleteAction
      */
     public function testDeleteMissing(): void
     {
@@ -276,6 +463,22 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::deleteAction
+     */
+    public function testDeleteException(): void
+    {
+        $this->prepareHandlerMock('delete');
+
+        $this->loginUser('email@example.com', 'passw0rd');
+
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/exceptionDeleteUserRequest.json');
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::deleteAction
      */
     public function testDeleteYourself(): void
     {
@@ -289,15 +492,45 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     * ------------------------------------- HELPERS ------------------------------------------
+     * @throws Exception
      */
 
     /**
      * @throws Exception
      */
+    protected function setUp(): void
+    {
+        // Intentionally not calling parent setUp
+        self::startClient();
+        $this->dm = self::$container->get('doctrine_mongodb.odm.default_document_manager');
+        $this->clearMongo();
+    }
+
+    /**
+     * ------------------------------------- HELPERS ------------------------------------------
+     */
+
+    /**
+     *
+     */
     private function prepareMailerMock(): void
     {
-        self::$container->set('hbpf.user.mailer', $this->createMock(Mailer::class));
+        self::$container->set('hbpf.user.mailer', self::createMock(Mailer::class));
+    }
+
+    /**
+     * @phpstan-param class-string<\Throwable> $exception
+     *
+     * @param string $method
+     * @param string $exception
+     */
+    private function prepareHandlerMock(string $method, string $exception = Exception::class): void
+    {
+        /** @var UserHandler|MockObject $handler */
+        $handler = self::createMock(UserHandler::class);
+        $handler->method($method)->willThrowException(new $exception('Something gone wrong!'));
+
+        self::$container->set('hbpf.user.handler.user', $handler);
     }
 
 }

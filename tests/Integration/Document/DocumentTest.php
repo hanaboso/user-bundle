@@ -13,6 +13,11 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  * Class DocumentTest
  *
  * @package UserBundleTests\Integration\Document
+ *
+ * @covers  \Hanaboso\UserBundle\Document\TmpUser
+ * @covers  \Hanaboso\UserBundle\Document\Token
+ * @covers  \Hanaboso\UserBundle\Document\User
+ * @covers  \Hanaboso\UserBundle\Document\UserAbstract
  */
 final class DocumentTest extends DatabaseTestCaseAbstract
 {
@@ -45,7 +50,7 @@ final class DocumentTest extends DatabaseTestCaseAbstract
         /** @var Token $existingToken */
         $existingToken = $tokenRepository->find($token->getId());
 
-        $this->assertEquals(
+        self::assertEquals(
             $token->getCreated()->format('d. m. Y H:i:s'),
             $existingToken->getCreated()->format('d. m. Y H:i:s')
         );
@@ -58,8 +63,8 @@ final class DocumentTest extends DatabaseTestCaseAbstract
         /** @var UserInterface $eTmpTokenUser */
         $eTmpTokenUser = $existingToken->getTmpUser();
 
-        $this->assertEquals($tokenUser->getEmail(), $eTokenUser->getEmail());
-        $this->assertEquals($tmpTokenUser->getEmail(), $eTmpTokenUser->getEmail());
+        self::assertEquals($tokenUser->getEmail(), $eTokenUser->getEmail());
+        self::assertEquals($tmpTokenUser->getEmail(), $eTmpTokenUser->getEmail());
     }
 
 }

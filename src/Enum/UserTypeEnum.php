@@ -2,7 +2,7 @@
 
 namespace Hanaboso\UserBundle\Enum;
 
-use Hanaboso\CommonsBundle\Enum\EnumAbstract;
+use Hanaboso\Utils\Enum\EnumAbstract;
 
 /**
  * Class UserTypeEnum
@@ -18,7 +18,7 @@ final class UserTypeEnum extends EnumAbstract
     /**
      * @var string[]
      */
-    protected static $choices = [
+    protected static array $choices = [
         self::USER     => 'User',
         self::TMP_USER => 'Unactivated user',
     ];

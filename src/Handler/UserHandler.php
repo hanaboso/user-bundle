@@ -3,14 +3,13 @@
 namespace Hanaboso\UserBundle\Handler;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\LockException;
+use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use EmailServiceBundle\Exception\MailerException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
-use Hanaboso\CommonsBundle\Exception\DateTimeException;
-use Hanaboso\CommonsBundle\Exception\PipesFrameworkException;
-use Hanaboso\CommonsBundle\Utils\ControllerUtils;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
@@ -19,6 +18,9 @@ use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
+use Hanaboso\Utils\Exception\DateTimeException;
+use Hanaboso\Utils\Exception\PipesFrameworkException;
+use Hanaboso\Utils\System\ControllerUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,11 +62,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param UserManager            $userManager
      * @param ResourceProvider       $provider
      */
-    public function __construct(
-        DatabaseManagerLocator $userDml,
-        UserManager $userManager,
-        ResourceProvider $provider
-    )
+    public function __construct(DatabaseManagerLocator $userDml, UserManager $userManager, ResourceProvider $provider)
     {
         $this->dm          = $userDml->get();
         $this->userManager = $userManager;
@@ -77,6 +75,8 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @return UserInterface
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
+     * @throws LockException
+     * @throws MappingException
      */
     public function login(array $data): UserInterface
     {
@@ -87,6 +87,8 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
 
     /**
      * @return UserInterface
+     * @throws LockException
+     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function loggedUser(): UserInterface
@@ -96,6 +98,8 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
 
     /**
      * @return mixed[]
+     * @throws LockException
+     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function logout(): array
@@ -171,6 +175,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @throws ORMException
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
+     * @throws MappingException
      */
     public function changePassword(array $data): array
     {
@@ -210,6 +215,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @throws ResourceProviderException
      * @throws SecurityManagerException
      * @throws UserManagerException
+     * @throws MappingException
      */
     public function delete(string $id): UserInterface
     {
@@ -228,18 +234,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
         $request;
 
         return new Response('{}', 200, ['Content-Type' => 'application/json']);
-    }
-
-    /**
-     * @return mixed[]
-     */
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            KernelEvents::EXCEPTION => [
-                ['onCoreException', 1000],
-            ],
-        ];
     }
 
     /**
@@ -265,7 +259,18 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
             $body['message'] = 'User not logged!';
             $event->setResponse(new JsonResponse($body, 401));
         }
+    }
 
+    /**
+     * @return mixed[]
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::EXCEPTION => [
+                ['onCoreException', 1_000],
+            ],
+        ];
     }
 
     /**
