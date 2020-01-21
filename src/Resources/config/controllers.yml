@@ -6,5 +6,4 @@ services:
         class: Hanaboso\UserBundle\Controller\UserController
         arguments:
             - '@hbpf.user.handler.user'
-        calls:
-            - ['setContainer', ['@service_container']]
+

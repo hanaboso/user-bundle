@@ -3,7 +3,6 @@
 namespace Hanaboso\UserBundle\Controller;
 
 use Exception;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
@@ -21,7 +20,7 @@ use Throwable;
  *
  * @package Hanaboso\UserBundle\Controller
  */
-class UserController extends AbstractFOSRestController
+class UserController
 {
 
     use ControllerTrait;

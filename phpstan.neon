@@ -5,6 +5,11 @@ parameters:
 #    doctrine:
 #        objectManagerLoader: tests/DocumentManagerLoader.php
     symfony:
-        container_xml_path: %rootDir%/../../../var/cache/test/testsUserBundleTests_KernelTestDebugContainer.xml
+        container_xml_path: %rootDir%/../../../var/cache/test/UserBundleTests_KernelTestDebugContainer.xml
     excludes_analyse:
         - src/Model/User/UserManager.php
+    ignoreErrors:
+        -
+            message: '#PHPDoc tag @var for variable .+ contains unresolvable type#'
+            path: tests/*
+

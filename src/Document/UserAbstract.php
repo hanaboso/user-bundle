@@ -10,7 +10,6 @@ use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\Utils\Date\DateTimeUtils;
 use Hanaboso\Utils\Exception\DateTimeException;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Class UserAbstract
@@ -104,7 +103,7 @@ abstract class UserAbstract implements UserInterface
     /**
      * Needed by symfony's UserInterface.
      *
-     * @return Role[]|string[]
+     * @return string[]
      */
     public function getRoles(): array
     {

@@ -47,7 +47,7 @@ database-create:
 # App dev
 init-dev: docker-up-force composer-install
 
-codesniffer:
+phpcodesniffer:
 	$(DE) ./vendor/bin/phpcs --standard=./ruleset.xml src/ tests/
 
 phpstan:
@@ -76,4 +76,4 @@ phpcoverage-ci:
 
 test: docker-up-force composer-install fasttest
 
-fasttest: clear-cache codesniffer phpstan phpunit phpintegration phpcontroller phpcoverage-ci
+fasttest: clear-cache phpcodesniffer phpstan phpunit phpintegration phpcontroller phpcoverage-ci
