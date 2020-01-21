@@ -6,10 +6,10 @@ doctrine:
         connections:
             default:
                 driver:   pdo_mysql
-                host:     'mariadb'
-                dbname:   'user'
-                user:     'root'
-                password: 'root'
+                host:     '%env(string:MARIADB_DSN)%'
+                dbname:   '%env(string:MARIADB_DB)%'
+                user:     '%env(string:MARIADB_USER)%'
+                password: '%env(string:MARIADB_PASS)%'
     orm:
         default_entity_manager: ~
         auto_generate_proxy_classes: "%kernel.debug%"

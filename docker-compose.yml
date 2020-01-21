@@ -18,20 +18,17 @@ services:
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - MONGODB_DSN=mongodb://mongo
+      - MONGODB_DB=user
+      - MARIADB_DSN=mariadb
+      - MARIADB_DB=user
+      - MARIADB_USER=root
+      - MARIADB_PASS=root
 
   mongo:
     image: mongo:latest
     volumes:
       - mongo:/data/db
-
-  rabbitmq:
-    image: rabbitmq:management-alpine
-    volumes:
-      - rabbit-mq:/var/lib/rabbitmq
-    environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
-      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
 
   mariadb:
       image: mariadb:latest

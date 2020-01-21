@@ -14,7 +14,7 @@ test:
     stage: test
     script:
         - export COMPOSE_PROJECT_NAME="${CI_PIPELINE_ID}-user-bundle"
-        - make test
+        - make test docker-down-clean
 
 mirror:
     stage: mirror

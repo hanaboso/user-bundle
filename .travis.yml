@@ -1,0 +1,70 @@
+language: php
+
+services:
+    - mariadb
+    - mongodb
+addons:
+    mariadb: '10.3'
+
+before_install:
+    - echo 'apc.enable_cli = 1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+    - phpenv config-rm xdebug.ini || return 0
+    - pecl install pcov
+    - echo "extension=mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - mysql -uroot -e 'CREATE USER IF NOT EXISTS travis@localhost; GRANT ALL ON *.* TO travis@localhost;'
+    - mysql -utravis -e 'CREATE DATABASE IF NOT EXISTS user1;'
+    - mysql -utravis -e 'CREATE DATABASE IF NOT EXISTS user2;'
+    - mysql -utravis -e 'CREATE DATABASE IF NOT EXISTS user3;'
+    - mysql -utravis -e 'CREATE DATABASE IF NOT EXISTS user4;'
+    - export MONGODB_DSN=mongodb://localhost
+    - export MONGODB_DB=user
+    - export MARIADB_DSN=localhost
+    - export MARIADB_DB=user
+    - export MARIADB_USER=travis
+    - export MARIADB_PASS=
+    - export SMTP_HOST=127.0.0.1
+    - export SMTP_PORT=1025
+    - export SMTP_USER=null
+    - export SMTP_PASSWORD=null
+    - export KERNEL_CLASS="UserBundleTests\\Kernel"
+
+install:
+    - travis_retry composer install --no-progress --prefer-dist
+    - tests/testApp/bin/console cache:warmup --env=test
+    - tests/testApp/bin/console doctrine:database:create --env=test
+    - tests/testApp/bin/console doctrine:schema:create --env=test
+    - mysqldump -utravis user | mysql -utravis user1
+    - mysqldump -utravis user | mysql -utravis user2
+    - mysqldump -utravis user | mysql -utravis user3
+    - mysqldump -utravis user | mysql -utravis user4
+
+script:
+    - ./vendor/bin/phpcs --standard=./ruleset.xml --colors -p src/ tests/
+    - ./vendor/bin/phpstan analyse -c ./phpstan.neon -l 8 src/ tests/
+    - ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 tests/Unit
+    - sed -i 's/TRUE/FALSE/g' src/Command/PasswordCommandAbstract.php
+    - ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 tests/Integration
+    - sed -i 's/FALSE/TRUE/g' src/Command/PasswordCommandAbstract.php
+    - ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 tests/Controller
+    - sed -i 's/TRUE/FALSE/g' src/Command/PasswordCommandAbstract.php
+    - ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 --coverage-clover var/coverage.xml --whitelist src tests
+    - sed -i 's/FALSE/TRUE/g' src/Command/PasswordCommandAbstract.php
+    - wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
+    - php coveralls.phar --verbose --config .coveralls.yml
+
+php:
+    - 7.4
+
+branches:
+    only:
+        - master
+
+sudo: true
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+notifications:
+    email: false
