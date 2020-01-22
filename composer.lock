@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "365766d49854fc9c273229ce082633e3",
+    "content-hash": "a717771eda218df85703bd326f66b528",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.133.3",
+            "version": "3.133.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "74f043b3afa8d226e1a2944a23484688a7a28fdb"
+                "reference": "6ecd907672784cca89584c7553fa38589c1efcb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/74f043b3afa8d226e1a2944a23484688a7a28fdb",
-                "reference": "74f043b3afa8d226e1a2944a23484688a7a28fdb",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6ecd907672784cca89584c7553fa38589c1efcb6",
+                "reference": "6ecd907672784cca89584c7553fa38589c1efcb6",
                 "shasum": ""
             },
             "require": {
@@ -88,7 +88,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-01-20T19:15:55+00:00"
+            "time": "2020-01-21T19:14:39+00:00"
         },
         {
             "name": "aws/aws-sdk-php-symfony",
@@ -1682,16 +1682,16 @@
         },
         {
             "name": "hanaboso/rest-bundle",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hanaboso/rest-bundle.git",
-                "reference": "869cfaba14e25089fee9b3b2fe9c89a5f068006e"
+                "reference": "05ac0dde1ed3086aae0d6b21e28505bbe533fe06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hanaboso/rest-bundle/zipball/869cfaba14e25089fee9b3b2fe9c89a5f068006e",
-                "reference": "869cfaba14e25089fee9b3b2fe9c89a5f068006e",
+                "url": "https://api.github.com/repos/hanaboso/rest-bundle/zipball/05ac0dde1ed3086aae0d6b21e28505bbe533fe06",
+                "reference": "05ac0dde1ed3086aae0d6b21e28505bbe533fe06",
                 "shasum": ""
             },
             "require": {
@@ -1714,31 +1714,31 @@
             "license": [
                 "proprietary"
             ],
-            "time": "2020-01-21T17:00:20+00:00"
+            "time": "2020-01-22T08:29:17+00:00"
         },
         {
             "name": "hanaboso/utils",
-            "version": "1.0.12",
+            "version": "1.0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hanaboso/utils.git",
-                "reference": "51659fd61beb8f6905b9bdee48e671a75342e888"
+                "reference": "12a3e37651e616b9a503217e774bfcb71caa0b39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hanaboso/utils/zipball/51659fd61beb8f6905b9bdee48e671a75342e888",
-                "reference": "51659fd61beb8f6905b9bdee48e671a75342e888",
+                "url": "https://api.github.com/repos/hanaboso/utils/zipball/12a3e37651e616b9a503217e774bfcb71caa0b39",
+                "reference": "12a3e37651e616b9a503217e774bfcb71caa0b39",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "php": "^7.4",
                 "psr/log": "^1.1",
-                "symfony/http-foundation": "^4.4 | ^5.0"
+                "symfony/http-foundation": "^5.0"
             },
             "require-dev": {
                 "hanaboso/php-check-utils": "^1.1",
-                "symfony/yaml": "^4.4 | ^5.0"
+                "symfony/yaml": "^5.0"
             },
             "type": "library",
             "autoload": {
@@ -1767,7 +1767,7 @@
                     "role": "Developer"
                 }
             ],
-            "time": "2020-01-21T08:45:42+00:00"
+            "time": "2020-01-22T07:26:36+00:00"
         },
         {
             "name": "jdorn/sql-formatter",
