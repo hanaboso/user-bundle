@@ -16,17 +16,17 @@ class ActivateMessage extends UserMessageAbstract
     /**
      * @var string
      */
-    protected $subject = MessageSubject::USER_ACTIVATE;
+    protected string $subject = MessageSubject::USER_ACTIVATE;
 
     /**
      * @var string|null
      */
-    protected $template = NULL;
+    protected ?string $template = NULL;
 
     /**
      * @var string
      */
-    protected $host = '%s';
+    protected string $host = '%s';
 
     /**
      * @param string $host

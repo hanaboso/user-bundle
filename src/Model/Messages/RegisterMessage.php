@@ -15,12 +15,12 @@ class RegisterMessage extends UserMessageAbstract
     /**
      * @var string
      */
-    protected $subject = MessageSubject::USER_REGISTER;
+    protected string $subject = MessageSubject::USER_REGISTER;
 
     /**
      * @var string|null
      */
-    protected $template = NULL;
+    protected ?string $template = NULL;
 
     /**
      * @return mixed[]

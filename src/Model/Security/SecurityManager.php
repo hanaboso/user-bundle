@@ -2,8 +2,6 @@
 
 namespace Hanaboso\UserBundle\Model\Security;
 
-use Doctrine\ODM\MongoDB\LockException;
-use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Exception;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -33,7 +31,7 @@ class SecurityManager
     /**
      * @var string
      */
-    protected $resourceUser = ResourceEnum::USER;
+    protected string $resourceUser = ResourceEnum::USER;
 
     /**
      * @var OrmRepo|OdmRepo
@@ -43,42 +41,42 @@ class SecurityManager
     /**
      * @var Session<mixed>
      */
-    protected $session;
+    protected Session $session;
 
     /**
      * @var UsageTrackingTokenStorage
      */
-    protected $tokenStorage;
+    protected UsageTrackingTokenStorage $tokenStorage;
 
     /**
      * @var string
      */
-    protected $sessionName;
+    protected string $sessionName;
 
     /**
      * @var ResourceProvider
      */
-    protected $provider;
+    protected ResourceProvider $provider;
 
     /**
      * @var PasswordEncoderInterface
      */
-    protected $encoder;
+    protected PasswordEncoderInterface $encoder;
 
     /**
      * @var EncoderFactory
      */
-    protected $encoderFactory;
+    protected EncoderFactory $encoderFactory;
 
     /**
      * @var DatabaseManagerLocator
      */
-    protected $userDml;
+    protected DatabaseManagerLocator $userDml;
 
     /**
      * @var string
      */
-    protected $area;
+    protected string $area;
 
     /**
      * SecurityManager constructor.
@@ -143,8 +141,6 @@ class SecurityManager
      * @param mixed[] $data
      *
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function login(array $data): UserInterface
@@ -190,8 +186,6 @@ class SecurityManager
 
     /**
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function getLoggedUser(): UserInterface
@@ -240,27 +234,29 @@ class SecurityManager
     /**
      * @return UserInterface
      * @throws SecurityManagerException
-     * @throws MappingException
-     * @throws LockException
      */
     protected function getUserFromSession(): UserInterface
     {
-        /** @var Token $token */
-        $token = unserialize($this->session->get($this->sessionName));
+        try {
+            /** @var Token $token */
+            $token = unserialize($this->session->get($this->sessionName));
 
-        /** @var UserInterface $user */
-        $user = $token->getUser();
+            /** @var UserInterface $user */
+            $user = $token->getUser();
 
-        /** @var UserInterface|null $user */
-        $user = $this->userRepository->find($user->getId());
+            /** @var UserInterface|null $user */
+            $user = $this->userRepository->find($user->getId());
 
-        if (!$user) {
-            $this->logout();
+            if (!$user) {
+                $this->logout();
 
-            throw new SecurityManagerException('User not logged.', SecurityManagerException::USER_NOT_LOGGED);
+                throw new SecurityManagerException('User not logged.', SecurityManagerException::USER_NOT_LOGGED);
+            }
+
+            return $user;
+        } catch (Throwable $t) {
+            throw new SecurityManagerException($t->getMessage(), $t->getCode(), $t);
         }
-
-        return $user;
     }
 
     /**

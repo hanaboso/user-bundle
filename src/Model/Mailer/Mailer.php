@@ -21,27 +21,27 @@ class Mailer
     /**
      * @var MailHandler
      */
-    private $mailHandler;
+    private MailHandler $mailHandler;
 
     /**
      * @var PublisherInterface
      */
-    private $producer;
+    private PublisherInterface $producer;
 
     /**
      * @var string
      */
-    private $from;
+    private string $from;
 
     /**
      * @var bool
      */
-    private $async;
+    private bool $async;
 
     /**
      * @var string
      */
-    private $builderId;
+    private string $builderId;
 
     /**
      * Mailer constructor.

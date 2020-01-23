@@ -25,17 +25,17 @@ class UserEvent extends Event
     /**
      * @var UserInterface
      */
-    private $user;
+    private UserInterface $user;
 
     /**
      * @var UserInterface|null
      */
-    private $loggedUser;
+    private ?UserInterface $loggedUser;
 
     /**
      * @var UserInterface|null
      */
-    private $tmpUser;
+    private ?UserInterface $tmpUser;
 
     /**
      * UserEvent constructor.

@@ -28,17 +28,17 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     /**
      * @var Session<mixed>
      */
-    private $session;
+    private Session $session;
 
     /**
      * @var PasswordEncoderInterface
      */
-    private $encoder;
+    private PasswordEncoderInterface $encoder;
 
     /**
      * @var SecurityManager
      */
-    private $securityManager;
+    private SecurityManager $securityManager;
 
     /**
      * @var ObjectRepository<User>

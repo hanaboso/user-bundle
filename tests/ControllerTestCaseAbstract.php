@@ -26,12 +26,12 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     /**
      * @var NativePasswordEncoder
      */
-    protected $encoder;
+    protected NativePasswordEncoder $encoder;
 
     /**
      * @var UserInterface
      */
-    protected $loggedUser;
+    protected UserInterface $loggedUser;
 
     /**
      * ControllerTestCaseAbstract constructor.

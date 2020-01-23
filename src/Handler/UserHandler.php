@@ -3,12 +3,7 @@
 namespace Hanaboso\UserBundle\Handler;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\LockException;
-use Doctrine\ODM\MongoDB\Mapping\MappingException;
-use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
-use EmailServiceBundle\Exception\MailerException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
@@ -18,7 +13,6 @@ use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
-use Hanaboso\Utils\Exception\DateTimeException;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\System\ControllerUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -48,12 +42,12 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     /**
      * @var UserManager
      */
-    protected $userManager;
+    protected UserManager $userManager;
 
     /**
      * @var ResourceProvider
      */
-    protected $provider;
+    protected ResourceProvider $provider;
 
     /**
      * UserHandler constructor.
@@ -75,8 +69,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @return UserInterface
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
-     * @throws LockException
-     * @throws MappingException
      */
     public function login(array $data): UserInterface
     {
@@ -87,8 +79,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
 
     /**
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function loggedUser(): UserInterface
@@ -98,8 +88,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
 
     /**
      * @return mixed[]
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function logout(): array
@@ -113,12 +101,8 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param mixed[] $data
      *
      * @return mixed[]
-     * @throws MailerException
      * @throws PipesFrameworkException
-     * @throws ResourceProviderException
      * @throws UserManagerException
-     * @throws ORMException
-     * @throws MongoDBException
      */
     public function register(array $data): array
     {
@@ -133,11 +117,8 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param string $token
      *
      * @return mixed[]
-     * @throws ORMException
      * @throws TokenManagerException
-     * @throws ResourceProviderException
-     * @throws DateTimeException
-     * @throws MongoDBException
+     * @throws UserManagerException
      */
     public function activate(string $token): array
     {
@@ -151,12 +132,9 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param mixed[] $data
      *
      * @return mixed[]
-     * @throws ORMException
      * @throws PipesFrameworkException
      * @throws TokenManagerException
-     * @throws ResourceProviderException
-     * @throws DateTimeException
-     * @throws MongoDBException
+     * @throws UserManagerException
      */
     public function setPassword(string $id, array $data): array
     {
@@ -171,11 +149,9 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param mixed[] $data
      *
      * @return mixed[]
-     * @throws MongoDBException
-     * @throws ORMException
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
-     * @throws MappingException
+     * @throws UserManagerException
      */
     public function changePassword(array $data): array
     {
@@ -190,12 +166,8 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param mixed[] $data
      *
      * @return mixed[]
-     * @throws MailerException
-     * @throws ORMException
      * @throws PipesFrameworkException
-     * @throws ResourceProviderException
      * @throws UserManagerException
-     * @throws MongoDBException
      */
     public function resetPassword(array $data): array
     {
@@ -210,12 +182,9 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param string $id
      *
      * @return UserInterface
-     * @throws MongoDBException
-     * @throws ORMException
      * @throws ResourceProviderException
      * @throws SecurityManagerException
      * @throws UserManagerException
-     * @throws MappingException
      */
     public function delete(string $id): UserInterface
     {
@@ -262,7 +231,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, array<int|string, array<int|string, int|string>|int|string>|string>
      */
     public static function getSubscribedEvents(): array
     {

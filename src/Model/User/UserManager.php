@@ -3,12 +3,7 @@
 namespace Hanaboso\UserBundle\Model\User;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\LockException;
-use Doctrine\ODM\MongoDB\Mapping\MappingException;
-use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
-use EmailServiceBundle\Exception\MailerException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -34,8 +29,8 @@ use Hanaboso\UserBundle\Repository\Document\TmpUserRepository as OdmTmpRepo;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\TmpUserRepository as OrmTmpRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
-use Hanaboso\Utils\Exception\DateTimeException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Throwable;
 
 /**
  * Class UserManager
@@ -53,12 +48,12 @@ class UserManager
     /**
      * @var SecurityManager
      */
-    protected $securityManager;
+    protected SecurityManager $securityManager;
 
     /**
      * @var TokenManager
      */
-    protected $tokenManager;
+    protected TokenManager $tokenManager;
 
     /**
      * @var OdmRepo|OrmRepo
@@ -73,27 +68,27 @@ class UserManager
     /**
      * @var EventDispatcherInterface
      */
-    protected $eventDispatcher;
+    protected EventDispatcherInterface $eventDispatcher;
 
     /**
      * @var Mailer
      */
-    protected $mailer;
+    protected Mailer $mailer;
 
     /**
      * @var string
      */
-    protected $activateLink;
+    protected string $activateLink;
 
     /**
      * @var string
      */
-    protected $passwordLink;
+    protected string $passwordLink;
 
     /**
      * @var ResourceProvider
      */
-    private $provider;
+    private ResourceProvider $provider;
 
     /**
      * UserManager constructor.
@@ -144,8 +139,6 @@ class UserManager
      *
      * @return UserInterface
      * @throws SecurityManagerException
-     * @throws LockException
-     * @throws MappingException
      */
     public function login(array $data): UserInterface
     {
@@ -157,8 +150,6 @@ class UserManager
 
     /**
      * @return UserInterface
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function loggedUser(): UserInterface
@@ -167,8 +158,6 @@ class UserManager
     }
 
     /**
-     * @throws LockException
-     * @throws MappingException
      * @throws SecurityManagerException
      */
     public function logout(): void
@@ -180,11 +169,7 @@ class UserManager
     /**
      * @param mixed[] $data
      *
-     * @throws MailerException
-     * @throws ResourceProviderException
      * @throws UserManagerException
-     * @throws ORMException
-     * @throws MongoDBException
      */
     public function register(array $data): void
     {
@@ -195,39 +180,40 @@ class UserManager
             );
         }
 
-        /** @var UserInterface|null $user */
-        $user = $this->tmpUserRepository->findOneBy(['email' => $data['email']]);
+        try {
+            /** @var UserInterface|null $user */
+            $user = $this->tmpUserRepository->findOneBy(['email' => $data['email']]);
 
-        if (!$user) {
-            $class = $this->provider->getResource(ResourceEnum::TMP_USER);
-            /** @var TmpUserInterface $user */
-            $user = new $class();
-            $user->setEmail($data['email']);
-            $this->dm->persist($user);
+            if (!$user) {
+                $class = $this->provider->getResource(ResourceEnum::TMP_USER);
+                /** @var TmpUserInterface $user */
+                $user = new $class();
+                $user->setEmail($data['email']);
+                $this->dm->persist($user);
+                $this->dm->flush();
+            }
+
+            $token = $this->tokenManager->create($user);
+            $user->setToken($token);
+            $token->setTmpUser($user);
             $this->dm->flush();
+
+            $msg = new ActivateMessage($user);
+            $msg->setHost($this->activateLink);
+            $this->mailer->send($msg);
+
+            $this->eventDispatcher->dispatch(new RegisterUserEvent($user));
+        } catch (Throwable $t) {
+            throw new UserManagerException($t->getMessage(), $t->getCode(), $t);
         }
-
-        $token = $this->tokenManager->create($user);
-        $user->setToken($token);
-        $token->setTmpUser($user);
-        $this->dm->flush();
-
-        $msg = new ActivateMessage($user);
-        $msg->setHost($this->activateLink);
-        $this->mailer->send($msg);
-
-        $this->eventDispatcher->dispatch(new RegisterUserEvent($user));
     }
 
     /**
      * @param string $token
      *
      * @return UserInterface
-     * @throws ORMException
      * @throws TokenManagerException
-     * @throws ResourceProviderException
-     * @throws MongoDBException
-     * @throws DateTimeException
+     * @throws UserManagerException
      */
     public function activate(string $token): UserInterface
     {
@@ -240,30 +226,31 @@ class UserManager
             );
         }
 
-        /** @var UserInterface $class */
-        $class = $this->provider->getResource(ResourceEnum::USER);
-        /** @var TmpUserInterface $tmpUser */
-        $tmpUser = $token->getTmpUser();
-        $user    = $class::from($tmpUser)->setToken($token);
-        $this->dm->persist($user);
-        $this->eventDispatcher->dispatch(new ActivateUserEvent($user, NULL, $token->getTmpUser()));
+        try {
+            /** @var UserInterface $class */
+            $class = $this->provider->getResource(ResourceEnum::USER);
+            /** @var TmpUserInterface $tmpUser */
+            $tmpUser = $token->getTmpUser();
+            $user    = $class::from($tmpUser)->setToken($token);
+            $this->dm->persist($user);
+            $this->eventDispatcher->dispatch(new ActivateUserEvent($user, NULL, $token->getTmpUser()));
 
-        $this->dm->remove($tmpUser);
-        $token->setUser($user)->setTmpUser(NULL);
-        $this->dm->flush();
+            $this->dm->remove($tmpUser);
+            $token->setUser($user)->setTmpUser(NULL);
+            $this->dm->flush();
 
-        return $user;
+            return $user;
+        } catch (Throwable $t) {
+            throw new UserManagerException($t->getMessage(), $t->getCode(), $t);
+        }
     }
 
     /**
      * @param string  $id
      * @param mixed[] $data
      *
-     * @throws ORMException
      * @throws TokenManagerException
-     * @throws ResourceProviderException
-     * @throws DateTimeException
-     * @throws MongoDBException
+     * @throws UserManagerException
      */
     public function setPassword(string $id, array $data): void
     {
@@ -273,17 +260,19 @@ class UserManager
             ->setPassword($this->securityManager->encodePassword($data['password']))
             ->setToken(NULL);
 
-        $this->dm->remove($token);
-        $this->dm->flush();
+        try {
+            $this->dm->remove($token);
+            $this->dm->flush();
+        } catch (Throwable $t) {
+            throw new UserManagerException($t->getMessage(), $t->getCode(), $t);
+        }
     }
 
     /**
      * @param mixed[] $data
      *
-     * @throws MongoDBException
-     * @throws ORMException
      * @throws SecurityManagerException
-     * @throws MappingException
+     * @throws UserManagerException
      */
     public function changePassword(array $data): void
     {
@@ -294,18 +283,18 @@ class UserManager
             $this->securityManager->validateUser($loggedUser, ['password' => $data['old_password']]);
         }
 
-        $loggedUser->setPassword($this->securityManager->encodePassword($data['password']));
-        $this->dm->flush();
+        try {
+            $loggedUser->setPassword($this->securityManager->encodePassword($data['password']));
+            $this->dm->flush();
+        } catch (Throwable $t) {
+            throw new UserManagerException($t->getMessage(), $t->getCode(), $t);
+        }
     }
 
     /**
      * @param mixed[] $data
      *
-     * @throws MailerException
-     * @throws ORMException
-     * @throws ResourceProviderException
      * @throws UserManagerException
-     * @throws MongoDBException
      */
     public function resetPassword(array $data): void
     {
@@ -319,24 +308,25 @@ class UserManager
             );
         }
 
-        $this->tokenManager->create($user);
+        try {
+            $this->tokenManager->create($user);
 
-        $msg = new ResetPasswordMessage($user);
-        $msg->setHost($this->passwordLink);
-        $this->mailer->send($msg);
+            $msg = new ResetPasswordMessage($user);
+            $msg->setHost($this->passwordLink);
+            $this->mailer->send($msg);
 
-        $this->eventDispatcher->dispatch(new ResetPasswordUserEvent($user));
+            $this->eventDispatcher->dispatch(new ResetPasswordUserEvent($user));
+        } catch (Throwable $t) {
+            throw new UserManagerException($t->getMessage(), $t->getCode(), $t);
+        }
     }
 
     /**
      * @param UserInterface $user
      *
      * @return UserInterface
-     * @throws MongoDBException
-     * @throws ORMException
      * @throws SecurityManagerException
      * @throws UserManagerException
-     * @throws MappingException
      */
     public function delete($user): UserInterface
     {
@@ -349,11 +339,15 @@ class UserManager
             );
         }
 
-        $user->setDeleted(TRUE);
-        $this->dm->flush();
-        $this->eventDispatcher->dispatch(new DeleteAfterUserEvent($user, $this->securityManager->getLoggedUser()));
+        try {
+            $user->setDeleted(TRUE);
+            $this->dm->flush();
+            $this->eventDispatcher->dispatch(new DeleteAfterUserEvent($user, $this->securityManager->getLoggedUser()));
 
-        return $user;
+            return $user;
+        } catch (Throwable $t) {
+            throw new UserManagerException($t->getMessage(), $t->getCode(), $t);
+        }
     }
 
 }

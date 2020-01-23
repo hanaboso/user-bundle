@@ -30,7 +30,7 @@ abstract class PasswordCommandAbstract extends Command
     /**
      * @var PasswordEncoderInterface
      */
-    protected $encoder;
+    protected PasswordEncoderInterface $encoder;
 
     /**
      * @param InputInterface  $input

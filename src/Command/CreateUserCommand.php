@@ -35,7 +35,7 @@ class CreateUserCommand extends PasswordCommandAbstract
     /**
      * @var ResourceProvider
      */
-    private $provider;
+    private ResourceProvider $provider;
 
     /**
      * CreateUserCommand constructor.

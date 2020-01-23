@@ -15,22 +15,22 @@ abstract class UserMessageAbstract
     /**
      * @var string
      */
-    protected $subject;
+    protected string $subject;
 
     /**
      * @var string
      */
-    protected $template;
+    protected ?string $template;
 
     /**
      * @var string
      */
-    protected $from = '';
+    protected string $from = '';
 
     /**
      * @var mixed[]
      */
-    protected $message = [
+    protected array $message = [
         'to'          => '',
         'subject'     => '',
         'content'     => '',
@@ -42,7 +42,7 @@ abstract class UserMessageAbstract
     /**
      * @var UserInterface
      */
-    protected $user;
+    protected UserInterface $user;
 
     /**
      * @return mixed[]

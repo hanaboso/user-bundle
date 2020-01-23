@@ -28,7 +28,7 @@ class UserController
     /**
      * @var UserHandler
      */
-    protected $userHandler;
+    protected UserHandler $userHandler;
 
     /**
      * UserController constructor.

@@ -4,6 +4,9 @@ namespace UserBundleTests\Integration\Model\User;
 
 use DateTime;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ORM\ORMException;
+use EmailServiceBundle\Exception\MailerException;
 use Exception;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\CustomAssertTrait;
 use Hanaboso\UserBundle\Document\TmpUser;
@@ -143,9 +146,27 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     {
         $this->pfd((new User())->setEmail('email@example.com'));
 
-        $this->expectException(UserManagerException::class);
-        $this->expectExceptionCode(UserManagerException::USER_EMAIL_ALREADY_EXISTS);
+        self::expectException(UserManagerException::class);
+        self::expectExceptionCode(UserManagerException::USER_EMAIL_ALREADY_EXISTS);
         $this->userManager->register(['email' => 'email@example.com']);
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\User\UserManager::register
+     */
+    public function testRegisterException(): void
+    {
+        $this->prepareMailerMock();
+
+        $dm = $this->createMock(DocumentManager::class);
+        $dm->method('persist')->willThrowException(new ORMException());
+        $manager = clone $this->userManager;
+        $this->setProperty($manager, 'dm', $dm);
+
+        self::expectException(UserManagerException::class);
+        $manager->register(['email' => 'email@example.com']);
     }
 
     /**
@@ -221,6 +242,29 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     /**
      * @throws Exception
      *
+     * @covers \Hanaboso\UserBundle\Model\User\UserManager::activate
+     */
+    public function testActivateException(): void
+    {
+        /** @var TmpUser $tmpUser */
+        $tmpUser = (new TmpUser())->setEmail('email@example.com');
+        $this->pfd($tmpUser);
+
+        $token = (new Token())->setTmpUser($tmpUser);
+        $this->pfd($token);
+
+        $dm = $this->createMock(DocumentManager::class);
+        $dm->method('persist')->willThrowException(new ORMException());
+        $manager = clone $this->userManager;
+        $this->setProperty($manager, 'dm', $dm);
+
+        self::expectException(UserManagerException::class);
+        $manager->activate($token->getHash());
+    }
+
+    /**
+     * @throws Exception
+     *
      * @covers \Hanaboso\UserBundle\Model\User\UserManager::resetPassword
      */
     public function testResetPassword(): void
@@ -235,6 +279,26 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $tokens = $this->tokenRepository->findBy(['user' => $user]);
         self::assertCount(1, $tokens);
         self::assertEquals('email@example.com', $tokens[0]->getUserOrTmpUser()->getEmail());
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\User\UserManager::resetPassword
+     */
+    public function testResetPasswordException2(): void
+    {
+        $this->prepareMailerMock();
+        $user = (new User())->setEmail('email@example.com');
+        $this->pfd($user);
+
+        $mailer = $this->createMock(Mailer::class);
+        $mailer->method('send')->willThrowException(new MailerException());
+        $manager = clone $this->userManager;
+        $this->setProperty($manager, 'mailer', $mailer);
+
+        self::expectException(UserManagerException::class);
+        $manager->resetPassword(['email' => 'email@example.com']);
     }
 
     /**
@@ -296,6 +360,28 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     /**
      * @throws Exception
      *
+     * @covers \Hanaboso\UserBundle\Model\User\UserManager::setPassword
+     */
+    public function testSetPasswordException(): void
+    {
+        $user = (new User())->setEmail('email@example.com');
+        $this->pfd($user);
+
+        $token = (new Token())->setUser($user);
+        $this->pfd($token);
+
+        $dm = $this->createMock(DocumentManager::class);
+        $dm->method('remove')->willThrowException(new ORMException());
+        $manager = clone $this->userManager;
+        $this->setProperty($manager, 'dm', $dm);
+
+        self::expectException(UserManagerException::class);
+        $manager->setPassword($token->getHash(), ['password' => 'passw0rd']);
+    }
+
+    /**
+     * @throws Exception
+     *
      * @covers \Hanaboso\UserBundle\Model\User\UserManager::changePassword
      */
     public function testChangePassword(): void
@@ -315,6 +401,25 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     /**
      * @throws Exception
      *
+     * @covers \Hanaboso\UserBundle\Model\User\UserManager::changePassword
+     */
+    public function testChangePasswordException(): void
+    {
+        $this->createUser();
+        $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+
+        $dm = $this->createMock(DocumentManager::class);
+        $dm->method('flush')->willThrowException(new ORMException());
+        $manager = clone $this->userManager;
+        $this->setProperty($manager, 'dm', $dm);
+
+        self::expectException(UserManagerException::class);
+        $manager->changePassword(['password' => 'Passw0rd', 'old_password' => 'passw0rd']);
+    }
+
+    /**
+     * @throws Exception
+     *
      * @covers \Hanaboso\UserBundle\Model\User\UserManager::delete
      */
     public function testDelete(): void
@@ -329,6 +434,25 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         self::assertCount(2, $users);
         self::assertFalse($users[0]->isDeleted());
         self::assertTrue($users[1]->isDeleted());
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\User\UserManager::delete
+     */
+    public function testDeleteException2(): void
+    {
+        $this->createUser();
+        $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+
+        $dm = $this->createMock(DocumentManager::class);
+        $dm->method('flush')->willThrowException(new ORMException());
+        $manager = clone $this->userManager;
+        $this->setProperty($manager, 'dm', $dm);
+
+        self::expectException(UserManagerException::class);
+        $manager->delete($this->createUser());
     }
 
     /**

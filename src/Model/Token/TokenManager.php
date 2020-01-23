@@ -3,19 +3,15 @@
 namespace Hanaboso\UserBundle\Model\Token;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
-use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\UserBundle\Repository\Document\TokenRepository as DocumentTokenRepository;
 use Hanaboso\UserBundle\Repository\Entity\TokenRepository as EntityTokenRepository;
-use Hanaboso\Utils\Exception\DateTimeException;
+use Throwable;
 
 /**
  * Class TokenManager
@@ -33,7 +29,7 @@ class TokenManager
     /**
      * @var ResourceProvider
      */
-    private $provider;
+    private ResourceProvider $provider;
 
     /**
      * TokenManager constructor.
@@ -51,23 +47,25 @@ class TokenManager
      * @param UserInterface $user
      *
      * @return TokenInterface
-     * @throws ORMException
-     * @throws ResourceProviderException
-     * @throws MongoDBException
+     * @throws TokenManagerException
      */
     public function create(UserInterface $user): TokenInterface
     {
-        $class = $this->provider->getResource(ResourceEnum::TOKEN);
-        $this->removeExistingTokens($user);
-        /** @var TokenInterface $token */
-        $token = new $class();
-        $token->setUserOrTmpUser($user);
-        $user->setToken($token);
+        try {
+            $class = $this->provider->getResource(ResourceEnum::TOKEN);
+            $this->removeExistingTokens($user);
+            /** @var TokenInterface $token */
+            $token = new $class();
+            $token->setUserOrTmpUser($user);
+            $user->setToken($token);
 
-        $this->dm->persist($token);
-        $this->dm->flush();
+            $this->dm->persist($token);
+            $this->dm->flush();
 
-        return $token;
+            return $token;
+        } catch (Throwable $t) {
+            throw new TokenManagerException($t->getMessage(), $t->getCode(), $t);
+        }
     }
 
     /**
@@ -75,57 +73,60 @@ class TokenManager
      *
      * @return TokenInterface
      * @throws TokenManagerException
-     * @throws ResourceProviderException
-     * @throws NonUniqueResultException
-     * @throws DateTimeException
      */
     public function validate(string $hash): TokenInterface
     {
-        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\Token|\Hanaboso\UserBundle\Document\Token> $tokenClass */
-        $tokenClass = $this->provider->getResource(ResourceEnum::TOKEN);
-        /** @var EntityTokenRepository|DocumentTokenRepository $repo */
-        $repo  = $this->dm->getRepository($tokenClass);
-        $token = $repo->getFreshToken($hash);
+        try {
+            /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\Token|\Hanaboso\UserBundle\Document\Token> $tokenClass */
+            $tokenClass = $this->provider->getResource(ResourceEnum::TOKEN);
+            /** @var EntityTokenRepository|DocumentTokenRepository $repo */
+            $repo  = $this->dm->getRepository($tokenClass);
+            $token = $repo->getFreshToken($hash);
 
-        if (!$token) {
-            throw new TokenManagerException(
-                sprintf('Token \'%s\' not valid.', $hash),
-                TokenManagerException::TOKEN_NOT_VALID
-            );
+            if (!$token) {
+                throw new TokenManagerException(
+                    sprintf('Token \'%s\' not valid.', $hash),
+                    TokenManagerException::TOKEN_NOT_VALID
+                );
+            }
+
+            return $token;
+        } catch (Throwable $t) {
+            throw new TokenManagerException($t->getMessage(), $t->getCode(), $t);
         }
-
-        return $token;
     }
 
     /**
      * @param TokenInterface $token
      *
-     * @throws ORMException
-     * @throws ResourceProviderException
-     * @throws MongoDBException
+     * @throws TokenManagerException
      */
     public function delete(TokenInterface $token): void
     {
         $this->removeExistingTokens($token->getUserOrTmpUser());
-        $this->dm->flush();
     }
 
     /**
      * @param UserInterface $user
      *
-     * @throws ResourceProviderException
-     * @throws ORMException
+     * @throws TokenManagerException
      */
     private function removeExistingTokens(UserInterface $user): void
     {
-        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\Token|\Hanaboso\UserBundle\Document\Token> $tokenClass */
-        $tokenClass = $this->provider->getResource(ResourceEnum::TOKEN);
-        /** @var EntityTokenRepository|DocumentTokenRepository $repo */
-        $repo = $this->dm->getRepository($tokenClass);
-        foreach ($repo->getExistingTokens($user) as $token) {
-            $this->dm->remove($token);
+        try {
+            /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\Token|\Hanaboso\UserBundle\Document\Token> $tokenClass */
+            $tokenClass = $this->provider->getResource(ResourceEnum::TOKEN);
+            /** @var EntityTokenRepository|DocumentTokenRepository $repo */
+            $repo = $this->dm->getRepository($tokenClass);
+            foreach ($repo->getExistingTokens($user) as $token) {
+                $this->dm->remove($token);
+            }
+            $user->setToken(NULL);
+
+            $this->dm->flush();
+        } catch (Throwable $t) {
+            throw new TokenManagerException($t->getMessage(), $t->getCode(), $t);
         }
-        $user->setToken(NULL);
     }
 
 }

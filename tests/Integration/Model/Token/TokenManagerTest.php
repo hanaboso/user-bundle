@@ -4,6 +4,8 @@ namespace UserBundleTests\Integration\Model\Token;
 
 use DateTime;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ORM\ORMException;
 use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
@@ -54,6 +56,27 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
         $tokenUser = $token->getUser();
         self::assertCount(1, $this->tokenRepository->findBy([UserTypeEnum::USER => $user]));
         self::assertEquals($user->getEmail(), $tokenUser->getEmail());
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::create
+     */
+    public function testCreateUserTokenException(): void
+    {
+        $user = (new User())->setEmail('email@example.com');
+        $this->pfd($user);
+
+        $dm = $this->createMock(DocumentManager::class);
+        $dm->method('persist')->willThrowException(new ORMException());
+
+        $manager = clone $this->tokenManager;
+
+        $this->setProperty($manager, 'dm', $dm);
+
+        self::expectException(TokenManagerException::class);
+        $manager->create($user);
     }
 
     /**
