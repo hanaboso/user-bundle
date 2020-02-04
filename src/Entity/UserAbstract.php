@@ -5,6 +5,7 @@ namespace Hanaboso\UserBundle\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Hanaboso\CommonsBundle\Database\Traits\Entity\DeletedTrait;
 use Hanaboso\CommonsBundle\Database\Traits\Entity\IdTrait;
 use Hanaboso\Utils\Date\DateTimeUtils;
 use Hanaboso\Utils\Exception\DateTimeException;
@@ -18,6 +19,7 @@ abstract class UserAbstract implements UserInterface
 {
 
     use IdTrait;
+    use DeletedTrait;
 
     /**
      * @var string
@@ -109,18 +111,6 @@ abstract class UserAbstract implements UserInterface
     public function eraseCredentials(): void
     {
         throw new Exception('UserAbstract::eraseCredentials is not implemented');
-    }
-
-    /**
-     * @param bool $deleted
-     *
-     * @return UserInterface
-     */
-    public function setDeleted(bool $deleted): UserInterface
-    {
-        $deleted;
-
-        return $this;
     }
 
 }

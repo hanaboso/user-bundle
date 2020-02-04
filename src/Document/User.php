@@ -4,7 +4,6 @@ namespace Hanaboso\UserBundle\Document;
 
 use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
-use Hanaboso\CommonsBundle\Database\Traits\Document\DeletedTrait;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
@@ -19,8 +18,6 @@ use Hanaboso\Utils\Exception\DateTimeException;
  */
 class User extends UserAbstract
 {
-
-    use DeletedTrait;
 
     /**
      * @var string

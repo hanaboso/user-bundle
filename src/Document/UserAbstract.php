@@ -5,6 +5,7 @@ namespace Hanaboso\UserBundle\Document;
 use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Exception;
+use Hanaboso\CommonsBundle\Database\Traits\Document\DeletedTrait;
 use Hanaboso\CommonsBundle\Database\Traits\Document\IdTrait;
 use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
@@ -20,6 +21,7 @@ abstract class UserAbstract implements UserInterface
 {
 
     use IdTrait;
+    use DeletedTrait;
 
     /**
      * @var string
@@ -138,18 +140,6 @@ abstract class UserAbstract implements UserInterface
     public function eraseCredentials(): void
     {
         throw new Exception(sprintf('%s is not implemented!', __METHOD__));
-    }
-
-    /**
-     * @param bool $deleted
-     *
-     * @return mixed
-     */
-    public function setDeleted(bool $deleted)
-    {
-        $deleted;
-
-        return $this;
     }
 
 }

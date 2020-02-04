@@ -1,7 +1,7 @@
 {
     "name": "hanaboso/user-bundle",
     "license": "proprietary",
-    "version": "1.3.5",
+    "version": "1.3.6",
     "autoload": {
         "psr-4": {
             "Hanaboso\\UserBundle\\": "src/"
@@ -14,7 +14,10 @@
     },
     "require": {
         "php": "^7.4",
-        "ext-json": "*",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "ext-intl": "*",
+        "ext-mbstring": "*",
         "doctrine/orm": "^2.7",
         "hanaboso/commons-bundle": "^2.0",
         "hanaboso/email-service-bundle": "^1.1",

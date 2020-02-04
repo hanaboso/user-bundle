@@ -5,7 +5,6 @@ namespace Hanaboso\UserBundle\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\InheritanceType;
-use Hanaboso\CommonsBundle\Database\Traits\Entity\DeletedTrait;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 use Hanaboso\Utils\Date\DateTimeUtils;
 use Hanaboso\Utils\Exception\DateTimeException;
@@ -22,8 +21,6 @@ use Hanaboso\Utils\Exception\DateTimeException;
  */
 class User extends UserAbstract
 {
-
-    use DeletedTrait;
 
     /**
      * @var TokenInterface|null
@@ -110,18 +107,6 @@ class User extends UserAbstract
     public function setToken(?TokenInterface $token): UserInterface
     {
         $this->token = $token;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $deleted
-     *
-     * @return UserInterface
-     */
-    public function setDeleted(bool $deleted): UserInterface
-    {
-        $deleted;
 
         return $this;
     }
