@@ -143,7 +143,7 @@ class UserManager
     public function login(array $data): UserInterface
     {
         $user = $this->securityManager->login($data);
-        $this->eventDispatcher->dispatch(new LoginUserEvent($user));
+        $this->eventDispatcher->dispatch(new LoginUserEvent($user), LoginUserEvent::NAME);
 
         return $user;
     }
@@ -162,7 +162,10 @@ class UserManager
      */
     public function logout(): void
     {
-        $this->eventDispatcher->dispatch(new LogoutUserEvent($this->securityManager->getLoggedUser()));
+        $this->eventDispatcher->dispatch(
+            new LogoutUserEvent($this->securityManager->getLoggedUser()),
+            LogoutUserEvent::NAME
+        );
         $this->securityManager->logout();
     }
 
@@ -202,7 +205,7 @@ class UserManager
             $msg->setHost($this->activateLink);
             $this->mailer->send($msg);
 
-            $this->eventDispatcher->dispatch(new RegisterUserEvent($user));
+            $this->eventDispatcher->dispatch(new RegisterUserEvent($user), RegisterUserEvent::NAME);
         } catch (Throwable $t) {
             throw new UserManagerException($t->getMessage(), $t->getCode(), $t);
         }
@@ -233,7 +236,10 @@ class UserManager
             $tmpUser = $token->getTmpUser();
             $user    = $class::from($tmpUser)->setToken($token);
             $this->dm->persist($user);
-            $this->eventDispatcher->dispatch(new ActivateUserEvent($user, NULL, $token->getTmpUser()));
+            $this->eventDispatcher->dispatch(
+                new ActivateUserEvent($user, NULL, $token->getTmpUser()),
+                ActivateUserEvent::NAME
+            );
 
             $this->dm->remove($tmpUser);
             $token->setUser($user)->setTmpUser(NULL);
@@ -277,7 +283,7 @@ class UserManager
     public function changePassword(array $data): void
     {
         $loggedUser = $this->securityManager->getLoggedUser();
-        $this->eventDispatcher->dispatch(new ChangePasswordUserEvent($loggedUser));
+        $this->eventDispatcher->dispatch(new ChangePasswordUserEvent($loggedUser), ChangePasswordUserEvent::NAME);
 
         if (isset($data['old_password'])) {
             $this->securityManager->validateUser($loggedUser, ['password' => $data['old_password']]);
@@ -315,7 +321,7 @@ class UserManager
             $msg->setHost($this->passwordLink);
             $this->mailer->send($msg);
 
-            $this->eventDispatcher->dispatch(new ResetPasswordUserEvent($user));
+            $this->eventDispatcher->dispatch(new ResetPasswordUserEvent($user), ResetPasswordUserEvent::NAME);
         } catch (Throwable $t) {
             throw new UserManagerException($t->getMessage(), $t->getCode(), $t);
         }
@@ -330,8 +336,10 @@ class UserManager
      */
     public function delete($user): UserInterface
     {
-        $this->eventDispatcher->dispatch(new DeleteBeforeUserEvent($user, $this->securityManager->getLoggedUser()));
-
+        $this->eventDispatcher->dispatch(
+            new DeleteBeforeUserEvent($user, $this->securityManager->getLoggedUser()),
+            DeleteBeforeUserEvent::NAME
+        );
         if ($this->securityManager->getLoggedUser()->getId() === $user->getId()) {
             throw new UserManagerException(
                 sprintf('User \'%s\' delete not allowed.', $user->getId()),
@@ -342,7 +350,10 @@ class UserManager
         try {
             $user->setDeleted(TRUE);
             $this->dm->flush();
-            $this->eventDispatcher->dispatch(new DeleteAfterUserEvent($user, $this->securityManager->getLoggedUser()));
+            $this->eventDispatcher->dispatch(
+                new DeleteAfterUserEvent($user, $this->securityManager->getLoggedUser()),
+                DeleteAfterUserEvent::NAME
+            );
 
             return $user;
         } catch (Throwable $t) {
