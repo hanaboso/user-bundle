@@ -279,6 +279,60 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     /**
      * @throws Exception
      *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::verifyAction
+     */
+    public function testVerify(): void
+    {
+        /** @var TmpUser $user */
+        $user = (new TmpUser())->setEmail('email@example.com');
+        $this->pfd($user);
+
+        $token = (new Token())->setTmpUser($user);
+        $this->pfd($token);
+
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/verifyRequest.json',
+            [],
+            ['token' => $token->getHash()]
+        );
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::verifyAction
+     */
+    public function testVerifyNotValid(): void
+    {
+        /** @var TmpUser $user */
+        $user = (new TmpUser())->setEmail('email@example.com');
+        $this->pfd($user);
+
+        $token = (new Token())->setTmpUser($user);
+        $this->pfd($token);
+
+        $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedVerifyRequest.json', [], ['token' => '123']);
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Controller\UserController::verifyAction
+     */
+    public function testVerifyException(): void
+    {
+        $this->prepareHandlerMock('verify');
+
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/exceptionVerifyRequest.json',
+            [],
+            ['token' => 'Unknown']
+        );
+    }
+
+    /**
+     * @throws Exception
+     *
      * @covers \Hanaboso\UserBundle\Controller\UserController::setPasswordAction
      */
     public function testSetPassword(): void

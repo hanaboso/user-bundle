@@ -3,12 +3,15 @@
 namespace Hanaboso\UserBundle\Command;
 
 use Doctrine\ODM\MongoDB\MongoDBException;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository as OdmRepo;
+use Doctrine\ORM\EntityRepository as OrmRepo;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
+use Hanaboso\UserBundle\Document\User as DmUser;
+use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
-use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
-use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
+use Hanaboso\UserBundle\Repository\Entity\UserRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,7 +28,7 @@ class ListUsersCommand extends Command
     private const CMD_NAME = 'user:list';
 
     /**
-     * @var OrmRepo|OdmRepo
+     * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
      */
     private $repo;
 
@@ -67,10 +70,12 @@ class ListUsersCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $input;
+        /** @var UserRepository $repo */
+        $repo  = $this->repo;
         $table = new Table($output);
         $table
             ->setHeaders(['Email', 'Created'])
-            ->setRows($this->repo->getArrayOfUsers());
+            ->setRows($repo->getArrayOfUsers());
 
         $table->render();
 

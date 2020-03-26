@@ -164,6 +164,24 @@ class UserController
     }
 
     /**
+     * @Route("/user/{token}/verify", requirements={"token": "\w+"}, methods={"POST", "OPTIONS"})
+     *
+     * @param string $token
+     *
+     * @return Response
+     */
+    public function verifyAction(string $token): Response
+    {
+        try {
+            return $this->getResponse($this->userHandler->verify($token));
+        } catch (TokenManagerException $e) {
+            return $this->getErrorResponse($e, 400);
+        } catch (Throwable $e) {
+            return $this->getErrorResponse($e);
+        }
+    }
+
+    /**
      * @Route("/user/{token}/set_password", requirements={"token": "\w+"}, methods={"POST", "OPTIONS"})
      *
      * @param Request $request

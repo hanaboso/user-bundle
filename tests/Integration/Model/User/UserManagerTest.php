@@ -265,6 +265,32 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     /**
      * @throws Exception
      *
+     * @covers \Hanaboso\UserBundle\Model\User\UserManager::verify
+     */
+    public function testVerify(): void
+    {
+        /** @var TmpUser $tmpUser */
+        $tmpUser = (new TmpUser())->setEmail('email@example.com');
+        $this->pfd($tmpUser);
+
+        $token = (new Token())->setTmpUser($tmpUser);
+        $this->pfd($token);
+
+        /** @var TmpUser[] $tmpUsers */
+        $tmpUsers = $this->tmpUserRepository->findBy(['email' => 'email@example.com']);
+
+        self::assertCount(1, $tmpUsers);
+        self::assertEquals('email@example.com', $tmpUsers[0]->getEmail());
+
+        $this->dm->clear();
+        $res = $this->userManager->verify($token->getHash());
+
+        self::assertEquals($tmpUsers[0]->getEmail(), $res->getEmail());
+    }
+
+    /**
+     * @throws Exception
+     *
      * @covers \Hanaboso\UserBundle\Model\User\UserManager::resetPassword
      */
     public function testResetPassword(): void

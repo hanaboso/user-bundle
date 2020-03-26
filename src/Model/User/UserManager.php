@@ -252,6 +252,17 @@ class UserManager
     }
 
     /**
+     * @param string $token
+     *
+     * @return UserInterface
+     * @throws TokenManagerException
+     */
+    public function verify(string $token): UserInterface
+    {
+        return $this->tokenManager->validate($token)->getUserOrTmpUser();
+    }
+
+    /**
      * @param string  $id
      * @param mixed[] $data
      *

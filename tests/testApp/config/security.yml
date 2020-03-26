@@ -10,7 +10,7 @@ security:
                 property: email
     firewalls:
         unsecured_user:
-            pattern: ^/(user/login|user/\w+/activate|user/\w+/set_password|user/reset_password|user/register)
+            pattern: ^/(user/login|user/\w+/activate|user/\w+/verify|user/\w+/set_password|user/reset_password|user/register)
             security: false
         secured_area:
             pattern: ^/

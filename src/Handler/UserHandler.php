@@ -128,6 +128,19 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
+     * @param string $token
+     *
+     * @return mixed[]
+     * @throws TokenManagerException
+     */
+    public function verify(string $token): array
+    {
+        $user = $this->userManager->verify($token);
+
+        return ['email' => $user->getEmail()];
+    }
+
+    /**
      * @param string  $id
      * @param mixed[] $data
      *

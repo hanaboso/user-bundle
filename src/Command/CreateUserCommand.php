@@ -3,14 +3,16 @@
 namespace Hanaboso\UserBundle\Command;
 
 use Doctrine\ODM\MongoDB\MongoDBException;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository as OdmRepo;
+use Doctrine\ORM\EntityRepository as OrmRepo;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
+use Hanaboso\UserBundle\Document\User as DmUser;
+use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
-use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
-use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
 use LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,7 +30,7 @@ class CreateUserCommand extends PasswordCommandAbstract
     private const CMD_NAME = 'user:create';
 
     /**
-     * @var OrmRepo|OdmRepo
+     * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
      */
     private $repo;
 

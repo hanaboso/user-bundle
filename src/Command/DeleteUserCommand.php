@@ -4,17 +4,20 @@ namespace Hanaboso\UserBundle\Command;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository as OdmRepo;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository as OrmRepo;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
+use Hanaboso\UserBundle\Document\User as DmUser;
+use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
-use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
-use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
+use Hanaboso\UserBundle\Repository\Entity\UserRepository;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,7 +40,7 @@ class DeleteUserCommand extends Command
     private $dm;
 
     /**
-     * @var OrmRepo|OdmRepo
+     * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
      */
     private $repo;
 
@@ -81,7 +84,9 @@ class DeleteUserCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ($this->repo->getUserCount() <= 1) {
+        /** @var UserRepository $repo */
+        $repo = $this->repo;
+        if ($repo->getUserCount() <= 1) {
             $output->writeln('Cannot delete when there is last one or none active users remaining.');
         } else {
             $helper = $this->getHelper('question');

@@ -115,6 +115,23 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
     /**
      * @throws Exception
      *
+     * @covers \Hanaboso\UserBundle\Handler\UserHandler::verify
+     */
+    public function testVerify(): void
+    {
+        $data = ['email' => 'user@example.com'];
+        $this->handler->register($data);
+
+        /** @var TokenInterface $token */
+        $token = $this->dm->getRepository(Token::class)->findAll()[0];
+        $res   = $this->handler->verify($token->getHash());
+
+        self::assertEquals($data, $res);
+    }
+
+    /**
+     * @throws Exception
+     *
      * @covers \Hanaboso\UserBundle\Handler\UserHandler::setPassword
      */
     public function testSetPassword(): void

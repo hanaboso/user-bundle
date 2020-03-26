@@ -2,15 +2,17 @@
 
 namespace Hanaboso\UserBundle\Model\Security;
 
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository as OdmRepo;
+use Doctrine\ORM\EntityRepository as OrmRepo;
 use Exception;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
+use Hanaboso\UserBundle\Document\User as DmUser;
+use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Model\Token;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
-use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
-use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\UsageTrackingTokenStorage;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
@@ -34,7 +36,7 @@ class SecurityManager
     protected string $resourceUser = ResourceEnum::USER;
 
     /**
-     * @var OrmRepo|OdmRepo
+     * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
      */
     protected $userRepository;
 
