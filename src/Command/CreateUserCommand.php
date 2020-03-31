@@ -56,7 +56,7 @@ class CreateUserCommand extends PasswordCommandAbstract
     {
         parent::__construct();
 
-        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\User|\Hanaboso\UserBundle\Document\User> $userClass */
+        /** @phpstan-var class-string<User|DmUser> $userClass */
         $userClass      = $provider->getResource(ResourceEnum::USER);
         $this->dm       = $userDml->get();
         $this->repo     = $this->dm->getRepository($userClass);

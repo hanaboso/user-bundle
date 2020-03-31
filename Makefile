@@ -22,9 +22,11 @@ docker-down-clean: .env
 # Composer
 composer-install:
 	$(DE) composer install --no-suggest
+	$(DE) composer update --dry-run roave/security-advisories
 
 composer-update:
 	$(DE) composer update --no-suggest
+	$(DE) composer update --dry-run roave/security-advisories
 
 composer-outdated:
 	$(DE) composer outdated

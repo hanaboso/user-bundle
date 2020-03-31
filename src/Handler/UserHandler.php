@@ -264,7 +264,10 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      */
     private function getUser(string $id): UserInterface
     {
-        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\User|\Hanaboso\UserBundle\Document\User> $userClass */
+        /**
+         * @template    T
+         * @phpstan-var class-string<T> $userClass
+         */
         $userClass = $this->provider->getResource(ResourceEnum::USER);
         /** @var UserInterface|null $user */
         $user = $this->dm->getRepository($userClass)->findOneBy(['id' => $id]);

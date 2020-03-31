@@ -11,6 +11,7 @@ use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use PHPUnit\Framework\MockObject\MockObject;
+use Throwable;
 use UserBundleTests\ControllerTestCaseAbstract;
 
 /**
@@ -573,7 +574,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     * @phpstan-param class-string<\Throwable> $exception
+     * @phpstan-param class-string<Throwable> $exception
      *
      * @param string $method
      * @param string $exception

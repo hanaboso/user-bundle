@@ -117,9 +117,15 @@ class UserManager
         string $passwordLink
     )
     {
-        /** @phpstan-var class-string<\Hanaboso\UserBundle\Document\User|\Hanaboso\UserBundle\Entity\User> $userClass */
+        /**
+         * @template    T
+         * @phpstan-var class-string<T> $userClass
+         */
         $userClass = $provider->getResource(ResourceEnum::USER);
-        /** @phpstan-var class-string<\Hanaboso\UserBundle\Document\TmpUser|\Hanaboso\UserBundle\Entity\User> $tmpUserClass */
+        /**
+         * @template    T
+         * @phpstan-var class-string<T> $tmpUserClass
+         */
         $tmpUserClass = $provider->getResource(ResourceEnum::TMP_USER);
 
         $this->dm                = $userDml->get();

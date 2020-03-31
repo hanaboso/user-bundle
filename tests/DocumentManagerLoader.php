@@ -2,6 +2,7 @@
 
 use UserBundleTests\Kernel;
 
+// phpcs:ignoreFile
 require __DIR__ . '/../vendor/autoload.php';
 
 $kernel = new Kernel((string) ($_SERVER['APP_ENV'] ?? 'test'), (bool) ($_SERVER['APP_DEBUG'] ?? TRUE));

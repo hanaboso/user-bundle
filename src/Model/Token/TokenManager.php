@@ -77,7 +77,10 @@ class TokenManager
     public function validate(string $hash): TokenInterface
     {
         try {
-            /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\Token|\Hanaboso\UserBundle\Document\Token> $tokenClass */
+            /**
+             * @template    T
+             * @phpstan-var class-string<T> $tokenClass
+             */
             $tokenClass = $this->provider->getResource(ResourceEnum::TOKEN);
             /** @var EntityTokenRepository|DocumentTokenRepository $repo */
             $repo  = $this->dm->getRepository($tokenClass);
@@ -114,7 +117,10 @@ class TokenManager
     private function removeExistingTokens(UserInterface $user): void
     {
         try {
-            /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\Token|\Hanaboso\UserBundle\Document\Token> $tokenClass */
+            /**
+             * @template    T
+             * @phpstan-var class-string<T> $tokenClass
+             */
             $tokenClass = $this->provider->getResource(ResourceEnum::TOKEN);
             /** @var EntityTokenRepository|DocumentTokenRepository $repo */
             $repo = $this->dm->getRepository($tokenClass);

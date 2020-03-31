@@ -117,7 +117,7 @@ class SecurityManager
      */
     public function setUserResource(string $resource): SecurityManager
     {
-        /** @phpstan-var class-string<\Hanaboso\UserBundle\Entity\User|\Hanaboso\UserBundle\Document\User> $userClass */
+        /** @phpstan-var class-string<User|DmUser> $userClass */
         $userClass            = $this->provider->getResource($this->resourceUser);
         $this->resourceUser   = $resource;
         $this->userRepository = $this->userDml->get()->getRepository($userClass);
