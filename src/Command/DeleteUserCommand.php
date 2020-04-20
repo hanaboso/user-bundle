@@ -84,7 +84,7 @@ class DeleteUserCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var UserRepository $repo */
+        /** @var UserRepository<User> $repo */
         $repo = $this->repo;
         if ($repo->getUserCount() <= 1) {
             $output->writeln('Cannot delete when there is last one or none active users remaining.');

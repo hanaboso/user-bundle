@@ -36,7 +36,7 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
         }
         $em->clear();
 
-        /** @var UserRepository $rep */
+        /** @var UserRepository<User> $rep */
         $rep   = $em->getRepository(User::class);
         $users = $rep->getArrayOfUsers();
 
@@ -58,7 +58,7 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
         $em->persist($user);
         $em->flush($user);
 
-        /** @var UserRepository $rep */
+        /** @var UserRepository<User> $rep */
         $rep = $em->getRepository(User::class);
 
         self::assertGreaterThanOrEqual(1, $rep->getUserCount());

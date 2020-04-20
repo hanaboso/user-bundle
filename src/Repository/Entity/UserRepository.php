@@ -10,9 +10,10 @@ use Doctrine\ORM\NoResultException;
 /**
  * Class UserRepository
  *
- * @package Hanaboso\UserBundle\Repository\Entity
+ * @package         Hanaboso\UserBundle\Repository\Entity
  *
- * @phpstan-extends EntityRepository<\Hanaboso\UserBundle\Entity\User>
+ * @template        T
+ * @phpstan-extends EntityRepository<T>
  */
 class UserRepository extends EntityRepository
 {

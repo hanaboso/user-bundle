@@ -11,7 +11,6 @@ use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
@@ -238,7 +237,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
      */
     public function testOnCoreException(): void
     {
-        /** @var ExceptionEvent|MockObject $event */
         $event = self::createMock(ExceptionEvent::class);
         $event->method('getThrowable')->willReturn(new AuthenticationException('Something gone wrong!'));
 
@@ -254,7 +252,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
      */
     public function testOnCoreExceptionSecond(): void
     {
-        /** @var ExceptionEvent|MockObject $event */
         $event = self::createMock(ExceptionEvent::class);
         $event
             ->method('getThrowable')

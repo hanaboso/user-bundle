@@ -70,7 +70,7 @@ class ListUsersCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $input;
-        /** @var UserRepository $repo */
+        /** @var UserRepository<User> $repo */
         $repo  = $this->repo;
         $table = new Table($output);
         $table
