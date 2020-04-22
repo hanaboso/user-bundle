@@ -8,7 +8,6 @@ use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Security\SecurityManager;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Repository\Document\UserRepository;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
@@ -99,7 +98,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         self::assertEquals('email@example.com', $user->getEmail());
         self::assertTrue($this->encoder->isPasswordValid($user->getPassword() ?? '', 'passw0rd', ''));
 
-        /** @var UserRepository|MockObject $repository */
         $repository = self::createMock(UserRepository::class);
         $repository->method('find')->willReturn(NULL);
         $this->setProperty($this->securityManager, 'userRepository', $repository);
@@ -285,7 +283,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
      */
     public function testEncodePassword(): void
     {
-        self::assertRegExp(
+        self::assertMatchesRegularExpression(
             '/\$argon2id\$v=19\$m=65536,t=3,p=1.{67}/',
             $this->securityManager->encodePassword('Passw0rd')
         );

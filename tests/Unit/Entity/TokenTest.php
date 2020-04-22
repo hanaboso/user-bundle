@@ -6,8 +6,6 @@ use Exception;
 use Hanaboso\UserBundle\Entity\TmpUser;
 use Hanaboso\UserBundle\Entity\Token;
 use Hanaboso\UserBundle\Entity\User;
-use Hanaboso\UserBundle\Entity\UserInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Throwable;
 use UserBundleTests\KernelTestCaseAbstract;
 
@@ -26,7 +24,6 @@ final class TokenTest extends KernelTestCaseAbstract
      */
     public function testEntity(): void
     {
-        /** @var UserInterface|MockObject $unknownUser */
         $unknownUser = self::createMock(User::class);
         $unknownUser->method('getType')->willReturn('Unknown');
 
@@ -52,7 +49,7 @@ final class TokenTest extends KernelTestCaseAbstract
         $token->setUser(new User())->getUser();
         $token->setTmpUser(new TmpUser())->getTmpUser();
 
-        self::assertRegExp('/\w{13}/', $token->getHash());
+        self::assertMatchesRegularExpression('/\w{13}/', $token->getHash());
     }
 
 }

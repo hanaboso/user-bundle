@@ -10,8 +10,6 @@ use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
-use PHPUnit\Framework\MockObject\MockObject;
-use Throwable;
 use UserBundleTests\ControllerTestCaseAbstract;
 
 /**
@@ -574,14 +572,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     }
 
     /**
-     * @phpstan-param class-string<Throwable> $exception
-     *
      * @param string $method
      * @param string $exception
      */
     private function prepareHandlerMock(string $method, string $exception = Exception::class): void
     {
-        /** @var UserHandler|MockObject $handler */
         $handler = self::createMock(UserHandler::class);
         $handler->method($method)->willThrowException(new $exception('Something gone wrong!'));
 

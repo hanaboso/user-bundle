@@ -182,11 +182,9 @@ class UserManager
      */
     public function register(array $data): void
     {
+        // Disable enumerate list of used e-mails
         if ($this->userRepository->findOneBy(['email' => $data['email']])) {
-            throw new UserManagerException(
-                sprintf('Email \'%s\' already exists.', $data['email']),
-                UserManagerException::USER_EMAIL_ALREADY_EXISTS
-            );
+            return;
         }
 
         try {
@@ -323,12 +321,9 @@ class UserManager
     {
         /** @var UserInterface|null $user */
         $user = $this->userRepository->findOneBy(['email' => $data['email']]);
-
+        // Disable enumerate list of used e-mails
         if (!$user) {
-            throw new UserManagerException(
-                sprintf('Email \'%s\' not exists.', $data['email']),
-                UserManagerException::USER_EMAIL_NOT_EXISTS
-            );
+            return;
         }
 
         try {

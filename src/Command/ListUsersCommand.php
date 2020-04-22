@@ -2,7 +2,6 @@
 
 namespace Hanaboso\UserBundle\Command;
 
-use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository as OdmRepo;
 use Doctrine\ORM\EntityRepository as OrmRepo;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
@@ -65,7 +64,6 @@ class ListUsersCommand extends Command
      * @param OutputInterface $output
      *
      * @return int
-     * @throws MongoDBException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

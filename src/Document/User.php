@@ -7,7 +7,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Hanaboso\UserBundle\Entity\TmpUserInterface;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
-use Hanaboso\Utils\Exception\DateTimeException;
 
 /**
  * Class User
@@ -96,7 +95,6 @@ class User extends UserAbstract
      * @param TmpUserInterface $tmpUser
      *
      * @return UserInterface
-     * @throws DateTimeException
      */
     public static function from(TmpUserInterface $tmpUser): UserInterface
     {

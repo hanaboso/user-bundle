@@ -146,9 +146,8 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     {
         $this->pfd((new User())->setEmail('email@example.com'));
 
-        self::expectException(UserManagerException::class);
-        self::expectExceptionCode(UserManagerException::USER_EMAIL_ALREADY_EXISTS);
         $this->userManager->register(['email' => 'email@example.com']);
+        self::assertFake();
     }
 
     /**
@@ -334,11 +333,8 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testResetPasswordException(): void
     {
-        self::expectException(UserManagerException::class);
-        self::expectExceptionCode(UserManagerException::USER_EMAIL_NOT_EXISTS);
-        self::expectExceptionMessage("Email 'Unknown' not exists.");
-
         $this->userManager->resetPassword(['email' => 'Unknown']);
+        self::assertFake();
     }
 
     /**

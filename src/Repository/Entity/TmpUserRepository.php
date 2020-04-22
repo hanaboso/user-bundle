@@ -3,13 +3,14 @@
 namespace Hanaboso\UserBundle\Repository\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Hanaboso\UserBundle\Entity\TmpUser;
 
 /**
  * Class TmpUserRepository
  *
  * @package Hanaboso\UserBundle\Repository\Entity
  *
- * @phpstan-extends EntityRepository<\Hanaboso\UserBundle\Entity\TmpUser>
+ * @phpstan-extends EntityRepository<TmpUser>
  */
 class TmpUserRepository extends EntityRepository
 {

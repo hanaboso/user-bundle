@@ -4,7 +4,6 @@ namespace Hanaboso\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
-use Hanaboso\Utils\Exception\DateTimeException;
 
 /**
  * Class TmpUser
@@ -89,7 +88,6 @@ class TmpUser extends UserAbstract implements TmpUserInterface
      * @param TmpUserInterface $tmpUser
      *
      * @return UserInterface
-     * @throws DateTimeException
      */
     public static function from(TmpUserInterface $tmpUser): UserInterface
     {

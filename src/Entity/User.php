@@ -135,7 +135,6 @@ class User extends UserAbstract
      * @param TmpUserInterface $tmpUser
      *
      * @return UserInterface
-     * @throws DateTimeException
      */
     public static function from(TmpUserInterface $tmpUser): UserInterface
     {

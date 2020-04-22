@@ -3,13 +3,14 @@
 namespace Hanaboso\UserBundle\Repository\Document;
 
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Hanaboso\UserBundle\Document\TmpUser;
 
 /**
  * Class TmpUserRepository
  *
  * @package Hanaboso\UserBundle\Repository\Document
  *
- * @phpstan-extends DocumentRepository<\Hanaboso\UserBundle\Document\TmpUser>
+ * @phpstan-extends DocumentRepository<TmpUser>
  */
 class TmpUserRepository extends DocumentRepository
 {
