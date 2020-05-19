@@ -117,9 +117,9 @@ class SecurityManager
      */
     public function setUserResource(string $resource): SecurityManager
     {
+        $this->resourceUser = $resource;
         /** @phpstan-var class-string<User|DmUser> $userClass */
         $userClass            = $this->provider->getResource($this->resourceUser);
-        $this->resourceUser   = $resource;
         $this->userRepository = $this->userDml->get()->getRepository($userClass);
         $this->encoder        = $this->encoderFactory->getEncoder($userClass);
 

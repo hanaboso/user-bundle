@@ -2,10 +2,12 @@
 
 use UserBundleTests\Kernel;
 
-// phpcs:ignoreFile
 require __DIR__ . '/../vendor/autoload.php';
 
-$kernel = new Kernel((string) ($_SERVER['APP_ENV'] ?? 'test'), (bool) ($_SERVER['APP_DEBUG'] ?? TRUE));
+$kernel = new Kernel(
+    (string) (filter_input(INPUT_SERVER, 'APP_ENV') ?? 'test'),
+    (bool) (filter_input(INPUT_SERVER, 'APP_DEBUG') ?? TRUE)
+);
 $kernel->boot();
 
 return $kernel->getContainer()->get('doctrine.orm.default_entity_manager');
