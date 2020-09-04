@@ -28,21 +28,21 @@ abstract class UserAbstract implements UserInterface
      *
      * @ODM\Field(type="string")
      */
-    protected $email;
+    protected string $email;
 
     /**
      * @var DateTime
      *
      * @ODM\Field(type="date")
      */
-    protected $created;
+    protected DateTime $created;
 
     /**
      * @var TokenInterface|null
      *
      * @ODM\ReferenceOne(targetDocument="Hanaboso\UserBundle\Document\Token")
      */
-    protected $token;
+    protected ?TokenInterface $token = NULL;
 
     /**
      * UserAbstract constructor.

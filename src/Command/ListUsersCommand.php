@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package Hanaboso\UserBundle\Command
  */
-class ListUsersCommand extends Command
+final class ListUsersCommand extends Command
 {
 
     private const CMD_NAME = 'user:list';

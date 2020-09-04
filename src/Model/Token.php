@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  *
  * @package Hanaboso\UserBundle\Model
  */
-class Token extends UsernamePasswordToken
+final class Token extends UsernamePasswordToken
 {
 
 }

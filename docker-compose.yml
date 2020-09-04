@@ -2,12 +2,12 @@ version: '3.5'
 
 services:
   app:
-    image: hanabosocom/php-dev:php-7.4
+    image: hanabosocom/php-dev:php-7.4-alpine
     user: ${DEV_UID}:${DEV_GID}
     volumes:
-      - ./:/var/www
-      - ${SSH_AUTH_SOCK}:${SSH_AUTH}
-      - ${HOME}/dev/.composer:${HOME}/dev/.composer
+      - ./:/var/www:cached
+      - ${SSH_AUTH}:/tmp/.ssh-auth-sock
+      - ${HOME}/dev/.composer:${HOME}/dev/.composer:cached
     environment:
       - APP_ENV=dev
       - DEV_UID=${DEV_UID}

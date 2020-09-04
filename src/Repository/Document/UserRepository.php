@@ -10,7 +10,7 @@ use Hanaboso\UserBundle\Document\User;
 /**
  * Class UserRepository
  *
- * @package Hanaboso\UserBundle\Repository\Document
+ * @package         Hanaboso\UserBundle\Repository\Document
  *
  * @phpstan-extends DocumentRepository<User>
  */

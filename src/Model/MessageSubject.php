@@ -7,7 +7,7 @@ namespace Hanaboso\UserBundle\Model;
  *
  * @package Hanaboso\UserBundle\Model
  */
-class MessageSubject
+final class MessageSubject
 {
 
     public const USER_RESET_PASSWORD = 'User reset password';

@@ -56,7 +56,7 @@ class UserManager
     protected TokenManager $tokenManager;
 
     /**
-     * @var OdmRepo|OrmRepo
+     * @var OdmRepo|OrmRepo<mixed>
      */
     protected $userRepository;
 
@@ -227,10 +227,7 @@ class UserManager
         $token = $this->tokenManager->validate($token);
 
         if (!$token->getTmpUser()) {
-            throw new TokenManagerException(
-                'Token has already been used.',
-                TokenManagerException::TOKEN_ALREADY_USED
-            );
+            throw new TokenManagerException('Token has already been used.', TokenManagerException::TOKEN_ALREADY_USED);
         }
 
         try {

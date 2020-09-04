@@ -8,7 +8,7 @@ use Hanaboso\UserBundle\Entity\TmpUser;
 /**
  * Class TmpUserRepository
  *
- * @package Hanaboso\UserBundle\Repository\Entity
+ * @package         Hanaboso\UserBundle\Repository\Entity
  *
  * @phpstan-extends EntityRepository<TmpUser>
  */

@@ -2,7 +2,7 @@
 
 namespace UserBundleTests\Integration\Model\Security;
 
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Security\SecurityManager;

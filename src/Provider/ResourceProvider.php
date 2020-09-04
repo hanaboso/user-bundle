@@ -7,13 +7,13 @@ namespace Hanaboso\UserBundle\Provider;
  *
  * @package Hanaboso\UserBundle\Provider
  */
-class ResourceProvider
+final class ResourceProvider
 {
 
     /**
      * @var mixed[]
      */
-    private $resources;
+    private array $resources;
 
     /**
      * ResourceProvider constructor.

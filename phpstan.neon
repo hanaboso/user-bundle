@@ -1,15 +1,60 @@
 includes:
-    - vendor/hanaboso/php-check-utils/phpstan.neon
+	- vendor/hanaboso/php-check-utils/phpstan.neon
 
 parameters:
-#    doctrine:
-#        objectManagerLoader: tests/DocumentManagerLoader.php
-    symfony:
-        container_xml_path: %rootDir%/../../../var/cache/test/UserBundleTests_KernelTestDebugContainer.xml
-    excludes_analyse:
-        - src/Model/User/UserManager.php
-    ignoreErrors:
-        -
-            message: '#PHPDoc tag @var for variable .+ contains unresolvable type#'
-            path: tests/*
-
+#	doctrine:
+#		objectManagerLoader: tests/DocumentManagerLoader.php
+	symfony:
+		container_xml_path: %rootDir%/../../../var/cache/test/UserBundleTests_KernelTestDebugContainer.xml
+	excludes_analyse:
+	ignoreErrors:
+		-
+			message: '#Unable to resolve the template type .*#'
+			path: src/Model/Token/TokenManager.php
+		-
+			message: '#Unable to resolve the template type .*#'
+			path:  src/Handler/UserHandler.php
+		-
+			message: '#Unable to resolve the template type .*#'
+			path: src/Model/User/UserManager.php
+		-
+			message: '#Property Hanaboso\\UserBundle\\Model\\User\\UserManager\:\:\$userRepository.*#'
+			path: src/Model/User/UserManager.php
+		-
+			message: '#Property Hanaboso\\UserBundle\\Model\\User\\UserManager\:\:\$tmpUserRepository.*#'
+			path: src/Model/User/UserManager.php
+		-
+			message: '#Parameter \#1 \$tmpUser of method Hanaboso\\UserBundle\\Entity\\TokenInterface\:\:setTmpUser\(\).*#'
+			path: src/Model/User/UserManager.php
+	ergebnis:
+			classesNotRequiredToBeAbstractOrFinal:
+				- Hanaboso\UserBundle\Document\TmpUser
+				- Hanaboso\UserBundle\Document\Token
+				- Hanaboso\UserBundle\Document\User
+				- Hanaboso\UserBundle\Enum\ResourceEnum
+				- Hanaboso\UserBundle\Handler\UserHandler
+				- Hanaboso\UserBundle\Model\Messages\ActivateMessage
+				- Hanaboso\UserBundle\Model\Messages\RegisterMessage
+				- Hanaboso\UserBundle\Model\Messages\ResetPasswordMessage
+				- Hanaboso\UserBundle\Model\Security\SecurityManager
+				- Hanaboso\UserBundle\Model\Token\TokenManager
+				- Hanaboso\UserBundle\Model\User\Event\UserEvent
+				- Hanaboso\UserBundle\Model\User\UserManager
+				- Hanaboso\UserBundle\Repository\Document\TmpUserRepository
+				- Hanaboso\UserBundle\Repository\Document\TokenRepository
+				- Hanaboso\UserBundle\Repository\Document\UserRepository
+				- Hanaboso\UserBundle\Repository\Entity\TmpUserRepository
+				- Hanaboso\UserBundle\Repository\Entity\TokenRepository
+				- Hanaboso\UserBundle\Repository\Entity\UserRepository
+			classesAllowedToBeExtended:
+				- Hanaboso\UserBundle\Command\PasswordCommandAbstract
+				- Hanaboso\UserBundle\Document\UserAbstract
+				- Hanaboso\UserBundle\Entity\UserAbstract
+				- Hanaboso\UserBundle\Model\Messages\UserMessageAbstract
+				- Hanaboso\UserBundle\Model\User\Event\UserEvent
+				- Hanaboso\Utils\Enum\EnumAbstract
+				- Hanaboso\Utils\Exception\PipesFrameworkExceptionAbstract
+				- Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+				- UserBundleTests\ControllerTestCaseAbstract
+				- UserBundleTests\DatabaseTestCaseAbstract
+				- UserBundleTests\KernelTestCaseAbstract

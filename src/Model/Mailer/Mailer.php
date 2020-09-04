@@ -13,7 +13,7 @@ use RabbitMqBundle\Publisher\PublisherInterface;
  *
  * @package Hanaboso\UserBundle\Model\Mailer
  */
-class Mailer
+final class Mailer
 {
 
     private const DEFAULT_MAIL_BUILDER = 'generic';

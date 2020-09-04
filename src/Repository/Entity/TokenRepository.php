@@ -13,7 +13,7 @@ use Hanaboso\Utils\Exception\DateTimeException;
 /**
  * Class TokenRepository
  *
- * @package Hanaboso\UserBundle\Repository\Entity
+ * @package         Hanaboso\UserBundle\Repository\Entity
  *
  * @phpstan-extends EntityRepository<Token>
  */

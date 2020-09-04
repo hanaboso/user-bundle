@@ -30,28 +30,28 @@ class Token implements TokenInterface
      *
      * @ODM\Field(type="date")
      */
-    private $created;
+    private DateTime $created;
 
     /**
      * @var UserInterface|null
      *
      * @ODM\ReferenceOne(targetDocument="Hanaboso\UserBundle\Document\User")
      */
-    private $user;
+    private ?UserInterface $user = NULL;
 
     /**
      * @var TmpUserInterface|null
      *
      * @ODM\ReferenceOne(targetDocument="Hanaboso\UserBundle\Document\TmpUser")
      */
-    private $tmpUser;
+    private ?TmpUserInterface $tmpUser = NULL;
 
     /**
      * @var string
      *
      * @ODM\Field(type="string")
      */
-    private $hash;
+    private string $hash;
 
     /**
      * Token constructor.

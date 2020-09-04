@@ -67,15 +67,15 @@ interface UserInterface extends SecurityCoreUserInterface
     public function setToken(?TokenInterface $token): UserInterface;
 
     /**
-     * @return mixed[]
-     */
-    public function toArray(): array;
-
-    /**
      * @param bool $deleted
      *
      * @return mixed
      */
     public function setDeleted(bool $deleted);
+
+    /**
+     * @return mixed[]
+     */
+    public function toArray(): array;
 
 }

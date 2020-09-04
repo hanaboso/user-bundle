@@ -27,7 +27,7 @@ use Symfony\Component\Routing\RouteCollectionBuilder;
  *
  * @package UserBundleTests
  */
-class Kernel extends BaseKernel
+final class Kernel extends BaseKernel
 {
 
     use MicroKernelTrait;

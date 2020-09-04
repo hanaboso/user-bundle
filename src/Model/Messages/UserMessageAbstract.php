@@ -18,7 +18,7 @@ abstract class UserMessageAbstract
     protected string $subject;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected ?string $template;
 

@@ -3,7 +3,7 @@
 namespace UserBundleTests\Integration\Repository\Document;
 
 use DateTime;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;

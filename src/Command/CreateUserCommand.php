@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
  *
  * @package Hanaboso\UserBundle\Command
  */
-class CreateUserCommand extends PasswordCommandAbstract
+final class CreateUserCommand extends PasswordCommandAbstract
 {
 
     private const CMD_NAME = 'user:create';

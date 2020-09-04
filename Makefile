@@ -6,10 +6,10 @@ DEC=docker-compose exec -T app composer
 DM=docker-compose exec -T mongo
 
 .env:
-	sed -e "s/{DEV_UID}/$(shell id -u)/g" \
-		-e "s/{DEV_GID}/$(shell id -u)/g" \
-		-e "s/{SSH_AUTH}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo "\/tmp\/.ssh-auth-sock"; else echo '\/tmp\/.nope'; fi)/g" \
-		.env.dist >> .env; \
+	sed -e "s/{DEV_UID}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo $(shell id -u); else echo '1001'; fi)/g" \
+		-e "s/{DEV_GID}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo $(shell id -g); else echo '1001'; fi)/g" \
+		-e "s/{SSH_AUTH}/$(shell if [ "$(shell uname)" = "Linux" ]; then echo '${SSH_AUTH_SOCK}' | sed 's/\//\\\//g'; else echo '\/run\/host-services\/ssh-auth.sock'; fi)/g" \
+		.env.dist > .env; \
 
 # Docker
 docker-up-force: .env
@@ -26,6 +26,7 @@ composer-install:
 
 composer-update:
 	$(DE) composer update --no-suggest
+	$(DE) composer normalize
 	$(DE) composer update --dry-run roave/security-advisories
 
 composer-outdated:
@@ -42,7 +43,7 @@ database-create:
 	$(DE) php tests/testApp/bin/console doctrine:database:create --env=test
 	$(DE) php tests/testApp/bin/console doctrine:schema:create --env=test
 	$(DM) /bin/bash -c "mongo <<< 'use user;'" ; \
-	for i in 1 2 3 4; do \
+	for i in `seq 1 $$(nproc)`; do \
 		$(DM) /bin/bash -c "mongo <<< 'use user$$i;'" ; \
 	done
 
@@ -50,21 +51,21 @@ database-create:
 init-dev: docker-up-force composer-install
 
 phpcodesniffer:
-	$(DE) ./vendor/bin/phpcs --standard=./ruleset.xml src tests
+	$(DE) ./vendor/bin/phpcs --parallel=$$(nproc) --standard=./ruleset.xml src tests
 
 phpstan:
 	$(DE) ./vendor/bin/phpstan analyse -c ./phpstan.neon -l 8 src tests
 
 phpunit:
-	$(DE) ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 --runner=WrapperRunner tests/Unit
+	$(DE) ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) --runner=WrapperRunner tests/Unit
 
 phpintegration: database-create
 	$(DE) sed -i 's/TRUE/FALSE/g' src/Command/PasswordCommandAbstract.php
-	$(DE) ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 --runner=WrapperRunner tests/Integration
+	$(DE) ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) --runner=WrapperRunner tests/Integration
 	$(DE) sed -i 's/FALSE/TRUE/g' src/Command/PasswordCommandAbstract.php
 
 phpcontroller:
-	$(DE) ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p 4 --runner=WrapperRunner tests/Controller
+	$(DE) ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist -p $$(nproc) --runner=WrapperRunner tests/Controller
 
 phpcoverage:
 	$(DE) sed -i 's/TRUE/FALSE/g' src/Command/PasswordCommandAbstract.php
@@ -73,7 +74,7 @@ phpcoverage:
 
 phpcoverage-ci:
 	$(DE) sed -i 's/TRUE/FALSE/g' src/Command/PasswordCommandAbstract.php
-	$(DE) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -c 99
+	$(DE) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -c 99 -p $$(nproc)
 	$(DE) sed -i 's/FALSE/TRUE/g' src/Command/PasswordCommandAbstract.php
 
 test: docker-up-force composer-install fasttest

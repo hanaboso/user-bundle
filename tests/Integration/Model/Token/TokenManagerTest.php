@@ -3,9 +3,9 @@
 namespace UserBundleTests\Integration\Model\Token;
 
 use DateTime;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;

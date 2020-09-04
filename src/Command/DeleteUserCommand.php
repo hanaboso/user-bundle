@@ -29,7 +29,7 @@ use Symfony\Component\Console\Question\Question;
  *
  * @package Hanaboso\UserBundle\Command
  */
-class DeleteUserCommand extends Command
+final class DeleteUserCommand extends Command
 {
 
     private const CMD_NAME = 'user:delete';

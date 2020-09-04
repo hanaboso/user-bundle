@@ -9,7 +9,7 @@ use Hanaboso\Utils\Exception\PipesFrameworkExceptionAbstract;
  *
  * @package Hanaboso\UserBundle\Provider
  */
-class ResourceProviderException extends PipesFrameworkExceptionAbstract
+final class ResourceProviderException extends PipesFrameworkExceptionAbstract
 {
 
     public const RESOURCE_NOT_EXIST = self::OFFSET + 1;

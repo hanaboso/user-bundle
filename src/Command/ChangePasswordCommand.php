@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
  *
  * @package Hanaboso\UserBundle\Command
  */
-class ChangePasswordCommand extends PasswordCommandAbstract
+final class ChangePasswordCommand extends PasswordCommandAbstract
 {
 
     private const CMD_NAME = 'user:password:change';

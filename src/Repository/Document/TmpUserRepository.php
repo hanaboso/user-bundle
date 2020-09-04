@@ -8,7 +8,7 @@ use Hanaboso\UserBundle\Document\TmpUser;
 /**
  * Class TmpUserRepository
  *
- * @package Hanaboso\UserBundle\Repository\Document
+ * @package         Hanaboso\UserBundle\Repository\Document
  *
  * @phpstan-extends DocumentRepository<TmpUser>
  */

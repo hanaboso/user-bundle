@@ -3,9 +3,9 @@
 namespace UserBundleTests\Integration\Model\User;
 
 use DateTime;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\ObjectRepository;
 use EmailServiceBundle\Exception\MailerException;
 use Exception;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\CustomAssertTrait;
