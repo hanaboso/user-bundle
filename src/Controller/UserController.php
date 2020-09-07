@@ -20,7 +20,7 @@ use Throwable;
  *
  * @package Hanaboso\UserBundle\Controller
  */
-final class UserController
+class UserController
 {
 
     use ControllerTrait;

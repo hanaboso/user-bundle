@@ -28,6 +28,7 @@ parameters:
 			path: src/Model/User/UserManager.php
 	ergebnis:
 			classesNotRequiredToBeAbstractOrFinal:
+				- Hanaboso\UserBundle\Controller\UserController
 				- Hanaboso\UserBundle\Document\TmpUser
 				- Hanaboso\UserBundle\Document\Token
 				- Hanaboso\UserBundle\Document\User
