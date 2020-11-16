@@ -1,23 +1,25 @@
 {
     "name": "hanaboso/user-bundle",
-    "version": "1.3.14",
+    "version": "1.3.15",
     "license": "Apache-2.0",
     "require": {
         "php": "^7.4",
-        "ext-ctype": "*",
-        "ext-iconv": "*",
-        "ext-intl": "*",
-        "ext-mbstring": "*",
-        "doctrine/orm": "^2.7",
         "hanaboso/commons-bundle": "^2.0",
         "hanaboso/email-service-bundle": "^1.1",
         "hanaboso/rabbit-mq-bundle": "^1.4",
         "hanaboso/rest-bundle": "^1.0"
     },
     "require-dev": {
+        "doctrine/doctrine-bundle": "^2.2",
+        "doctrine/orm": "^2.7",
+        "doctrine/mongodb-odm-bundle": "^4.2",
         "hanaboso/php-check-utils": "^1.1",
-        "symfony/monolog-bundle": "^3.5",
+        "symfony/monolog-bundle": "^3.6",
         "symfony/security-bundle": "^5.1"
+    },
+    "suggest": {
+        "doctrine/doctrine-bundle": "Install me, if you using MySQL.",
+        "doctrine/mongodb-odm-bundle": "Install me, if you using MongoDB."
     },
     "autoload": {
         "psr-4": {
