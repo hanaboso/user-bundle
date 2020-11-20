@@ -22,6 +22,11 @@ abstract class UserAbstract implements UserInterface
     use DeletedTrait;
 
     /**
+     * @var string|null
+     */
+    protected $password;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string")
@@ -110,7 +115,7 @@ abstract class UserAbstract implements UserInterface
      */
     public function eraseCredentials(): void
     {
-        throw new Exception('UserAbstract::eraseCredentials is not implemented');
+        $this->password = NULL;
     }
 
 }

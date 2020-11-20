@@ -23,7 +23,7 @@ class User extends UserAbstract
      *
      * @ODM\Field(type="string")
      */
-    private string $password;
+    protected string $password;
 
     /**
      * @var DateTime

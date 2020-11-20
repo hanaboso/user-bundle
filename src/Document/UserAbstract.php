@@ -25,6 +25,11 @@ abstract class UserAbstract implements UserInterface
 
     /**
      * @var string
+     */
+    protected string $password;
+
+    /**
+     * @var string
      *
      * @ODM\Field(type="string")
      */
@@ -139,7 +144,7 @@ abstract class UserAbstract implements UserInterface
      */
     public function eraseCredentials(): void
     {
-        throw new Exception(sprintf('%s is not implemented!', __METHOD__));
+        $this->password = '';
     }
 
 }

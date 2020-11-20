@@ -35,7 +35,7 @@ final class UserTest extends KernelTestCaseAbstract
         $user->setEmail('');
         $this->setProperty($user, 'id', '');
 
-        $user->setPassword('');
+        $user->setPassword('aa');
         $user->setUpdated($timestamp);
         $user->getCreated();
         $user->setToken($user->getToken());
@@ -45,7 +45,7 @@ final class UserTest extends KernelTestCaseAbstract
         self::assertEquals(UserTypeEnum::USER, $user->getType());
         self::assertEquals('', User::from($tmpUser)->getEmail());
         self::assertEquals('', $user->getEmail());
-        self::assertEquals('', $user->getPassword());
+        self::assertEquals('aa', $user->getPassword());
         self::assertEquals('', $user->getUsername());
         self::assertEquals('', $user->getSalt());
         self::assertEquals(['admin'], $user->getRoles());
@@ -55,8 +55,8 @@ final class UserTest extends KernelTestCaseAbstract
         );
         self::assertEquals(['id' => '', 'email' => ''], $user->toArray());
 
-        self::expectException(Exception::class);
         $user->eraseCredentials();
+        self::assertEmpty($user->getPassword());
     }
 
 }
