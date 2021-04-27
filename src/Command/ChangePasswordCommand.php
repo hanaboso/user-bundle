@@ -32,7 +32,7 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
     /**
      * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
      */
-    private $repo;
+    private OrmRepo|OdmRepo $repo;
 
     /**
      * ChangePasswordCommand constructor.

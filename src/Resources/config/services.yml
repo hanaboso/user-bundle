@@ -53,9 +53,9 @@ services:
             - '%mailer_async%'
             - '%mailer_builder_id%'
 
-    EmailServiceBundle\Transport\Impl\SwiftMailerTransport:
-        class: EmailServiceBundle\Transport\Impl\SwiftMailerTransport
+    EmailServiceBundle\Transport\Impl\SymfonyMailerTransport:
+        class: EmailServiceBundle\Transport\Impl\SymfonyMailerTransport
         arguments:
-            - '@swiftmailer.mailer.default'
+            - '@mailer.mailer'
         calls:
             - ['setLogger', ['@monolog.logger.mailer']]

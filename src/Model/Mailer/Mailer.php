@@ -19,26 +19,6 @@ final class Mailer
     private const DEFAULT_MAIL_BUILDER = 'generic';
 
     /**
-     * @var MailHandler
-     */
-    private MailHandler $mailHandler;
-
-    /**
-     * @var PublisherInterface
-     */
-    private PublisherInterface $producer;
-
-    /**
-     * @var string
-     */
-    private string $from;
-
-    /**
-     * @var bool
-     */
-    private bool $async;
-
-    /**
      * @var string
      */
     private string $builderId;
@@ -53,18 +33,14 @@ final class Mailer
      * @param string|null        $builderId
      */
     public function __construct(
-        PublisherInterface $producer,
-        MailHandler $mailHandler,
-        string $from,
-        bool $async = TRUE,
+        private PublisherInterface $producer,
+        private MailHandler $mailHandler,
+        private string $from,
+        private bool $async = TRUE,
         ?string $builderId = NULL
     )
     {
-        $this->mailHandler = $mailHandler;
-        $this->producer    = $producer;
-        $this->from        = $from;
-        $this->async       = $async;
-        $this->builderId   = $builderId ?? '';
+        $this->builderId = $builderId ?? '';
 
         if ($this->async === FALSE && empty($this->builderId)) {
             $this->builderId = self::DEFAULT_MAIL_BUILDER;

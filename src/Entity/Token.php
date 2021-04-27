@@ -28,28 +28,28 @@ class Token implements TokenInterface
      *
      * @ORM\Column(type="date")
      */
-    private $created;
+    private DateTime $created;
 
     /**
      * @var UserInterface|null
      *
      * @ORM\OneToOne(targetEntity="Hanaboso\UserBundle\Entity\User", mappedBy="token")
      */
-    private $user;
+    private ?UserInterface $user = NULL;
 
     /**
      * @var TmpUserInterface|null
      *
      * @ORM\OneToOne(targetEntity="Hanaboso\UserBundle\Entity\TmpUser", mappedBy="token")
      */
-    private $tmpUser;
+    private ?TmpUserInterface $tmpUser = NULL;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string")
      */
-    private $hash;
+    private string $hash;
 
     /**
      * Token constructor.
@@ -113,7 +113,7 @@ class Token implements TokenInterface
     /**
      * @return UserInterface|TmpUserInterface
      */
-    public function getUserOrTmpUser(): UserInterface
+    public function getUserOrTmpUser(): UserInterface|TmpUserInterface
     {
         if ($this->user) {
             return $this->user;
@@ -129,7 +129,7 @@ class Token implements TokenInterface
      *
      * @return TokenInterface
      */
-    public function setUserOrTmpUser(UserInterface $user): TokenInterface
+    public function setUserOrTmpUser(UserInterface|TmpUserInterface $user): TokenInterface
     {
         if ($user->getType() === UserTypeEnum::USER) {
             $this->setUser($user);

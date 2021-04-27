@@ -23,32 +23,18 @@ class UserEvent extends Event
     public const USER_CHANGE_PASSWORD = 'user.change.password';
 
     /**
-     * @var UserInterface
-     */
-    private UserInterface $user;
-
-    /**
-     * @var UserInterface|null
-     */
-    private ?UserInterface $loggedUser;
-
-    /**
-     * @var UserInterface|null
-     */
-    private ?UserInterface $tmpUser;
-
-    /**
      * UserEvent constructor.
      *
      * @param UserInterface      $user
      * @param UserInterface|null $loggedUser
      * @param UserInterface|null $tmpUser
      */
-    public function __construct(UserInterface $user, ?UserInterface $loggedUser = NULL, ?UserInterface $tmpUser = NULL)
+    public function __construct(
+        private UserInterface $user,
+        private ?UserInterface $loggedUser = NULL,
+        private ?UserInterface $tmpUser = NULL
+    )
     {
-        $this->user       = $user;
-        $this->loggedUser = $loggedUser;
-        $this->tmpUser    = $tmpUser;
     }
 
     /**

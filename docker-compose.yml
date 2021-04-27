@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   app:
-    image: hanabosocom/php-dev:php-7.4-alpine
+    image: hanabosocom/php-dev:php-8.0-alpine
     user: ${DEV_UID}:${DEV_GID}
     volumes:
       - ./:/var/www:cached
@@ -14,10 +14,7 @@ services:
       - DEV_GID=${DEV_GID}
       - COMPOSER_HOME=${HOME}/dev/.composer
       - KERNEL_CLASS=UserBundleTests\Kernel
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_PORT=${SMTP_PORT}
-      - SMTP_USER=${SMTP_USER}
-      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_DSN=${SMTP_DSN}
       - MONGODB_DSN=mongodb://mongo
       - MONGODB_DB=user
       - MARIADB_DSN=mariadb
@@ -37,6 +34,9 @@ services:
        MYSQL_ROOT_PASSWORD: root
       volumes:
        - mariadb:/var/lib/mysql
+
+  mailhog:
+    image: mailhog/mailhog
 
 volumes:
   mongo: {}

@@ -49,13 +49,13 @@ class User extends UserAbstract
     }
 
     /**
-     * @param string $password
+     * @param string $pwd
      *
      * @return UserInterface
      */
-    public function setPassword(string $password): UserInterface
+    public function setPassword(string $pwd): UserInterface
     {
-        $this->password = $password;
+        $this->password = $pwd;
 
         return $this;
     }

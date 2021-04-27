@@ -27,21 +27,21 @@ class User extends UserAbstract
      *
      * @ORM\OneToOne(targetEntity="Hanaboso\UserBundle\Entity\Token", inversedBy="user")
      */
-    protected $token;
+    protected ?TokenInterface $token = NULL;
 
     /**
      * @var string|null
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $password;
+    protected ?string $password = NULL;
 
     /**
      * @var DateTime
      *
      * @ORM\Column(type="datetime")
      */
-    protected $updated;
+    protected DateTime $updated;
 
     /**
      * @return string
@@ -60,13 +60,13 @@ class User extends UserAbstract
     }
 
     /**
-     * @param string $password
+     * @param string $pwd
      *
      * @return UserInterface
      */
-    public function setPassword(string $password): UserInterface
+    public function setPassword(string $pwd): UserInterface
     {
-        $this->password = $password;
+        $this->password = $pwd;
 
         return $this;
     }

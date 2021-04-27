@@ -25,7 +25,7 @@ abstract class PasswordCommandAbstract extends Command
     /**
      * @var DocumentManager|EntityManager
      */
-    protected $dm;
+    protected DocumentManager|EntityManager $dm;
 
     /**
      * @var PasswordEncoderInterface

@@ -24,12 +24,7 @@ class TokenManager
     /**
      * @var DocumentManager|EntityManager
      */
-    private $dm;
-
-    /**
-     * @var ResourceProvider
-     */
-    private ResourceProvider $provider;
+    private DocumentManager|EntityManager $dm;
 
     /**
      * TokenManager constructor.
@@ -37,10 +32,9 @@ class TokenManager
      * @param DatabaseManagerLocator $userDml
      * @param ResourceProvider       $provider
      */
-    public function __construct(DatabaseManagerLocator $userDml, ResourceProvider $provider)
+    public function __construct(DatabaseManagerLocator $userDml, private ResourceProvider $provider)
     {
-        $this->dm       = $userDml->get();
-        $this->provider = $provider;
+        $this->dm = $userDml->get();
     }
 
     /**

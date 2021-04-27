@@ -38,17 +38,7 @@ class SecurityManager
     /**
      * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
      */
-    protected $userRepository;
-
-    /**
-     * @var Session<mixed>
-     */
-    protected Session $session;
-
-    /**
-     * @var UsageTrackingTokenStorage
-     */
-    protected UsageTrackingTokenStorage $tokenStorage;
+    protected OrmRepo|OdmRepo $userRepository;
 
     /**
      * @var string
@@ -56,24 +46,9 @@ class SecurityManager
     protected string $sessionName;
 
     /**
-     * @var ResourceProvider
-     */
-    protected ResourceProvider $provider;
-
-    /**
      * @var PasswordEncoderInterface
      */
     protected PasswordEncoderInterface $encoder;
-
-    /**
-     * @var EncoderFactory
-     */
-    protected EncoderFactory $encoderFactory;
-
-    /**
-     * @var DatabaseManagerLocator
-     */
-    protected DatabaseManagerLocator $userDml;
 
     /**
      * @var string
@@ -92,19 +67,13 @@ class SecurityManager
      * @throws ResourceProviderException
      */
     public function __construct(
-        DatabaseManagerLocator $userDml,
-        EncoderFactory $encoderFactory,
-        Session $session,
-        UsageTrackingTokenStorage $tokenStorage,
-        ResourceProvider $provider
+        protected DatabaseManagerLocator $userDml,
+        protected EncoderFactory $encoderFactory,
+        protected Session $session,
+        protected UsageTrackingTokenStorage $tokenStorage,
+        protected ResourceProvider $provider
     )
     {
-        $this->tokenStorage   = $tokenStorage;
-        $this->session        = $session;
-        $this->encoderFactory = $encoderFactory;
-        $this->provider       = $provider;
-        $this->userDml        = $userDml;
-
         $this->setUserResource($this->resourceUser);
         $this->setArea(self::SECURED_AREA);
     }
@@ -221,7 +190,7 @@ class SecurityManager
             if (!$this->encoder->isPasswordValid($user->getPassword() ?? '', $data['password'], '')) {
                 throw new Exception('Invalid password');
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             throw new SecurityManagerException(
                 sprintf('User \'%s\' or password not valid.', $user->getEmail()),
                 SecurityManagerException::USER_OR_PASSWORD_NOT_VALID

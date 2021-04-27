@@ -40,11 +40,6 @@ abstract class UserMessageAbstract
     ];
 
     /**
-     * @var UserInterface
-     */
-    protected UserInterface $user;
-
-    /**
      * @return mixed[]
      */
     abstract public function getMessage(): array;
@@ -54,9 +49,8 @@ abstract class UserMessageAbstract
      *
      * @param UserInterface $user
      */
-    public function __construct(UserInterface $user)
+    public function __construct(protected UserInterface $user)
     {
-        $this->user                = $user;
         $this->message['subject']  = $this->subject;
         $this->message['template'] = $this->template;
     }

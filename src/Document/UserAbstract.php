@@ -72,7 +72,7 @@ abstract class UserAbstract implements UserInterface
      *
      * @return UserInterface|User|TmpUser
      */
-    public function setEmail(string $email): UserInterface
+    public function setEmail(string $email): UserInterface|User|TmpUser
     {
         $this->email = $email;
 

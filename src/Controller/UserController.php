@@ -26,19 +26,13 @@ class UserController
     use ControllerTrait;
 
     /**
-     * @var UserHandler
-     */
-    protected UserHandler $userHandler;
-
-    /**
      * UserController constructor.
      *
      * @param UserHandler $userHandler
      */
-    public function __construct(UserHandler $userHandler)
+    public function __construct(protected UserHandler $userHandler)
     {
-        $this->userHandler = $userHandler;
-        $this->logger      = new NullLogger();
+        $this->logger = new NullLogger();
     }
 
     /**

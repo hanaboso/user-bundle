@@ -44,14 +44,14 @@ interface TokenInterface
     /**
      * @return UserInterface|TmpUserInterface
      */
-    public function getUserOrTmpUser(): UserInterface;
+    public function getUserOrTmpUser(): UserInterface|TmpUserInterface;
 
     /**
      * @param UserInterface|TmpUserInterface $user
      *
      * @return TokenInterface
      */
-    public function setUserOrTmpUser(UserInterface $user): TokenInterface;
+    public function setUserOrTmpUser(UserInterface|TmpUserInterface $user): TokenInterface;
 
     /**
      * @return string

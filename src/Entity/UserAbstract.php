@@ -24,21 +24,21 @@ abstract class UserAbstract implements UserInterface
     /**
      * @var string|null
      */
-    protected $password;
+    protected ?string $password;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string")
      */
-    protected $email;
+    protected string $email;
 
     /**
      * @var DateTime
      *
      * @ORM\Column(type="datetime")
      */
-    protected $created;
+    protected DateTime $created;
 
     /**
      * UserAbstract constructor.
@@ -63,7 +63,7 @@ abstract class UserAbstract implements UserInterface
      *
      * @return UserInterface|User|TmpUser
      */
-    public function setEmail(string $email): UserInterface
+    public function setEmail(string $email): UserInterface|User|TmpUser
     {
         $this->email = $email;
 

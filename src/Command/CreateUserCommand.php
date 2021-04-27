@@ -32,12 +32,7 @@ final class CreateUserCommand extends PasswordCommandAbstract
     /**
      * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
      */
-    private $repo;
-
-    /**
-     * @var ResourceProvider
-     */
-    private ResourceProvider $provider;
+    private OrmRepo|OdmRepo $repo;
 
     /**
      * CreateUserCommand constructor.
@@ -50,18 +45,17 @@ final class CreateUserCommand extends PasswordCommandAbstract
      */
     public function __construct(
         DatabaseManagerLocator $userDml,
-        ResourceProvider $provider,
+        private ResourceProvider $provider,
         EncoderFactory $encoderFactory
     )
     {
         parent::__construct();
 
         /** @phpstan-var class-string<User|DmUser> $userClass */
-        $userClass      = $provider->getResource(ResourceEnum::USER);
-        $this->dm       = $userDml->get();
-        $this->repo     = $this->dm->getRepository($userClass);
-        $this->encoder  = $encoderFactory->getEncoder($userClass);
-        $this->provider = $provider;
+        $userClass     = $provider->getResource(ResourceEnum::USER);
+        $this->dm      = $userDml->get();
+        $this->repo    = $this->dm->getRepository($userClass);
+        $this->encoder = $encoderFactory->getEncoder($userClass);
     }
 
     /**

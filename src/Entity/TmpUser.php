@@ -21,7 +21,7 @@ class TmpUser extends UserAbstract implements TmpUserInterface
      *
      * @ORM\OneToOne(targetEntity="Hanaboso\UserBundle\Entity\Token", inversedBy="tmpUser")
      */
-    protected $token;
+    protected ?TokenInterface $token = NULL;
 
     /**
      * @return string

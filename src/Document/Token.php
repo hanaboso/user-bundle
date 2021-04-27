@@ -115,7 +115,7 @@ class Token implements TokenInterface
     /**
      * @return UserInterface|TmpUserInterface
      */
-    public function getUserOrTmpUser(): UserInterface
+    public function getUserOrTmpUser(): UserInterface|TmpUserInterface
     {
         if ($this->user) {
             return $this->user;
@@ -131,7 +131,7 @@ class Token implements TokenInterface
      *
      * @return TokenInterface
      */
-    public function setUserOrTmpUser(UserInterface $user): TokenInterface
+    public function setUserOrTmpUser(UserInterface|TmpUserInterface $user): TokenInterface
     {
         if ($user->getType() === UserTypeEnum::USER) {
             $this->setUser($user);

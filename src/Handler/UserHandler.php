@@ -37,17 +37,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     /**
      * @var DocumentManager|EntityManager
      */
-    protected $dm;
-
-    /**
-     * @var UserManager
-     */
-    protected UserManager $userManager;
-
-    /**
-     * @var ResourceProvider
-     */
-    protected ResourceProvider $provider;
+    protected DocumentManager|EntityManager $dm;
 
     /**
      * UserHandler constructor.
@@ -56,11 +46,13 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
      * @param UserManager            $userManager
      * @param ResourceProvider       $provider
      */
-    public function __construct(DatabaseManagerLocator $userDml, UserManager $userManager, ResourceProvider $provider)
+    public function __construct(
+        DatabaseManagerLocator $userDml,
+        protected UserManager $userManager,
+        protected ResourceProvider $provider
+    )
     {
-        $this->dm          = $userDml->get();
-        $this->userManager = $userManager;
-        $this->provider    = $provider;
+        $this->dm = $userDml->get();
     }
 
     /**
@@ -229,7 +221,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
         $body      = [
             'status'     => 'ERROR',
             'error_code' => $exception->getCode(),
-            'type'       => get_class($exception),
+            'type'       => $exception::class,
             'message'    => $exception->getMessage(),
         ];
 

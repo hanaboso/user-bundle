@@ -29,7 +29,7 @@ final class ListUsersCommand extends Command
     /**
      * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
      */
-    private $repo;
+    private OrmRepo|OdmRepo $repo;
 
     /**
      * ListUsersCommand constructor.

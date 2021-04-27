@@ -313,7 +313,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $this->session->invalidate();
         $this->session->clear();
         $this->encoder         = new NativePasswordEncoder(3);
-        $encodeFactory         = new EncoderFactory([$this->encoder]);
+        $encodeFactory         = new EncoderFactory([User::class => $this->encoder]);
         $this->securityManager = new SecurityManager(
             self::$container->get('hbpf.database_manager_locator'),
             $encodeFactory,

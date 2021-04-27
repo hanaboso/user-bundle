@@ -37,12 +37,12 @@ final class DeleteUserCommand extends Command
     /**
      * @var DocumentManager|EntityManager
      */
-    private $dm;
+    private DocumentManager|EntityManager $dm;
 
     /**
      * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
      */
-    private $repo;
+    private OrmRepo|OdmRepo $repo;
 
     /**
      * DeleteUserCommand constructor.

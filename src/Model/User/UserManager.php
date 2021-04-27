@@ -43,17 +43,7 @@ class UserManager
     /**
      * @var DocumentManager|EntityManager
      */
-    protected $dm;
-
-    /**
-     * @var SecurityManager
-     */
-    protected SecurityManager $securityManager;
-
-    /**
-     * @var TokenManager
-     */
-    protected TokenManager $tokenManager;
+    protected DocumentManager|EntityManager $dm;
 
     /**
      * @var OdmRepo|OrmRepo<mixed>
@@ -66,16 +56,6 @@ class UserManager
     protected $tmpUserRepository;
 
     /**
-     * @var EventDispatcherInterface
-     */
-    protected EventDispatcherInterface $eventDispatcher;
-
-    /**
-     * @var Mailer
-     */
-    protected Mailer $mailer;
-
-    /**
      * @var string
      */
     protected string $activateLink;
@@ -84,11 +64,6 @@ class UserManager
      * @var string
      */
     protected string $passwordLink;
-
-    /**
-     * @var ResourceProvider
-     */
-    private ResourceProvider $provider;
 
     /**
      * UserManager constructor.
@@ -107,11 +82,11 @@ class UserManager
      */
     public function __construct(
         DatabaseManagerLocator $userDml,
-        SecurityManager $securityManager,
-        TokenManager $tokenManager,
-        EventDispatcherInterface $eventDispatcher,
-        ResourceProvider $provider,
-        Mailer $mailer,
+        protected SecurityManager $securityManager,
+        protected TokenManager $tokenManager,
+        protected EventDispatcherInterface $eventDispatcher,
+        private ResourceProvider $provider,
+        protected Mailer $mailer,
         string $feHost,
         string $activateLink,
         string $passwordLink
@@ -129,13 +104,8 @@ class UserManager
         $tmpUserClass = $provider->getResource(ResourceEnum::TMP_USER);
 
         $this->dm                = $userDml->get();
-        $this->securityManager   = $securityManager;
-        $this->tokenManager      = $tokenManager;
         $this->userRepository    = $this->dm->getRepository($userClass);
         $this->tmpUserRepository = $this->dm->getRepository($tmpUserClass);
-        $this->eventDispatcher   = $eventDispatcher;
-        $this->provider          = $provider;
-        $this->mailer            = $mailer;
         $this->activateLink      = sprintf('%s/%s', rtrim($feHost, '/'), ltrim($activateLink, '/'));
         $this->passwordLink      = sprintf('%s/%s', rtrim($feHost, '/'), ltrim($passwordLink, '/'));
     }
@@ -343,7 +313,7 @@ class UserManager
      * @throws SecurityManagerException
      * @throws UserManagerException
      */
-    public function delete($user): UserInterface
+    public function delete(UserInterface $user): UserInterface
     {
         $this->eventDispatcher->dispatch(
             new DeleteBeforeUserEvent($user, $this->securityManager->getLoggedUser()),
