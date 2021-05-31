@@ -108,8 +108,8 @@ final class DeleteUserCommand extends Command
                             }
 
                             return $user;
-                        }
-                    )
+                        },
+                    ),
             );
 
             $this->dm->remove($user);

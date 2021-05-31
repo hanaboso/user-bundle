@@ -26,7 +26,7 @@ final class UserEventTest extends KernelTestCaseAbstract
         $event = new UserEvent(
             (new User())->setEmail('user@example.com'),
             (new User())->setEmail('logger-user@example.com'),
-            (new TmpUser())->setEmail('tmp-user@example.com')
+            (new TmpUser())->setEmail('tmp-user@example.com'),
         );
 
         /** @var UserInterface $tmpUser */

@@ -51,7 +51,7 @@ final class UserTest extends KernelTestCaseAbstract
         self::assertEquals(['admin'], $user->getRoles());
         self::assertEquals(
             $timestamp->format(DateTimeUtils::DATE_TIME),
-            $user->getUpdated()->format(DateTimeUtils::DATE_TIME)
+            $user->getUpdated()->format(DateTimeUtils::DATE_TIME),
         );
         self::assertEquals(['id' => '', 'email' => ''], $user->toArray());
 

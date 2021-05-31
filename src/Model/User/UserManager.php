@@ -89,7 +89,7 @@ class UserManager
         protected Mailer $mailer,
         string $feHost,
         string $activateLink,
-        string $passwordLink
+        string $passwordLink,
     )
     {
         /**
@@ -140,7 +140,7 @@ class UserManager
     {
         $this->eventDispatcher->dispatch(
             new LogoutUserEvent($this->securityManager->getLoggedUser()),
-            LogoutUserEvent::NAME
+            LogoutUserEvent::NAME,
         );
         $this->securityManager->logout();
     }
@@ -209,7 +209,7 @@ class UserManager
             $this->dm->persist($user);
             $this->eventDispatcher->dispatch(
                 new ActivateUserEvent($user, NULL, $token->getTmpUser()),
-                ActivateUserEvent::NAME
+                ActivateUserEvent::NAME,
             );
 
             $this->dm->remove($tmpUser);
@@ -317,12 +317,12 @@ class UserManager
     {
         $this->eventDispatcher->dispatch(
             new DeleteBeforeUserEvent($user, $this->securityManager->getLoggedUser()),
-            DeleteBeforeUserEvent::NAME
+            DeleteBeforeUserEvent::NAME,
         );
         if ($this->securityManager->getLoggedUser()->getId() === $user->getId()) {
             throw new UserManagerException(
                 sprintf('User \'%s\' delete not allowed.', $user->getId()),
-                UserManagerException::USER_DELETE_NOT_ALLOWED
+                UserManagerException::USER_DELETE_NOT_ALLOWED,
             );
         }
 
@@ -331,7 +331,7 @@ class UserManager
             $this->dm->flush();
             $this->eventDispatcher->dispatch(
                 new DeleteAfterUserEvent($user, $this->securityManager->getLoggedUser()),
-                DeleteAfterUserEvent::NAME
+                DeleteAfterUserEvent::NAME,
             );
 
             return $user;

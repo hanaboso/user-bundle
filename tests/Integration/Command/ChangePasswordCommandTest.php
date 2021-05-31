@@ -50,7 +50,7 @@ User email: User password:  Password cannot be empty!
 User password: User password again:  Both passwords must be same! 
 User password again: Password changed.
 ',
-            $this->tester->getDisplay()
+            $this->tester->getDisplay(),
         );
         self::assertNotEmpty($user->getPassword());
     }

@@ -71,7 +71,7 @@ class SecurityManager
         protected EncoderFactory $encoderFactory,
         protected Session $session,
         protected UsageTrackingTokenStorage $tokenStorage,
-        protected ResourceProvider $provider
+        protected ResourceProvider $provider,
     )
     {
         $this->setUserResource($this->resourceUser);
@@ -193,7 +193,7 @@ class SecurityManager
         } catch (Throwable) {
             throw new SecurityManagerException(
                 sprintf('User \'%s\' or password not valid.', $user->getEmail()),
-                SecurityManagerException::USER_OR_PASSWORD_NOT_VALID
+                SecurityManagerException::USER_OR_PASSWORD_NOT_VALID,
             );
         }
     }
@@ -243,13 +243,13 @@ class SecurityManager
             [
                 'email'   => $email,
                 'deleted' => FALSE,
-            ]
+            ],
         );
 
         if (!$user) {
             throw new SecurityManagerException(
                 sprintf('User \'%s\' or password not valid.', $email),
-                SecurityManagerException::USER_OR_PASSWORD_NOT_VALID
+                SecurityManagerException::USER_OR_PASSWORD_NOT_VALID,
             );
         }
 

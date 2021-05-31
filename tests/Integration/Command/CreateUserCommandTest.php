@@ -38,7 +38,7 @@ final class CreateUserCommandTest extends DatabaseTestCaseAbstract
         $this->dm->clear();
 
         $this->tester->setInputs(
-            ['', 'another-user@example.com', 'user@example.com', '', 'password', 'Unknown', 'password']
+            ['', 'another-user@example.com', 'user@example.com', '', 'password', 'Unknown', 'password'],
         );
         $this->tester->execute([]);
 
@@ -52,7 +52,7 @@ Creating user, select user email: User password:  Password cannot be empty!
 User password: User password again:  Both passwords must be same! 
 User password again: User created.
 ',
-            $this->tester->getDisplay()
+            $this->tester->getDisplay(),
         );
         self::assertNotEmpty($user->getPassword());
     }

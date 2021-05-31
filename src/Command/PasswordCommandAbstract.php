@@ -54,9 +54,9 @@ abstract class PasswordCommandAbstract extends Command
                         }
 
                         return $answer;
-                    }
+                    },
                 )
-                ->setHidden(TRUE)
+                ->setHidden(TRUE),
         );
 
         $password = $helper->ask(
@@ -70,9 +70,9 @@ abstract class PasswordCommandAbstract extends Command
                         }
 
                         return $answer;
-                    }
+                    },
                 )
-                ->setHidden(TRUE)
+                ->setHidden(TRUE),
         );
 
         $user->setPassword($this->encoder->encodePassword($password, ''));

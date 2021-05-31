@@ -238,7 +238,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/activateRequest.json',
             [],
-            ['token' => $token->getHash()]
+            ['token' => $token->getHash()],
         );
     }
 
@@ -271,7 +271,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/exceptionActivateRequest.json',
             [],
-            ['token' => 'Unknown']
+            ['token' => 'Unknown'],
         );
     }
 
@@ -292,7 +292,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/verifyRequest.json',
             [],
-            ['token' => $token->getHash()]
+            ['token' => $token->getHash()],
         );
     }
 
@@ -325,7 +325,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/exceptionVerifyRequest.json',
             [],
-            ['token' => 'Unknown']
+            ['token' => 'Unknown'],
         );
     }
 
@@ -347,7 +347,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/setPasswordRequest.json',
             [],
-            ['token' => $token->getHash()]
+            ['token' => $token->getHash()],
         );
     }
 
@@ -369,7 +369,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/failedSetPasswordRequest.json',
             [],
-            ['token' => '123']
+            ['token' => '123'],
         );
     }
 
@@ -385,7 +385,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/exceptionSetPasswordRequest.json',
             [],
-            ['token' => 'Unknown']
+            ['token' => 'Unknown'],
         );
     }
 
@@ -498,7 +498,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/deleteUserRequest.json',
             ['id' => '1'],
-            ['id' => $user->getId()]
+            ['id' => $user->getId()],
         );
     }
 
@@ -540,7 +540,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/deleteSelfRequest.json',
             ['message' => 'User \'self\' delete not allowed.'],
-            ['id' => $loggedUser->getId()]
+            ['id' => $loggedUser->getId()],
         );
     }
 

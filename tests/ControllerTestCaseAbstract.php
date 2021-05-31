@@ -81,7 +81,7 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
             $password,
             Token::class,
             SecurityManager::SECURITY_KEY,
-            SecurityManager::SECURED_AREA
+            SecurityManager::SECURED_AREA,
         );
 
         return $user;

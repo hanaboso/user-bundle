@@ -52,7 +52,7 @@ final class DocumentTest extends DatabaseTestCaseAbstract
 
         self::assertEquals(
             $token->getCreated()->format('d. m. Y H:i:s'),
-            $existingToken->getCreated()->format('d. m. Y H:i:s')
+            $existingToken->getCreated()->format('d. m. Y H:i:s'),
         );
         /** @var UserInterface $tokenUser */
         $tokenUser = $token->getUser();

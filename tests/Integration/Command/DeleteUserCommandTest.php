@@ -48,7 +48,7 @@ final class DeleteUserCommandTest extends DatabaseTestCaseAbstract
 Deleting user, select user email:  User with given email already exist! 
 Deleting user, select user email: User deleted.
 ',
-            $this->tester->getDisplay()
+            $this->tester->getDisplay(),
         );
         self::assertNull($user);
     }
@@ -65,7 +65,7 @@ Deleting user, select user email: User deleted.
         self::assertEquals(
             'Cannot delete when there is last one or none active users remaining.
 ',
-            $this->tester->getDisplay()
+            $this->tester->getDisplay(),
         );
     }
 

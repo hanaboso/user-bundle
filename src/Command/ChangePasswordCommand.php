@@ -46,7 +46,7 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
     public function __construct(
         DatabaseManagerLocator $userDml,
         ResourceProvider $provider,
-        EncoderFactory $encoderFactory
+        EncoderFactory $encoderFactory,
     )
     {
         parent::__construct();
@@ -95,8 +95,8 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
                         }
 
                         return $email;
-                    }
-                )
+                    },
+                ),
         );
 
         $this->setPassword($input, $output, $user);

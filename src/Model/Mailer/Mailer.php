@@ -37,7 +37,7 @@ final class Mailer
         private MailHandler $mailHandler,
         private string $from,
         private bool $async = TRUE,
-        ?string $builderId = NULL
+        ?string $builderId = NULL,
     )
     {
         $this->builderId = $builderId ?? '';

@@ -156,12 +156,12 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
         self::assertTrue(
             $this->session->has(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-            )
+                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
+            ),
         );
 
         $token = unserialize(
-            $this->session->get(sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA))
+            $this->session->get(sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)),
         );
         /** @var User $user */
         $user = $this->userRepository->find($token->getUser()->getId());
@@ -183,15 +183,15 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
         self::assertFalse(
             $this->session->has(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-            )
+                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
+            ),
         );
         self::assertNull(
             $this->userRepository->find(
                 $this->session->get(
-                    sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-                )
-            )
+                    sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
+                ),
+            ),
         );
     }
 
@@ -210,14 +210,14 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
         self::assertTrue(
             $this->session->has(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-            )
+                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
+            ),
         );
 
         $token = unserialize(
             $this->session->get(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-            )
+                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
+            ),
         );
 
         /** @var User $user */
@@ -228,15 +228,15 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $this->securityManager->logout();
         self::assertFalse(
             $this->session->has(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-            )
+                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
+            ),
         );
         self::assertNull(
             $this->userRepository->find(
                 $this->session->get(
-                    sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)
-                )
-            )
+                    sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
+                ),
+            ),
         );
     }
 
@@ -284,8 +284,8 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     public function testEncodePassword(): void
     {
         self::assertMatchesRegularExpression(
-            '/\$argon2id\$v=19\$m=65536,t=3,p=1.{67}/',
-            $this->securityManager->encodePassword('Passw0rd')
+            '/\$2y\$13\$.*/',
+            $this->securityManager->encodePassword('Passw0rd'),
         );
     }
 
@@ -319,7 +319,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
             $encodeFactory,
             $this->session,
             self::$container->get('security.token_storage'),
-            self::$container->get('hbpf.user.provider.resource')
+            self::$container->get('hbpf.user.provider.resource'),
         );
         $this->userRepository  = $this->dm->getRepository(User::class);
     }

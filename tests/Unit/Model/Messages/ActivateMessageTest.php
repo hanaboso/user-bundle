@@ -48,7 +48,7 @@ final class ActivateMessageTest extends TestCase
                 'template'    => '',
                 'from'        => '',
             ],
-            $message->getMessage()
+            $message->getMessage(),
         );
     }
 

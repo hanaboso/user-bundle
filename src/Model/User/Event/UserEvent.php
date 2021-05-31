@@ -32,7 +32,7 @@ class UserEvent extends Event
     public function __construct(
         private UserInterface $user,
         private ?UserInterface $loggedUser = NULL,
-        private ?UserInterface $tmpUser = NULL
+        private ?UserInterface $tmpUser = NULL,
     )
     {
     }

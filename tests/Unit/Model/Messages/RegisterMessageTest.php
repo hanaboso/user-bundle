@@ -40,7 +40,7 @@ final class RegisterMessageTest extends TestCase
                 'template'    => '',
                 'from'        => '',
             ],
-            $message->getMessage()
+            $message->getMessage(),
         );
     }
 

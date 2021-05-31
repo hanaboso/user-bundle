@@ -64,7 +64,7 @@ final class ResourceProvider
         if (!isset($this->resources[$key])) {
             throw new ResourceProviderException(
                 sprintf('Resource \'%s\' not exist', $key),
-                ResourceProviderException::RESOURCE_NOT_EXIST
+                ResourceProviderException::RESOURCE_NOT_EXIST,
             );
         }
 

@@ -535,7 +535,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
             $this->createMock(Mailer::class),
             'host',
             'active-link',
-            'password-link'
+            'password-link',
         );
     }
 

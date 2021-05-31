@@ -47,9 +47,9 @@ final class ListUsersCommandTest extends DatabaseTestCaseAbstract
 | user@example.com | %s |
 +------------------+------------+
 ',
-                DateTimeUtils::getUtcDateTime()->format('d-m-Y')
+                DateTimeUtils::getUtcDateTime()->format('d-m-Y'),
             ),
-            $this->tester->getDisplay()
+            $this->tester->getDisplay(),
         );
     }
 

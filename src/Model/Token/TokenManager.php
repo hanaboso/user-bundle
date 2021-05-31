@@ -83,7 +83,7 @@ class TokenManager
             if (!$token) {
                 throw new TokenManagerException(
                     sprintf('Token \'%s\' not valid.', $hash),
-                    TokenManagerException::TOKEN_NOT_VALID
+                    TokenManagerException::TOKEN_NOT_VALID,
                 );
             }
 

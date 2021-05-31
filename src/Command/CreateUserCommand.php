@@ -46,7 +46,7 @@ final class CreateUserCommand extends PasswordCommandAbstract
     public function __construct(
         DatabaseManagerLocator $userDml,
         private ResourceProvider $provider,
-        EncoderFactory $encoderFactory
+        EncoderFactory $encoderFactory,
     )
     {
         parent::__construct();
@@ -100,8 +100,8 @@ final class CreateUserCommand extends PasswordCommandAbstract
                         }
 
                         return $email;
-                    }
-                )
+                    },
+                ),
         );
 
         $userNamespace = $this->provider->getResource(ResourceEnum::USER);

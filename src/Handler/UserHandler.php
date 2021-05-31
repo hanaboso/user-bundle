@@ -49,7 +49,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     public function __construct(
         DatabaseManagerLocator $userDml,
         protected UserManager $userManager,
-        protected ResourceProvider $provider
+        protected ResourceProvider $provider,
     )
     {
         $this->dm = $userDml->get();
@@ -267,7 +267,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
         if (!$user) {
             throw new UserManagerException(
                 sprintf('User with id [%s] not found.', $id),
-                UserManagerException::USER_NOT_EXISTS
+                UserManagerException::USER_NOT_EXISTS,
             );
         }
 

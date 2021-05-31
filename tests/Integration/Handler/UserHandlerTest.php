@@ -184,7 +184,7 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
                 'id'    => $user->getId(),
                 'email' => 'user@example.com',
             ],
-            $this->handler->delete($user->getId())->toArray()
+            $this->handler->delete($user->getId())->toArray(),
         );
     }
 
@@ -226,7 +226,7 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
                     ],
                 ],
             ],
-            UserHandler::getSubscribedEvents()
+            UserHandler::getSubscribedEvents(),
         );
     }
 
