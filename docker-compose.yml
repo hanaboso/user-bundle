@@ -21,6 +21,7 @@ services:
       - MARIADB_DB=user
       - MARIADB_USER=root
       - MARIADB_PASS=root
+      - JWT_KEY=test12345
 
   mongo:
     image: mongo:latest

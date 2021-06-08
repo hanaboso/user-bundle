@@ -1,9 +1,7 @@
 {
-    "http": 400,
+    "http": 401,
     "body": {
-        "status": "INTERNAL_SERVER_ERROR",
-        "error_code": 1201,
-        "type": "Hanaboso\\UserBundle\\Model\\User\\UserManagerException",
-        "message": "User with id [0] not found."
+        "message": "Not valid token",
+        "code": 1401
     }
 }

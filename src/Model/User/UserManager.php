@@ -29,6 +29,7 @@ use Hanaboso\UserBundle\Repository\Document\TmpUserRepository as OdmTmpRepo;
 use Hanaboso\UserBundle\Repository\Document\UserRepository as OdmRepo;
 use Hanaboso\UserBundle\Repository\Entity\TmpUserRepository as OrmTmpRepo;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository as OrmRepo;
+use Hanaboso\Utils\Exception\DateTimeException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
@@ -113,15 +114,16 @@ class UserManager
     /**
      * @param mixed[] $data
      *
-     * @return UserInterface
+     * @return mixed[]
      * @throws SecurityManagerException
+     * @throws DateTimeException
      */
-    public function login(array $data): UserInterface
+    public function login(array $data): array
     {
-        $user = $this->securityManager->login($data);
+        [$user, $token] = $this->securityManager->login($data);
         $this->eventDispatcher->dispatch(new LoginUserEvent($user), LoginUserEvent::NAME);
 
-        return $user;
+        return [$user, $token];
     }
 
     /**
@@ -142,7 +144,6 @@ class UserManager
             new LogoutUserEvent($this->securityManager->getLoggedUser()),
             LogoutUserEvent::NAME,
         );
-        $this->securityManager->logout();
     }
 
     /**

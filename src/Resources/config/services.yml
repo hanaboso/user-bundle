@@ -34,10 +34,16 @@ services:
         class: Hanaboso\UserBundle\Model\Security\SecurityManager
         arguments:
             - '@hbpf.database_manager_locator'
-            - '@security.encoder_factory'
-            - '@session'
-            - '@security.token_storage'
+            - '@security.password_hasher_factory'
             - '@hbpf.user.provider.resource'
+            - '@request_stack'
+            - '@config.jwt'
+            - '%cookieSameSite%'
+
+    Hanaboso\UserBundle\Model\Security\JWTAuthenticator:
+        class: Hanaboso\UserBundle\Model\Security\JWTAuthenticator
+        arguments:
+            - '@hbpf.user.manager.security'
 
     hbpf.user.provider.resource:
         class: Hanaboso\UserBundle\Provider\ResourceProvider

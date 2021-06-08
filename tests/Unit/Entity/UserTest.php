@@ -48,6 +48,7 @@ final class UserTest extends KernelTestCaseAbstract
         self::assertEquals('aa', $user->getPassword());
         self::assertEquals('', $user->getUsername());
         self::assertEquals('', $user->getSalt());
+        self::assertEquals('', $user->getUserIdentifier());
         self::assertEquals(['admin'], $user->getRoles());
         self::assertEquals(
             $timestamp->format(DateTimeUtils::DATE_TIME),
