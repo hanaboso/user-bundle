@@ -8,10 +8,12 @@ use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Security\SecurityManager;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Repository\Document\UserRepository;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Validation\Validator;
+use LogicException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
@@ -23,16 +25,6 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  */
 final class SecurityManagerTest extends DatabaseTestCaseAbstract
 {
-
-    /**
-     * @var Session<mixed>
-     */
-    private Session $session;
-
-    /**
-     * @var PasswordEncoderInterface
-     */
-    private PasswordEncoderInterface $encoder;
 
     /**
      * @var SecurityManager
@@ -51,35 +43,9 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
      */
     public function testLogin(): void
     {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->pfd($user);
-
-        $user = $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
+        $user = $this->createUser();
         self::assertEquals('email@example.com', $user->getEmail());
-        self::assertTrue($this->encoder->isPasswordValid($user->getPassword() ?? '', 'passw0rd', ''));
-    }
-
-    /**
-     * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::login
-     */
-    public function testLoginLogged(): void
-    {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->pfd($user);
-
-        $user = $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
-        self::assertEquals('email@example.com', $user->getEmail());
-        self::assertTrue($this->encoder->isPasswordValid($user->getPassword() ?? '', 'passw0rd', ''));
-
-        $user = $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
-        self::assertEquals('email@example.com', $user->getEmail());
-        self::assertTrue($this->encoder->isPasswordValid($user->getPassword() ?? '', 'passw0rd', ''));
+        self::assertTrue($this->getEncoder()->verify($user->getPassword() ?? '', 'passw0rd'));
     }
 
     /**
@@ -89,22 +55,14 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
      */
     public function testLoginLoggedException(): void
     {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->pfd($user);
+        $user = $this->createUser();
 
-        $user = $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
         self::assertEquals('email@example.com', $user->getEmail());
-        self::assertTrue($this->encoder->isPasswordValid($user->getPassword() ?? '', 'passw0rd', ''));
+        self::assertTrue($this->getEncoder()->verify($user->getPassword() ?? '', 'passw0rd'));
 
         $repository = self::createMock(UserRepository::class);
         $repository->method('find')->willReturn(NULL);
         $this->setProperty($this->securityManager, 'userRepository', $repository);
-
-        self::expectException(SecurityManagerException::class);
-        self::expectExceptionCode(SecurityManagerException::USER_NOT_LOGGED);
-        $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
     }
 
     /**
@@ -114,10 +72,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
      */
     public function testLoginInvalidEmail(): void
     {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->pfd($user);
+        $this->createUser();
 
         self::expectException(SecurityManagerException::class);
         self::expectExceptionCode(SecurityManagerException::USER_OR_PASSWORD_NOT_VALID);
@@ -131,10 +86,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
      */
     public function testLoginInvalidPassword(): void
     {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->pfd($user);
+        $this->createUser();
 
         self::expectException(SecurityManagerException::class);
         self::expectExceptionCode(SecurityManagerException::USER_OR_PASSWORD_NOT_VALID);
@@ -144,119 +96,18 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     /**
      * @throws Exception
      *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::isLoggedIn
-     */
-    public function testIsLoggedIn(): void
-    {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->pfd($user);
-
-        $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
-        self::assertTrue(
-            $this->session->has(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
-            ),
-        );
-
-        $token = unserialize(
-            $this->session->get(sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA)),
-        );
-        /** @var User $user */
-        $user = $this->userRepository->find($token->getUser()->getId());
-        self::assertEquals('email@example.com', $user->getEmail());
-        self::assertTrue($this->encoder->isPasswordValid($user->getPassword(), 'passw0rd', ''));
-    }
-
-    /**
-     * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::isLoggedIn
-     */
-    public function testIsLoggedOut(): void
-    {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->pfd($user);
-
-        self::assertFalse(
-            $this->session->has(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
-            ),
-        );
-        self::assertNull(
-            $this->userRepository->find(
-                $this->session->get(
-                    sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
-                ),
-            ),
-        );
-    }
-
-    /**
-     * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::logout
-     */
-    public function testLogout(): void
-    {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->pfd($user);
-
-        $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
-        self::assertTrue(
-            $this->session->has(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
-            ),
-        );
-
-        $token = unserialize(
-            $this->session->get(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
-            ),
-        );
-
-        /** @var User $user */
-        $user = $this->userRepository->find($token->getUser()->getId());
-        self::assertEquals('email@example.com', $user->getEmail());
-        self::assertTrue($this->encoder->isPasswordValid($user->getPassword(), 'passw0rd', ''));
-
-        $this->securityManager->logout();
-        self::assertFalse(
-            $this->session->has(
-                sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
-            ),
-        );
-        self::assertNull(
-            $this->userRepository->find(
-                $this->session->get(
-                    sprintf('%s%s', SecurityManager::SECURITY_KEY, SecurityManager::SECURED_AREA),
-                ),
-            ),
-        );
-    }
-
-    /**
-     * @throws Exception
-     *
      * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::getLoggedUser
      */
     public function testGetLoggedUser(): void
     {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->pfd($user);
+        $this->createUser();
 
-        $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
+        [, $jwt] = $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
+        $this->injectJwt($jwt);
 
         $user = $this->securityManager->getLoggedUser();
         self::assertEquals('email@example.com', $user->getEmail());
-        self::assertTrue($this->encoder->isPasswordValid($user->getPassword() ?? '', 'passw0rd', ''));
+        self::assertTrue($this->getEncoder()->verify($user->getPassword() ?? '', 'passw0rd'));
     }
 
     /**
@@ -264,16 +115,60 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
      *
      * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::getLoggedUser
      */
-    public function testGetNotLoggedUser(): void
+    public function testGetLoggedUserException(): void
     {
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword($this->encoder->encodePassword('passw0rd', ''));
-        $this->pfd($user);
+        $this->createUser();
 
-        $this->expectException(SecurityManagerException::class);
-        $this->expectExceptionCode(SecurityManagerException::USER_NOT_LOGGED);
-        $this->securityManager->getLoggedUser();
+        $man = $this->createPartialMock(SecurityManager::class, ['jwtVerifyAccessToken']);
+        $man->method('jwtVerifyAccessToken')->willThrowException(new LogicException('Token not valid'));
+        self::getContainer()->set('hbpf.user.manager.security', $man);
+
+        [, $jwt] = $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
+        $this->injectJwt($jwt);
+
+        self::expectException(SecurityManagerException::class);
+        $man->getLoggedUser();
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::getLoggedUser
+     */
+    public function testJwtNullException(): void
+    {
+        $this->createUser();
+
+        $man = $this->createPartialMock(RequestStack::class, ['getCurrentRequest']);
+        $man->method('getCurrentRequest')->willReturn(new Request(server: ['HTTP_Authorization' => '']));
+        self::getContainer()->set('hbpf.user.manager.security', $man);
+
+        self::expectException(SecurityManagerException::class);
+        $this->securityManager->jwtVerifyAccessToken();
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::getLoggedUser
+     */
+    public function testJwtFailParseException(): void
+    {
+        $validator = $this->createMock(Validator::class);
+        $validator->method('validate')->willReturn(FALSE);
+        $conf = $this->createMock(Configuration::class);
+        $conf->method('validator')->willReturn($validator);
+        $this->setProperty($this->securityManager, 'configuration', $conf);
+        $this->createUser();
+
+        $man = $this->createPartialMock(RequestStack::class, ['getCurrentRequest']);
+        $man->method('getCurrentRequest')->willReturn(
+            new Request(server: ['HTTP_Authorization' => 'asdsadas.asd.asda']),
+        );
+        $this->setProperty($this->securityManager, 'requestStack', $man);
+
+        self::expectException(SecurityManagerException::class);
+        $this->securityManager->jwtVerifyAccessToken();
     }
 
     /**
@@ -284,7 +179,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     public function testEncodePassword(): void
     {
         self::assertMatchesRegularExpression(
-            '/\$2y\$13\$.*/',
+            '/\$2y\$04\$.*/',
             $this->securityManager->encodePassword('Passw0rd'),
         );
     }
@@ -303,23 +198,34 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     }
 
     /**
+     * @param string $username
+     * @param string $password
+     *
+     * @return User
+     */
+    protected function createUser(string $username = 'email@example.com', string $password = 'passw0rd'): User
+    {
+        $user = parent::createUser($username, $password);
+        $this->injectJwt('');
+
+        return $user;
+    }
+
+    /**
      * @throws Exception
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->session = new Session();
-        $this->session->invalidate();
-        $this->session->clear();
-        $this->encoder         = new NativePasswordEncoder(3);
-        $encodeFactory         = new EncoderFactory([User::class => $this->encoder]);
+        $encodeFactory         = new PasswordHasherFactory([User::class => $this->getEncoder()]);
         $this->securityManager = new SecurityManager(
-            self::$container->get('hbpf.database_manager_locator'),
+            self::getContainer()->get('hbpf.database_manager_locator'),
             $encodeFactory,
-            $this->session,
-            self::$container->get('security.token_storage'),
-            self::$container->get('hbpf.user.provider.resource'),
+            self::getContainer()->get('hbpf.user.provider.resource'),
+            self::getContainer()->get('request_stack'),
+            self::getContainer()->get('config.jwt'),
+            'Lax',
         );
         $this->userRepository  = $this->dm->getRepository(User::class);
     }

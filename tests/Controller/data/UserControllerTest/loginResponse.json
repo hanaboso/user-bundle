@@ -1,7 +1,10 @@
 {
     "http": 200,
     "body": {
-        "email": "email@example.com",
-        "id": "1"
+        "user": {
+            "id": 1,
+            "email": "email@example.com"
+        },
+        "token": "JWToken"
     }
 }

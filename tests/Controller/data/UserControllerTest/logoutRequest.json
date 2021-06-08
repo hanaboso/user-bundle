@@ -1,5 +1,7 @@
 {
     "http": "POST /user/logout",
-    "headers": [],
+    "headers": {
+        "HTTP_Authorization": "jwt"
+    },
     "body": []
 }

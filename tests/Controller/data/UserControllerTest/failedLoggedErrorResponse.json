@@ -1,9 +1,9 @@
 {
-    "http": 400,
+    "http": 401,
     "body": {
         "status": "INTERNAL_SERVER_ERROR",
         "error_code": 0,
-        "type": "Hanaboso\\UserBundle\\Model\\User\\UserManagerException",
+        "type": "Hanaboso\\UserBundle\\Model\\Security\\SecurityManagerException",
         "message": "Something gone wrong!"
     }
 }
