@@ -96,6 +96,14 @@ abstract class UserAbstract implements UserInterface
     }
 
     /**
+     * @return string
+     */
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    /**
      * @param TokenInterface|null $token
      *
      * @return UserInterface

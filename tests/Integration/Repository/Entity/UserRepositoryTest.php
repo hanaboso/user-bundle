@@ -24,7 +24,7 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
      */
     public function testGetArrayOfUsers(): void
     {
-        $em = self::$container->get('doctrine.orm.default_entity_manager');
+        $em = self::getContainer()->get('doctrine.orm.default_entity_manager');
 
         for ($i = 0; $i < 2; $i++) {
             $user = new User();
@@ -50,7 +50,7 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
      */
     public function testGetUserCount(): void
     {
-        $em   = self::$container->get('doctrine.orm.default_entity_manager');
+        $em   = self::getContainer()->get('doctrine.orm.default_entity_manager');
         $user = new User();
         $user
             ->setEmail('eml')

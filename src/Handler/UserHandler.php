@@ -13,6 +13,7 @@ use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
+use Hanaboso\Utils\Exception\DateTimeException;
 use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\System\ControllerUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -58,15 +59,20 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     /**
      * @param mixed[] $data
      *
-     * @return UserInterface
+     * @return mixed[]
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
+     * @throws DateTimeException
      */
-    public function login(array $data): UserInterface
+    public function login(array $data): array
     {
         ControllerUtils::checkParameters(['email', 'password'], $data);
+        [$user, $token] = $this->userManager->login($data);
 
-        return $this->userManager->login($data);
+        return [
+            'user'  => $user->toArray(),
+            'token' => $token,
+        ];
     }
 
     /**
@@ -225,7 +231,10 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
             'message'    => $exception->getMessage(),
         ];
 
-        if ($exception instanceof AuthenticationException || $exception instanceof AccessDeniedException) {
+        if ($exception instanceof AuthenticationException ||
+            $exception instanceof AccessDeniedException ||
+            $exception instanceof SecurityManagerException
+        ) {
             $event->setResponse(new JsonResponse($body, 401));
         }
 

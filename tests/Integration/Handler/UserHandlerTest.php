@@ -8,7 +8,6 @@ use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Entity\TokenInterface;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,11 +40,15 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
      */
     public function testLogin(): void
     {
-        $this->createUser();
+        $this->createUser('user@example.com');
 
-        $data = $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $loggedUser = $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $this->injectJwt($loggedUser['token']);
 
-        self::assertEquals(['id' => $data->getId(), 'email' => 'user@example.com'], $data->toArray());
+        self::assertEquals(
+            ['id' => $loggedUser['user']['id'], 'email' => 'user@example.com'],
+            $loggedUser['user'],
+        );
     }
 
     /**
@@ -55,12 +58,13 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
      */
     public function testLoggedUser(): void
     {
-        $this->createUser();
+        $this->createUser('user@example.com');
 
-        $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
-        $data = $this->handler->loggedUser();
+        $loggedUser = $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $this->injectJwt($loggedUser['token']);
+        $loggedUser = $this->handler->loggedUser();
 
-        self::assertEquals(['id' => $data->getId(), 'email' => 'user@example.com'], $data->toArray());
+        self::assertEquals(['id' => $loggedUser->getId(), 'email' => 'user@example.com'], $loggedUser->toArray());
     }
 
     /**
@@ -70,9 +74,10 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
      */
     public function testLogout(): void
     {
-        $this->createUser();
+        $this->createUser('user@example.com');
 
-        $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $loggedUser = $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $this->injectJwt($loggedUser['token']);
 
         self::assertEquals([], $this->handler->logout());
     }
@@ -148,9 +153,10 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
      */
     public function testChangePassword(): void
     {
-        $this->createUser();
+        $this->createUser('user@example.com');
 
-        $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $loggedUser = $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $this->injectJwt($loggedUser['token']);
 
         self::assertEquals([], $this->handler->changePassword(['password' => 'anotherPassw0rd']));
     }
@@ -162,7 +168,7 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
      */
     public function testResetPassword(): void
     {
-        $this->createUser();
+        $this->createUser('user@example.com');
 
         self::assertEquals([], $this->handler->resetPassword(['email' => 'user@example.com']));
     }
@@ -174,17 +180,18 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
      */
     public function testDelete(): void
     {
-        $this->createUser();
-        $user = $this->createUser();
+        $testUser = $this->createUser('user1@example.com');
+        $this->createUser('user@example.com');
 
-        $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $loggedUser = $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $this->injectJwt($loggedUser['token']);
 
         self::assertEquals(
             [
-                'id'    => $user->getId(),
-                'email' => 'user@example.com',
+                'id'    => $testUser->getId(),
+                'email' => 'user1@example.com',
             ],
-            $this->handler->delete($user->getId())->toArray(),
+            $this->handler->delete($testUser->getId())->toArray(),
         );
     }
 
@@ -269,19 +276,19 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->handler = self::$container->get('hbpf.user.handler.user');
+        $this->handler = self::getContainer()->get('hbpf.user.handler.user');
     }
 
     /**
-     * @return UserInterface
-     * @throws Exception
+     * @param string $username
+     * @param string $password
+     *
+     * @return User
      */
-    private function createUser(): UserInterface
+    protected function createUser(string $username = 'email@example.com', string $password = 'passw0rd'): User
     {
-        $user = (new User())
-            ->setEmail('user@example.com')
-            ->setPassword('$2y$12$E66ihLcqEwlM018HA.rD3.eeC/79zzP3L5W9hpT19.YHqPBC3EQFe');
-        $this->pfd($user);
+        $user = parent::createUser($username, $password);
+        $this->injectJwt('');
 
         return $user;
     }

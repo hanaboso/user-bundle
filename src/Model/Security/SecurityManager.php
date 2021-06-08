@@ -10,13 +10,16 @@ use Hanaboso\UserBundle\Document\User as DmUser;
 use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
-use Hanaboso\UserBundle\Model\Token;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\UsageTrackingTokenStorage;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Hanaboso\Utils\Date\DateTimeUtils;
+use Hanaboso\Utils\Exception\DateTimeException;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Token\Plain;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Throwable;
 
 /**
@@ -27,8 +30,13 @@ use Throwable;
 class SecurityManager
 {
 
-    public const SECURITY_KEY = '_security_';
-    public const SECURED_AREA = 'secured_area';
+    private const ACCESS_TOKEN_EXPIRATION  = 420;
+    private const REFRESH_TOKEN_EXPIRATION = 900;
+    private const REFRESH_TOKEN            = 'refreshToken';
+    private const AUTHORIZATION            = 'Authorization';
+    private const ID                       = 'id';
+    private const EMAIL                    = 'email';
+    private const PERMISSIONS              = 'permissions';
 
     /**
      * @var string
@@ -41,41 +49,34 @@ class SecurityManager
     protected OrmRepo|OdmRepo $userRepository;
 
     /**
-     * @var string
+     * @var PasswordHasherInterface
      */
-    protected string $sessionName;
-
-    /**
-     * @var PasswordEncoderInterface
-     */
-    protected PasswordEncoderInterface $encoder;
-
-    /**
-     * @var string
-     */
-    protected string $area;
+    protected PasswordHasherInterface $encoder;
 
     /**
      * SecurityManager constructor.
      *
-     * @param DatabaseManagerLocator    $userDml
-     * @param EncoderFactory            $encoderFactory
-     * @param Session<mixed>            $session
-     * @param UsageTrackingTokenStorage $tokenStorage
-     * @param ResourceProvider          $provider
+     * @phpstan-param 'None'|'Lax'|'Strict' $sameSite
+     *
+     * @param DatabaseManagerLocator $userDml
+     * @param PasswordHasherFactory  $encoderFactory
+     * @param ResourceProvider       $provider
+     * @param RequestStack           $requestStack
+     * @param Configuration          $configuration
+     * @param string                 $sameSite
      *
      * @throws ResourceProviderException
      */
     public function __construct(
         protected DatabaseManagerLocator $userDml,
-        protected EncoderFactory $encoderFactory,
-        protected Session $session,
-        protected UsageTrackingTokenStorage $tokenStorage,
+        protected PasswordHasherFactory $encoderFactory,
         protected ResourceProvider $provider,
+        private RequestStack $requestStack,
+        private Configuration $configuration,
+        private string $sameSite,
     )
     {
         $this->setUserResource($this->resourceUser);
-        $this->setArea(self::SECURED_AREA);
     }
 
     /**
@@ -90,20 +91,7 @@ class SecurityManager
         /** @phpstan-var class-string<User|DmUser> $userClass */
         $userClass            = $this->provider->getResource($this->resourceUser);
         $this->userRepository = $this->userDml->get()->getRepository($userClass);
-        $this->encoder        = $this->encoderFactory->getEncoder($userClass);
-
-        return $this;
-    }
-
-    /**
-     * @param string $area
-     *
-     * @return SecurityManager
-     */
-    public function setArea(string $area): SecurityManager
-    {
-        $this->area        = $area;
-        $this->sessionName = sprintf('%s%s', self::SECURITY_KEY, $this->area);
+        $this->encoder        = $this->encoderFactory->getPasswordHasher($userClass);
 
         return $this;
     }
@@ -111,48 +99,18 @@ class SecurityManager
     /**
      * @param mixed[] $data
      *
-     * @return UserInterface
+     * @return mixed[]
+     * @throws DateTimeException
      * @throws SecurityManagerException
      */
-    public function login(array $data): UserInterface
+    public function login(array $data): array
     {
-        if ($this->isLoggedIn()) {
-            return $this->getUserFromSession();
-        }
-
         $user = $this->getUser($data['email']);
         $this->validateUser($user, $data);
-        $this->setToken($user, $data);
+        $this->setNewRefreshToken($user);
+        $token = $this->createToken($user->getId(), $user->getEmail(), self::ACCESS_TOKEN_EXPIRATION);
 
-        return $user;
-    }
-
-    /**
-     * @param UserInterface $user
-     * @param mixed[]       $data
-     */
-    public function setToken(UserInterface $user, array $data): void
-    {
-        $token = new Token($user, $data['password'], $this->area, ['admin']);
-        $this->tokenStorage->setToken($token);
-        $this->session->set($this->sessionName, serialize($token));
-    }
-
-    /**
-     *
-     */
-    public function logout(): void
-    {
-        $this->session->invalidate();
-        $this->session->clear();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isLoggedIn(): bool
-    {
-        return $this->session->has($this->sessionName);
+        return [$user, $token];
     }
 
     /**
@@ -161,11 +119,13 @@ class SecurityManager
      */
     public function getLoggedUser(): UserInterface
     {
-        if (!$this->isLoggedIn()) {
-            throw new SecurityManagerException('User not logged.', SecurityManagerException::USER_NOT_LOGGED);
+        try {
+            $token = $this->jwtVerifyAccessToken();
+        } catch (Throwable $t) {
+            throw new SecurityManagerException($t->getMessage(), $t->getCode(), $t);
         }
 
-        return $this->getUserFromSession();
+        return $this->getUser($token->claims()->get(self::EMAIL));
     }
 
     /**
@@ -175,7 +135,7 @@ class SecurityManager
      */
     public function encodePassword(string $rawPassword): string
     {
-        return $this->encoder->encodePassword($rawPassword, '');
+        return $this->encoder->hash($rawPassword);
     }
 
     /**
@@ -187,7 +147,7 @@ class SecurityManager
     public function validateUser(UserInterface $user, array $data): void
     {
         try {
-            if (!$this->encoder->isPasswordValid($user->getPassword() ?? '', $data['password'], '')) {
+            if (!$this->encoder->verify($user->getPassword() ?? '', $data['password'])) {
                 throw new Exception('Invalid password');
             }
         } catch (Throwable) {
@@ -199,35 +159,55 @@ class SecurityManager
     }
 
     /**
-     * ------------------------------------------- HELPERS ---------------------------------
+     * @param Request $request
+     *
+     * @return string|null
      */
+    public function getJwt(Request $request): ?string
+    {
+        /** @var string|null $jwt */
+        $jwt = $request->headers->get(self::AUTHORIZATION) ?? $request->query->get(self::AUTHORIZATION);
+
+        return $jwt;
+    }
 
     /**
-     * @return UserInterface
+     * @return Plain
      * @throws SecurityManagerException
      */
-    protected function getUserFromSession(): UserInterface
+    public function jwtVerifyAccessToken(): Plain
     {
+        /** @var Request $request */
+        $request          = $this->requestStack->getCurrentRequest();
+        $exceptionMessage = 'Not valid token';
         try {
-            /** @var Token $token */
-            $token = unserialize($this->session->get($this->sessionName));
+            $jwt = $this->getJwt($request);
+            if (!$jwt) {
+                throw new SecurityManagerException($exceptionMessage);
+            }
+            /** @var Plain $token */
+            $token = $this->configuration->parser()->parse(str_replace('Bearer ', '', $jwt));
 
-            /** @var UserInterface $user */
-            $user = $token->getUser();
-
-            /** @var UserInterface|null $user */
-            $user = $this->userRepository->find($user->getId());
-
-            if (!$user) {
-                $this->logout();
-
-                throw new SecurityManagerException('User not logged.', SecurityManagerException::USER_NOT_LOGGED);
+            if ($this->configuration->validator()->validate($token, ...$this->configuration->validationConstraints())) {
+                return $token;
             }
 
-            return $user;
+            throw new SecurityManagerException($exceptionMessage);
         } catch (Throwable $t) {
-            throw new SecurityManagerException($t->getMessage(), $t->getCode(), $t);
+            throw new SecurityManagerException($t->getMessage(), SecurityManagerException::USER_NOT_LOGGED, $t);
         }
+    }
+
+    /**
+     * @param UserInterface $user
+     *
+     * @return mixed[]
+     */
+    public function getPermissions(UserInterface $user): array
+    {
+        $user;
+
+        return [];
     }
 
     /**
@@ -236,7 +216,7 @@ class SecurityManager
      * @return UserInterface
      * @throws SecurityManagerException
      */
-    protected function getUser(string $email): UserInterface
+    public function getUser(string $email): UserInterface
     {
         /** @var UserInterface|null $user */
         $user = $this->userRepository->findOneBy(
@@ -254,6 +234,59 @@ class SecurityManager
         }
 
         return $user;
+    }
+
+    /**
+     * @param string   $id
+     * @param string   $email
+     * @param int      $expiration
+     * @param string[] $permissions
+     *
+     * @return string
+     * @throws DateTimeException
+     */
+    public function createToken(string $id, string $email, int $expiration, array $permissions = []): string
+    {
+        return $this->configuration->builder()
+            ->expiresAt(DateTimeUtils::getUtcDateTimeImmutable(sprintf('+%s seconds', $expiration)))
+            ->withClaim(self::ID, $id)
+            ->withClaim(self::EMAIL, $email)
+            ->withClaim(self::PERMISSIONS, $permissions)
+            ->getToken($this->configuration->signer(), $this->configuration->signingKey())
+            ->toString();
+    }
+
+    /**
+     * ------------------------------------------- HELPERS ---------------------------------
+     */
+
+    /**
+     * @param UserInterface $user
+     *
+     * @throws DateTimeException
+     * @throws SecurityManagerException
+     */
+    private function setNewRefreshToken(UserInterface $user): void
+    {
+        /** @var Request $request */
+        $request     = $this->requestStack->getCurrentRequest();
+        $permissions = $this->getPermissions($user);
+
+        setcookie(
+            self::REFRESH_TOKEN,
+            $this->createToken(
+                $user->getId(),
+                $user->getEmail(),
+                self::REFRESH_TOKEN_EXPIRATION,
+                $permissions,
+            ),
+            [
+                'secure'   => $request->isSecure(),
+                'expires'  => time() + self::REFRESH_TOKEN_EXPIRATION,
+                'samesite' => $this->sameSite,
+                'httponly' => TRUE,
+            ],
+        );
     }
 
 }

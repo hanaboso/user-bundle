@@ -1,5 +1,7 @@
 {
     "http": "DELETE /user/id/delete",
-    "headers": [],
+    "headers": {
+        "HTTP_Authorization": "jwt"
+    },
     "body": []
 }

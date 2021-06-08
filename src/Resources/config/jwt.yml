@@ -1,0 +1,33 @@
+parameters:
+    public.services: false
+
+    jwt_key: '%env(string:JWT_KEY)%'
+
+services:
+    _defaults:
+        public: '%public.services%'
+
+    signer.jwt:
+        class: Lcobucci\JWT\Signer\Hmac\Sha512
+        arguments:
+
+    signer.key:
+        class: Lcobucci\JWT\Signer\Key\InMemory
+        factory: [ 'Lcobucci\JWT\Signer\Key\InMemory', 'plainText' ]
+        arguments:
+            - '%jwt_key%'
+
+    config.constraint:
+        class: Lcobucci\JWT\Validation\Constraint\SignedWith
+        arguments:
+            - '@signer.jwt'
+            - '@signer.key'
+
+    config.jwt:
+        class: Lcobucci\JWT\Configuration
+        factory: [ 'Lcobucci\JWT\Configuration', 'forSymmetricSigner' ]
+        arguments:
+            - '@signer.jwt'
+            - '@signer.key'
+        calls:
+            - [ 'setValidationConstraints', [ '@config.constraint' ] ]

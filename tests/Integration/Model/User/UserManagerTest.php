@@ -12,14 +12,11 @@ use Hanaboso\PhpCheckUtils\PhpUnit\Traits\CustomAssertTrait;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
 use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
-use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
@@ -55,20 +52,15 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     private $tokenRepository;
 
     /**
-     * @var PasswordEncoderInterface
-     */
-    private $encoder;
-
-    /**
      * @throws Exception
      *
      * @covers \Hanaboso\UserBundle\Model\User\UserManager::login
      */
     public function testLogin(): void
     {
-        $this->createUser();
-
-        $user = $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $this->createUser('user@example.com');
+        $this->injectJwt('');
+        [$user,] = $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
 
         self::assertEquals(['id' => $user->getId(), 'email' => 'user@example.com'], $user->toArray());
     }
@@ -80,9 +72,10 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testLoggedUser(): void
     {
-        $this->createUser();
-
-        $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $this->createUser('user@example.com');
+        $this->injectJwt('');
+        [, $token] = $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $this->injectJwt($token);
         $user = $this->userManager->loggedUser();
 
         self::assertEquals(['id' => $user->getId(), 'email' => 'user@example.com'], $user->toArray());
@@ -95,9 +88,10 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testLogout(): void
     {
-        $this->createUser();
-
-        $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $this->createUser('user@example.com');
+        $this->injectJwt('');
+        [, $token] = $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        $this->injectJwt($token);
         $this->userManager->logout();
 
         self::assertFake();
@@ -357,7 +351,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
         self::assertCount(1, $users);
         self::assertEquals('email@example.com', $users[0]->getEmail());
-        self::assertTrue($this->encoder->isPasswordValid($users[0]->getPassword(), 'passw0rd', ''));
+        self::assertTrue($this->getEncoder()->verify($users[0]->getPassword(), 'passw0rd'));
     }
 
     /**
@@ -408,16 +402,16 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testChangePassword(): void
     {
-        $this->createUser();
-        $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        [, $jwt] = $this->loginUser();
+        $this->injectJwt($jwt);
         $this->userManager->changePassword(['password' => 'Passw0rd', 'old_password' => 'passw0rd']);
 
         /** @var User[] $users */
-        $users = $this->userRepository->findBy(['email' => 'user@example.com']);
+        $users = $this->userRepository->findBy(['email' => 'email@example.com']);
 
         self::assertCount(1, $users);
-        self::assertEquals('user@example.com', $users[0]->getEmail());
-        self::assertTrue($this->encoder->isPasswordValid($users[0]->getPassword(), 'Passw0rd', ''));
+        self::assertEquals('email@example.com', $users[0]->getEmail());
+        self::assertTrue($this->getEncoder()->verify($users[0]->getPassword(), 'Passw0rd'));
     }
 
     /**
@@ -427,8 +421,8 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testChangePasswordException(): void
     {
-        $this->createUser();
-        $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        [, $jwt] = $this->loginUser('user@example.com');
+        $this->injectJwt($jwt);
 
         $dm = $this->createMock(DocumentManager::class);
         $dm->method('flush')->willThrowException(new ORMException());
@@ -446,9 +440,10 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testDelete(): void
     {
-        $this->createUser();
-        $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
-        $this->userManager->delete($this->createUser());
+        [, $jwt] = $this->loginUser('user@example.com');
+        $this->injectJwt($jwt);
+        $user = $this->createUser();
+        $this->userManager->delete($user);
 
         /** @var User[] $users */
         $users = $this->userRepository->findAll();
@@ -465,8 +460,8 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testDeleteException2(): void
     {
-        $this->createUser();
-        $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        [, $jwt] = $this->loginUser('user@example.com');
+        $this->injectJwt($jwt);
 
         $dm = $this->createMock(DocumentManager::class);
         $dm->method('flush')->willThrowException(new ORMException());
@@ -488,8 +483,8 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         self::expectExceptionCode(UserManagerException::USER_DELETE_NOT_ALLOWED);
         self::expectExceptionMessageMatches("/User '\w+' delete not allowed./");
 
-        $user = $this->createUser();
-        $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
+        [$user, $jwt] = $this->loginUser('user@example.com');
+        $this->injectJwt($jwt);
         $this->userManager->delete($user);
     }
 
@@ -500,25 +495,10 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->userManager       = self::$container->get('hbpf.user.manager.user');
+        $this->userManager       = self::getContainer()->get('hbpf.user.manager.user');
         $this->userRepository    = $this->dm->getRepository(User::class);
         $this->tmpUserRepository = $this->dm->getRepository(TmpUser::class);
         $this->tokenRepository   = $this->dm->getRepository(Token::class);
-        $this->encoder           = new NativePasswordEncoder(3);
-    }
-
-    /**
-     * @return UserInterface
-     * @throws Exception
-     */
-    private function createUser(): UserInterface
-    {
-        $user = (new User())
-            ->setEmail('user@example.com')
-            ->setPassword('$2y$12$E66ihLcqEwlM018HA.rD3.eeC/79zzP3L5W9hpT19.YHqPBC3EQFe');
-        $this->pfd($user);
-
-        return $user;
     }
 
     /**
@@ -527,11 +507,11 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
     private function prepareMailerMock(): void
     {
         $this->userManager = new UserManager(
-            self::$container->get('hbpf.database_manager_locator'),
-            self::$container->get('hbpf.user.manager.security'),
-            self::$container->get('hbpf.user.manager.token'),
-            self::$container->get('event_dispatcher'),
-            self::$container->get('hbpf.user.provider.resource'),
+            self::getContainer()->get('hbpf.database_manager_locator'),
+            self::getContainer()->get('hbpf.user.manager.security'),
+            self::getContainer()->get('hbpf.user.manager.token'),
+            self::getContainer()->get('event_dispatcher'),
+            self::getContainer()->get('hbpf.user.provider.resource'),
             $this->createMock(Mailer::class),
             'host',
             'active-link',

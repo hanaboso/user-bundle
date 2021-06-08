@@ -45,7 +45,7 @@ class UserController
     public function loginAction(Request $request): Response
     {
         try {
-            return $this->getResponse($this->userHandler->login($request->request->all())->toArray());
+            return $this->getResponse($this->userHandler->login($request->request->all()));
         } catch (SecurityManagerException $e) {
             return $this->getErrorResponse($e, 400);
         } catch (PipesFrameworkException | Throwable $e) {
