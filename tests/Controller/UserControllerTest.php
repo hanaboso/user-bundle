@@ -84,7 +84,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/loggedRequest.json',
-            ['id' => 1],
+            ['id' => 1, 'token' => 'jwt'],
             requestHeadersReplacements: [self::$AUTHORIZATION => $jwt],
         );
     }

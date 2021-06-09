@@ -76,12 +76,17 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     }
 
     /**
-     * @return UserInterface
+     * @return mixed[]
      * @throws SecurityManagerException
      */
-    public function loggedUser(): UserInterface
+    public function loggedUser(): array
     {
-        return $this->userManager->loggedUser();
+        [$user, $token] = $this->userManager->loggedUser();
+
+        return [
+            'user'  => $user->toArray(),
+            'token' => $token,
+        ];
     }
 
     /**

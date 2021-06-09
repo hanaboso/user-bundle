@@ -76,7 +76,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $this->injectJwt('');
         [, $token] = $this->userManager->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
         $this->injectJwt($token);
-        $user = $this->userManager->loggedUser();
+        [$user,] = $this->userManager->loggedUser();
 
         self::assertEquals(['id' => $user->getId(), 'email' => 'user@example.com'], $user->toArray());
     }
