@@ -127,10 +127,10 @@ class UserManager
     }
 
     /**
-     * @return UserInterface
+     * @return mixed[]
      * @throws SecurityManagerException
      */
-    public function loggedUser(): UserInterface
+    public function loggedUser(): array
     {
         return $this->securityManager->getLoggedUser();
     }
@@ -140,8 +140,9 @@ class UserManager
      */
     public function logout(): void
     {
+        [$user,] = $this->securityManager->getLoggedUser();
         $this->eventDispatcher->dispatch(
-            new LogoutUserEvent($this->securityManager->getLoggedUser()),
+            new LogoutUserEvent($user),
             LogoutUserEvent::NAME,
         );
     }
@@ -265,7 +266,7 @@ class UserManager
      */
     public function changePassword(array $data): void
     {
-        $loggedUser = $this->securityManager->getLoggedUser();
+        [$loggedUser,] = $this->securityManager->getLoggedUser();
         $this->eventDispatcher->dispatch(new ChangePasswordUserEvent($loggedUser), ChangePasswordUserEvent::NAME);
 
         if (isset($data['old_password'])) {
@@ -316,11 +317,12 @@ class UserManager
      */
     public function delete(UserInterface $user): UserInterface
     {
+        [$loggedUser,] = $this->securityManager->getLoggedUser();
         $this->eventDispatcher->dispatch(
-            new DeleteBeforeUserEvent($user, $this->securityManager->getLoggedUser()),
+            new DeleteBeforeUserEvent($user, $loggedUser),
             DeleteBeforeUserEvent::NAME,
         );
-        if ($this->securityManager->getLoggedUser()->getId() === $user->getId()) {
+        if ($loggedUser->getId() === $user->getId()) {
             throw new UserManagerException(
                 sprintf('User \'%s\' delete not allowed.', $user->getId()),
                 UserManagerException::USER_DELETE_NOT_ALLOWED,
@@ -331,7 +333,7 @@ class UserManager
             $user->setDeleted(TRUE);
             $this->dm->flush();
             $this->eventDispatcher->dispatch(
-                new DeleteAfterUserEvent($user, $this->securityManager->getLoggedUser()),
+                new DeleteAfterUserEvent($user, $loggedUser),
                 DeleteAfterUserEvent::NAME,
             );
 

@@ -114,18 +114,21 @@ class SecurityManager
     }
 
     /**
-     * @return UserInterface
+     * @return mixed[]
      * @throws SecurityManagerException
      */
-    public function getLoggedUser(): UserInterface
+    public function getLoggedUser(): array
     {
         try {
             $token = $this->jwtVerifyAccessToken();
+            $user  = $this->getUser($token->claims()->get(self::EMAIL));
+            $this->setNewRefreshToken($user);
+            $token = $this->createToken($user->getId(), $user->getEmail(), self::ACCESS_TOKEN_EXPIRATION);
         } catch (Throwable $t) {
             throw new SecurityManagerException($t->getMessage(), $t->getCode(), $t);
         }
 
-        return $this->getUser($token->claims()->get(self::EMAIL));
+        return [$user, $token];
     }
 
     /**

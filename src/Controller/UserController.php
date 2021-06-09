@@ -61,7 +61,7 @@ class UserController
     public function loggedUserAction(): Response
     {
         try {
-            return $this->getResponse($this->userHandler->loggedUser()->toArray());
+            return $this->getResponse($this->userHandler->loggedUser());
         } catch (SecurityManagerException $e) {
             return $this->getErrorResponse($e, 401);
         } catch (Throwable $e) {

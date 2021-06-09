@@ -62,9 +62,9 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
         $loggedUser = $this->handler->login(['email' => 'user@example.com', 'password' => 'passw0rd']);
         $this->injectJwt($loggedUser['token']);
-        $loggedUser = $this->handler->loggedUser();
+        $loggedUser = $this->handler->loggedUser()['user'];
 
-        self::assertEquals(['id' => $loggedUser->getId(), 'email' => 'user@example.com'], $loggedUser->toArray());
+        self::assertEquals(['id' => $loggedUser['id'], 'email' => 'user@example.com'], $loggedUser);
     }
 
     /**

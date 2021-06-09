@@ -105,7 +105,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         [, $jwt] = $this->securityManager->login(['email' => 'email@example.com', 'password' => 'passw0rd']);
         $this->injectJwt($jwt);
 
-        $user = $this->securityManager->getLoggedUser();
+        [$user,] = $this->securityManager->getLoggedUser();
         self::assertEquals('email@example.com', $user->getEmail());
         self::assertTrue($this->getEncoder()->verify($user->getPassword() ?? '', 'passw0rd'));
     }
