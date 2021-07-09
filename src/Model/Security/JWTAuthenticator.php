@@ -62,7 +62,7 @@ final class JWTAuthenticator extends AbstractAuthenticator
             return new SelfValidatingPassport(
                 new UserBadge(
                     $email,
-                    fn($email) => $this->securityManager->getUser($email),
+                    fn($email) => clone $this->securityManager->getUser($email),
                 ),
             );
         } catch (Throwable $t) {

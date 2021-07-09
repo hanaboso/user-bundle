@@ -72,7 +72,7 @@ class TokenManager
     {
         try {
             /**
-             * @template    T
+             * @template    T of object
              * @phpstan-var class-string<T> $tokenClass
              */
             $tokenClass = $this->provider->getResource(ResourceEnum::TOKEN);
@@ -112,7 +112,7 @@ class TokenManager
     {
         try {
             /**
-             * @template    T
+             * @template    T of object
              * @phpstan-var class-string<T> $tokenClass
              */
             $tokenClass = $this->provider->getResource(ResourceEnum::TOKEN);

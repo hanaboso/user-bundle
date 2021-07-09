@@ -12,7 +12,7 @@ use Doctrine\ORM\NoResultException;
  *
  * @package         Hanaboso\UserBundle\Repository\Entity
  *
- * @template        T
+ * @template        T of object
  * @phpstan-extends EntityRepository<T>
  */
 class UserRepository extends EntityRepository

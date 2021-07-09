@@ -47,7 +47,7 @@ class UserManager
     protected DocumentManager|EntityManager $dm;
 
     /**
-     * @var OdmRepo|OrmRepo<mixed>
+     * @var OdmRepo|OrmRepo<object>
      */
     protected $userRepository;
 
@@ -94,12 +94,12 @@ class UserManager
     )
     {
         /**
-         * @template    T
+         * @template    T of object
          * @phpstan-var class-string<T> $userClass
          */
         $userClass = $provider->getResource(ResourceEnum::USER);
         /**
-         * @template    T
+         * @template    T of object
          * @phpstan-var class-string<T> $tmpUserClass
          */
         $tmpUserClass = $provider->getResource(ResourceEnum::TMP_USER);

@@ -271,7 +271,7 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     private function getUser(string $id): UserInterface
     {
         /**
-         * @template    T
+         * @template    T of object
          * @phpstan-var class-string<T> $userClass
          */
         $userClass = $this->provider->getResource(ResourceEnum::USER);
