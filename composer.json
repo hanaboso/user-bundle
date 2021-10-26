@@ -1,7 +1,7 @@
 {
     "name": "hanaboso/user-bundle",
     "description": "Hanaboso - user-bundle",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "license": "Apache-2.0",
     "require": {
         "php": "^8.0",
