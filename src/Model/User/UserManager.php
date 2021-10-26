@@ -269,13 +269,15 @@ class UserManager
         [$loggedUser,] = $this->securityManager->getLoggedUser();
         $this->eventDispatcher->dispatch(new ChangePasswordUserEvent($loggedUser), ChangePasswordUserEvent::NAME);
 
-        if (isset($data['old_password'])) {
-            $this->securityManager->validateUser($loggedUser, ['password' => $data['old_password']]);
-        }
-
         try {
+            if (isset($data['old_password'])) {
+                $this->securityManager->validateUser($loggedUser, ['password' => $data['old_password']]);
+            }
+
             $loggedUser->setPassword($this->securityManager->encodePassword($data['password']));
             $this->dm->flush();
+        } catch (SecurityManagerException $e) {
+            throw new UserManagerException('Incorrect old password', $e->getCode(), $e);
         } catch (Throwable $t) {
             throw new UserManagerException($t->getMessage(), $t->getCode(), $t);
         }
