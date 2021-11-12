@@ -79,4 +79,4 @@ phpcoverage-ci:
 
 test: docker-up-force composer-install fasttest
 
-fasttest: clear-cache phpcodesniffer phpstan phpunit phpintegration phpcontroller phpcoverage-ci
+fasttest: clear-cache phpcodesniffer phpunit phpintegration phpcontroller phpcoverage-ci

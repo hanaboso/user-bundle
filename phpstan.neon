@@ -7,7 +7,6 @@ parameters:
 	symfony:
 		container_xml_path: %rootDir%/../../../var/cache/test/UserBundleTests_KernelTestDebugContainer.xml
 	excludes_analyse:
-		- src/Document/
 	ignoreErrors:
 		-
 			message: '#Missing call to parent\:\:setUp\(\) method#'
