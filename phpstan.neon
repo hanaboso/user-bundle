@@ -7,7 +7,14 @@ parameters:
 	symfony:
 		container_xml_path: %rootDir%/../../../var/cache/test/UserBundleTests_KernelTestDebugContainer.xml
 	excludes_analyse:
+		- src/Document/
 	ignoreErrors:
+		-
+			message: '#Missing call to parent\:\:setUp\(\) method#'
+			path: tests/Controller/UserControllerTest.php
+		-
+			message: '#exception of method .* expects Throwable, object given#'
+			path: tests/Controller/UserControllerTest.php
 		-
 			message: '#Unable to resolve the template type .*#'
 			path: src/Model/Token/TokenManager.php

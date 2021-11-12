@@ -2,7 +2,6 @@
 
 namespace UserBundleTests\Integration\Model\Security;
 
-use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Security\SecurityManager;
@@ -32,11 +31,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     private SecurityManager $securityManager;
 
     /**
-     * @var ObjectRepository<User>
-     */
-    private $userRepository;
-
-    /**
      * @throws Exception
      *
      * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::login
@@ -45,7 +39,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     {
         $user = $this->createUser();
         self::assertEquals('email@example.com', $user->getEmail());
-        self::assertTrue($this->getEncoder()->verify($user->getPassword() ?? '', 'passw0rd'));
+        self::assertTrue($this->getEncoder()->verify($user->getPassword(), 'passw0rd'));
     }
 
     /**
@@ -58,7 +52,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         $user = $this->createUser();
 
         self::assertEquals('email@example.com', $user->getEmail());
-        self::assertTrue($this->getEncoder()->verify($user->getPassword() ?? '', 'passw0rd'));
+        self::assertTrue($this->getEncoder()->verify($user->getPassword(), 'passw0rd'));
 
         $repository = self::createMock(UserRepository::class);
         $repository->method('find')->willReturn(NULL);
@@ -227,7 +221,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
             self::getContainer()->get('config.jwt'),
             'Lax',
         );
-        $this->userRepository  = $this->dm->getRepository(User::class);
     }
 
 }

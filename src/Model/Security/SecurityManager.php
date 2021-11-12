@@ -107,8 +107,16 @@ class SecurityManager
     {
         $user = $this->getUser($data['email']);
         $this->validateUser($user, $data);
-        $this->setNewRefreshToken($user);
-        $token = $this->createToken($user->getId(), $user->getEmail(), self::ACCESS_TOKEN_EXPIRATION);
+
+        unset($data['email'], $data['password']);
+        $this->setNewRefreshToken($user, $data);
+        $token = $this->createToken(
+            $user->getId(),
+            $user->getEmail(),
+            self::ACCESS_TOKEN_EXPIRATION,
+            $this->getPermissions($user),
+            $data,
+        );
 
         return [$user, $token];
     }
@@ -122,8 +130,14 @@ class SecurityManager
         try {
             $token = $this->jwtVerifyAccessToken();
             $user  = $this->getUser($token->claims()->get(self::EMAIL));
-            $this->setNewRefreshToken($user);
-            $token = $this->createToken($user->getId(), $user->getEmail(), self::ACCESS_TOKEN_EXPIRATION);
+            $this->setNewRefreshToken($user, $token->claims()->all());
+            $token = $this->createToken(
+                $user->getId(),
+                $user->getEmail(),
+                self::ACCESS_TOKEN_EXPIRATION,
+                $this->getPermissions($user),
+                $token->claims()->all(),
+            );
         } catch (Throwable $t) {
             throw new SecurityManagerException($t->getMessage(), $t->getCode(), $t);
         }
@@ -168,10 +182,7 @@ class SecurityManager
      */
     public function getJwt(Request $request): ?string
     {
-        /** @var string|null $jwt */
-        $jwt = $request->headers->get(self::AUTHORIZATION) ?? $request->query->get(self::AUTHORIZATION);
-
-        return $jwt;
+        return $request->headers->get(self::AUTHORIZATION) ?? $request->query->get(self::AUTHORIZATION);
     }
 
     /**
@@ -240,21 +251,36 @@ class SecurityManager
     }
 
     /**
-     * @param string   $id
-     * @param string   $email
-     * @param int      $expiration
-     * @param string[] $permissions
+     * @param string         $id
+     * @param string         $email
+     * @param int            $expiration
+     * @param string[]       $permissions
+     * @param string[]|int[] $additionalData
      *
      * @return string
      * @throws DateTimeException
      */
-    public function createToken(string $id, string $email, int $expiration, array $permissions = []): string
+    public function createToken(
+        string $id,
+        string $email,
+        int $expiration,
+        array $permissions = [],
+        array $additionalData = [],
+    ): string
     {
-        return $this->configuration->builder()
+        $builder = $this->configuration->builder()
             ->expiresAt(DateTimeUtils::getUtcDateTimeImmutable(sprintf('+%s seconds', $expiration)))
             ->withClaim(self::ID, $id)
             ->withClaim(self::EMAIL, $email)
-            ->withClaim(self::PERMISSIONS, $permissions)
+            ->withClaim(self::PERMISSIONS, $permissions);
+
+        foreach ($additionalData as $key => $val) {
+            if(!in_array($key, ['exp', 'permissions'], TRUE)){
+                $builder->withClaim((string) $key, (string) $val);
+            }
+        }
+
+        return $builder
             ->getToken($this->configuration->signer(), $this->configuration->signingKey())
             ->toString();
     }
@@ -265,11 +291,11 @@ class SecurityManager
 
     /**
      * @param UserInterface $user
+     * @param string[]      $additionalData
      *
      * @throws DateTimeException
-     * @throws SecurityManagerException
      */
-    private function setNewRefreshToken(UserInterface $user): void
+    private function setNewRefreshToken(UserInterface $user, array $additionalData = []): void
     {
         /** @var Request $request */
         $request     = $this->requestStack->getCurrentRequest();
@@ -282,6 +308,7 @@ class SecurityManager
                 $user->getEmail(),
                 self::REFRESH_TOKEN_EXPIRATION,
                 $permissions,
+                $additionalData,
             ),
             [
                 'secure'   => $request->isSecure(),

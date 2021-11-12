@@ -5,14 +5,14 @@ namespace Hanaboso\UserBundle\Command;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 /**
  * Class PasswordCommandAbstract
@@ -28,9 +28,9 @@ abstract class PasswordCommandAbstract extends Command
     protected DocumentManager|EntityManager $dm;
 
     /**
-     * @var PasswordEncoderInterface
+     * @var PasswordHasherInterface
      */
-    protected PasswordEncoderInterface $encoder;
+    protected PasswordHasherInterface $encoder;
 
     /**
      * @param InputInterface  $input
@@ -75,7 +75,7 @@ abstract class PasswordCommandAbstract extends Command
                 ->setHidden(TRUE),
         );
 
-        $user->setPassword($this->encoder->encodePassword($password, ''));
+        $user->setPassword($this->encoder->hash($password));
         $this->dm->flush();
     }
 

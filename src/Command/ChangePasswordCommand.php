@@ -5,7 +5,7 @@ namespace Hanaboso\UserBundle\Command;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository as OdmRepo;
 use Doctrine\ORM\EntityRepository as OrmRepo;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Document\User as DmUser;
 use Hanaboso\UserBundle\Entity\User;
@@ -17,7 +17,7 @@ use LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 
 /**
  * Class ChangePasswordCommand
@@ -39,14 +39,14 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
      *
      * @param DatabaseManagerLocator $userDml
      * @param ResourceProvider       $provider
-     * @param EncoderFactory         $encoderFactory
+     * @param PasswordHasherFactory  $encoderFactory
      *
      * @throws ResourceProviderException
      */
     public function __construct(
         DatabaseManagerLocator $userDml,
         ResourceProvider $provider,
-        EncoderFactory $encoderFactory,
+        PasswordHasherFactory $encoderFactory,
     )
     {
         parent::__construct();
@@ -55,7 +55,7 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
         $userClass     = $provider->getResource(ResourceEnum::USER);
         $this->dm      = $userDml->get();
         $this->repo    = $this->dm->getRepository($userClass);
-        $this->encoder = $encoderFactory->getEncoder($userClass);
+        $this->encoder = $encoderFactory->getPasswordHasher($userClass);
     }
 
     /**

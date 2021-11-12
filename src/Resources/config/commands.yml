@@ -7,7 +7,7 @@ services:
         arguments:
             - '@hbpf.database_manager_locator'
             - '@hbpf.user.provider.resource'
-            - '@security.encoder_factory.generic'
+            - '@security.password_hasher_factory'
         tags:
             - { name: console.command }
 
@@ -16,7 +16,7 @@ services:
         arguments:
             - '@hbpf.database_manager_locator'
             - '@hbpf.user.provider.resource'
-            - '@security.encoder_factory.generic'
+            - '@security.password_hasher_factory'
         tags:
             - { name: console.command }
 
