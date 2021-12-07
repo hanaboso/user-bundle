@@ -18,21 +18,18 @@ use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\System\ControllerUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 /**
  * Class UserHandler
  *
  * @package Hanaboso\UserBundle\Handler
  */
-class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInterface
+class UserHandler implements EventSubscriberInterface
 {
 
     /**
@@ -205,20 +202,6 @@ class UserHandler implements LogoutSuccessHandlerInterface, EventSubscriberInter
     public function delete(string $id): UserInterface
     {
         return $this->userManager->delete($this->getUser($id));
-    }
-
-    /**
-     * Don't redirect after logout
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function onLogoutSuccess(Request $request): Response
-    {
-        $request;
-
-        return new Response('{}', 200, ['Content-Type' => 'application/json']);
     }
 
     /**

@@ -1,6 +1,6 @@
 security:
     enable_authenticator_manager: true
-    encoders:
+    password_hashers:
         Hanaboso\UserBundle\Document\User:
             algorithm: auto
             cost: 12

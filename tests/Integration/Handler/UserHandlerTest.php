@@ -10,7 +10,6 @@ use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -207,16 +206,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
         self::expectExceptionMessage('User with id [Unknown] not found.');
 
         $this->handler->delete('Unknown');
-    }
-
-    /**
-     * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::onLogoutSuccess
-     */
-    public function testOnLogoutSuccess(): void
-    {
-        self::assertEquals('{}', $this->handler->onLogoutSuccess(new Request())->getContent());
     }
 
     /**
