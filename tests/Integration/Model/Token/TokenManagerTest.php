@@ -176,7 +176,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->tokenManager    = self::$container->get('hbpf.user.manager.token');
+        $this->tokenManager    = self::getContainer()->get('hbpf.user.manager.token');
         $this->tokenRepository = $this->dm->getRepository(Token::class);
     }
 
