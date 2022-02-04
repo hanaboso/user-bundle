@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   app:
-    image: hanabosocom/php-dev:php-8.0-alpine
+    image: hanabosocom/php-dev:php-8.1-alpine
     user: ${DEV_UID}:${DEV_GID}
     volumes:
       - ./:/var/www:cached
