@@ -7,8 +7,8 @@ use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Security\SecurityManager;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Repository\Document\UserRepository;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Validation\Validator;
+use Jose\Component\Checker\ClaimCheckerManager;
+use Jose\Component\Checker\InvalidClaimException;
 use LogicException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -148,11 +148,9 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
      */
     public function testJwtFailParseException(): void
     {
-        $validator = $this->createMock(Validator::class);
-        $validator->method('validate')->willReturn(FALSE);
-        $conf = $this->createMock(Configuration::class);
-        $conf->method('validator')->willReturn($validator);
-        $this->setProperty($this->securityManager, 'configuration', $conf);
+        $claimCheckerManager = $this->createMock(ClaimCheckerManager::class);
+        $claimCheckerManager->method('check')->willThrowException(new InvalidClaimException('', '', ''));
+        $this->setProperty($this->securityManager, 'claimCheckerManager', $claimCheckerManager);
         $this->createUser();
 
         $man = $this->createPartialMock(RequestStack::class, ['getCurrentRequest']);
@@ -218,7 +216,10 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
             $encodeFactory,
             self::getContainer()->get('hbpf.user.provider.resource'),
             self::getContainer()->get('request_stack'),
-            self::getContainer()->get('config.jwt'),
+            self::getContainer()->get('jws.builder'),
+            self::getContainer()->get('jws.loader'),
+            self::getContainer()->get('jwt.jwk'),
+            self::getContainer()->get('jwt.manager.checker'),
             'Lax',
         );
     }
