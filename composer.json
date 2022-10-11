@@ -2,20 +2,24 @@
     "name": "hanaboso/user-bundle",
     "description": "Hanaboso - user-bundle",
     "license": "Apache-2.0",
-    "version": "1.5.8",
+    "version": "1.6.0",
     "require": {
         "php": "^8.1",
-        "hanaboso/commons-bundle": "^2.5",
+        "hanaboso/commons-bundle": "^2.7",
         "hanaboso/email-service-bundle": "^1.2",
         "hanaboso/rabbit-mq-bundle": "^1.5",
         "hanaboso/rest-bundle": "^1.1",
-        "lcobucci/jwt": "^4.1"
+        "web-token/jwt-checker": "^3.1",
+        "web-token/jwt-core": "^3.1",
+        "web-token/jwt-key-mgmt": "^3.1",
+        "web-token/jwt-signature": "^3.1",
+        "web-token/jwt-signature-algorithm-hmac": "^3.1"
     },
     "require-dev": {
         "ext-apcu": "*",
-        "doctrine/doctrine-bundle": "^2.6",
-        "doctrine/mongodb-odm-bundle": "^4.4",
-        "doctrine/orm": "^2.12",
+        "doctrine/doctrine-bundle": "^2.7",
+        "doctrine/mongodb-odm-bundle": "^4.5",
+        "doctrine/orm": "^2.13",
         "hanaboso/php-check-utils": "^1.4",
         "symfony/monolog-bundle": "^v3.8",
         "symfony/security-bundle": "^v6.1"

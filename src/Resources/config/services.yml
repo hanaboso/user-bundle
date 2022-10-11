@@ -37,7 +37,10 @@ services:
             - '@security.password_hasher_factory'
             - '@hbpf.user.provider.resource'
             - '@request_stack'
-            - '@config.jwt'
+            - '@jws.builder'
+            - '@jws.loader'
+            - '@jwt.jwk'
+            - '@jwt.manager.checker'
             - '%cookieSameSite%'
 
     Hanaboso\UserBundle\Model\Security\JWTAuthenticator:

@@ -28,7 +28,7 @@ final class JWTAuthenticator extends AbstractAuthenticator
      *
      * @param SecurityManager $securityManager
      */
-    public function __construct(private SecurityManager $securityManager)
+    public function __construct(private readonly SecurityManager $securityManager)
     {
     }
 
@@ -57,7 +57,7 @@ final class JWTAuthenticator extends AbstractAuthenticator
             $token = $this->securityManager->jwtVerifyAccessToken();
 
             /** @var string $email */
-            $email = $token->claims()->get(self::EMAIL);
+            $email = $token[self::EMAIL];
 
             return new SelfValidatingPassport(
                 new UserBadge(
