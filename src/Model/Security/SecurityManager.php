@@ -14,8 +14,13 @@ use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\Utils\Date\DateTimeUtils;
 use Hanaboso\Utils\Exception\DateTimeException;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Token\Plain;
+use Hanaboso\Utils\String\Json;
+use Jose\Component\Checker\ClaimCheckerManager;
+use Jose\Component\Checker\InvalidClaimException;
+use Jose\Component\Core\JWK;
+use Jose\Component\Signature\JWSBuilder;
+use Jose\Component\Signature\JWSLoader;
+use Jose\Component\Signature\Serializer\CompactSerializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
@@ -35,6 +40,7 @@ class SecurityManager
     private const REFRESH_TOKEN            = 'refreshToken';
     private const AUTHORIZATION            = 'Authorization';
     private const ID                       = 'id';
+    private const EXP                      = 'exp';
     private const EMAIL                    = 'email';
     private const PERMISSIONS              = 'permissions';
 
@@ -62,7 +68,10 @@ class SecurityManager
      * @param PasswordHasherFactory  $encoderFactory
      * @param ResourceProvider       $provider
      * @param RequestStack           $requestStack
-     * @param Configuration          $configuration
+     * @param JWSBuilder             $jwsBuilder
+     * @param JWSLoader              $jwsLoader
+     * @param JWK                    $jwk
+     * @param ClaimCheckerManager    $claimCheckerManager
      * @param string                 $sameSite
      *
      * @throws ResourceProviderException
@@ -72,10 +81,12 @@ class SecurityManager
         protected PasswordHasherFactory $encoderFactory,
         protected ResourceProvider $provider,
         private RequestStack $requestStack,
-        private Configuration $configuration,
-        private string $sameSite,
-    )
-    {
+        private readonly JWSBuilder $jwsBuilder,
+        private readonly JWSLoader $jwsLoader,
+        private readonly JWK $jwk,
+        private ClaimCheckerManager $claimCheckerManager,
+        private readonly string $sameSite,
+    ) {
         $this->setUserResource($this->resourceUser);
     }
 
@@ -129,14 +140,14 @@ class SecurityManager
     {
         try {
             $token = $this->jwtVerifyAccessToken();
-            $user  = $this->getUser($token->claims()->get(self::EMAIL));
-            $this->setNewRefreshToken($user, $token->claims()->all());
+            $user  = $this->getUser($token[self::EMAIL]);
+            $this->setNewRefreshToken($user, $token);
             $token = $this->createToken(
                 $user->getId(),
                 $user->getEmail(),
                 self::ACCESS_TOKEN_EXPIRATION,
                 $this->getPermissions($user),
-                $token->claims()->all(),
+                $token,
             );
         } catch (Throwable $t) {
             throw new SecurityManagerException($t->getMessage(), $t->getCode(), $t);
@@ -186,27 +197,38 @@ class SecurityManager
     }
 
     /**
-     * @return Plain
+     * @return mixed[]
      * @throws SecurityManagerException
      */
-    public function jwtVerifyAccessToken(): Plain
+    public function jwtVerifyAccessToken(): array
     {
         /** @var Request $request */
         $request          = $this->requestStack->getCurrentRequest();
         $exceptionMessage = 'Not valid token';
         try {
             $jwt = $this->getJwt($request);
+
             if (!$jwt) {
                 throw new SecurityManagerException($exceptionMessage);
             }
-            /** @var Plain $token */
-            $token = $this->configuration->parser()->parse(str_replace('Bearer ', '', $jwt));
 
-            if ($this->configuration->validator()->validate($token, ...$this->configuration->validationConstraints())) {
-                return $token;
+            try {
+                $token = $this->jwsLoader->loadAndVerifyWithKey(
+                    str_replace('Bearer ', '', $jwt),
+                    $this->jwk,
+                    $signature,
+                );
+
+                $claims = Json::decode($token->getPayload());
+
+                $this->claimCheckerManager->check($claims);
+
+                return $claims;
+            } catch (InvalidClaimException $exception) {
+                throw $exception;
+            } catch (Throwable) {
+                throw new SecurityManagerException($exceptionMessage);
             }
-
-            throw new SecurityManagerException($exceptionMessage);
         } catch (Throwable $t) {
             throw new SecurityManagerException($t->getMessage(), SecurityManagerException::USER_NOT_LOGGED, $t);
         }
@@ -266,23 +288,28 @@ class SecurityManager
         int $expiration,
         array $permissions = [],
         array $additionalData = [],
-    ): string
-    {
-        $builder = $this->configuration->builder()
-            ->expiresAt(DateTimeUtils::getUtcDateTimeImmutable(sprintf('+%s seconds', $expiration)))
-            ->withClaim(self::ID, $id)
-            ->withClaim(self::EMAIL, $email)
-            ->withClaim(self::PERMISSIONS, $permissions);
+    ): string {
+        $jws = $this->jwsBuilder
+            ->create()
+            ->withPayload(
+                Json::encode(
+                    array_merge(
+                        $additionalData,
+                        [
+                            self::EXP         => DateTimeUtils::getUtcDateTimeImmutable(
+                                sprintf('+%s seconds', $expiration),
+                            )->getTimestamp(),
+                            self::ID          => $id,
+                            self::EMAIL       => $email,
+                            self::PERMISSIONS => $permissions,
+                        ],
+                    ),
+                ),
+            )
+            ->addSignature($this->jwk, ['alg' => 'HS512'])
+            ->build();
 
-        foreach ($additionalData as $key => $val) {
-            if(!in_array($key, ['exp', 'permissions'], TRUE)){
-                $builder->withClaim((string) $key, (string) $val);
-            }
-        }
-
-        return $builder
-            ->getToken($this->configuration->signer(), $this->configuration->signingKey())
-            ->toString();
+        return $this->jwsLoader->getSerializerManager()->serialize(CompactSerializer::NAME, $jws);
     }
 
     /**

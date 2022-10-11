@@ -7,27 +7,60 @@ services:
     _defaults:
         public: '%public.services%'
 
-    signer.jwt:
-        class: Lcobucci\JWT\Signer\Hmac\Sha512
+    jws.loader:
+        class: Jose\Component\Signature\JWSLoader
+        arguments:
+            - '@jws.manager.serializer'
+            - '@jws.verifier'
+            - null
+
+    jws.builder:
+        class: Jose\Component\Signature\JWSBuilder
+        arguments:
+            - '@jwt.manager.algorithm'
+
+    jws.manager.serializer:
+        class: Jose\Component\Signature\Serializer\JWSSerializerManager
+        arguments:
+            - [ '@jws.serializer.compact' ]
+
+    jws.serializer.compact:
+        class: Jose\Component\Signature\Serializer\CompactSerializer
         arguments:
 
-    signer.key:
-        class: Lcobucci\JWT\Signer\Key\InMemory
-        factory: [ 'Lcobucci\JWT\Signer\Key\InMemory', 'plainText' ]
+    jws.verifier:
+        class: Jose\Component\Signature\JWSVerifier
+        arguments:
+            - '@jwt.manager.algorithm'
+
+    jwt.manager.algorithm:
+        class: Jose\Component\Core\AlgorithmManager
+        arguments:
+            - [ '@jwt.algorithm.hs512' ]
+
+    jwt.jwk:
+        class: Jose\Component\Core\JWK
+        factory: [ 'Jose\Component\KeyManagement\JWKFactory', 'createFromSecret' ]
         arguments:
             - '%jwt_key%'
 
-    config.constraint:
-        class: Lcobucci\JWT\Validation\Constraint\SignedWith
+    jwt.algorithm.hs512:
+        class: Jose\Component\Signature\Algorithm\HS512
         arguments:
-            - '@signer.jwt'
-            - '@signer.key'
 
-    config.jwt:
-        class: Lcobucci\JWT\Configuration
-        factory: [ 'Lcobucci\JWT\Configuration', 'forSymmetricSigner' ]
+    jwt.manager.checker:
+        class: Jose\Component\Checker\ClaimCheckerManager
         arguments:
-            - '@signer.jwt'
-            - '@signer.key'
-        calls:
-            - [ 'setValidationConstraints', [ '@config.constraint' ] ]
+            - [ '@jwt.checker.exp', '@jwt.checker.nbf', '@jwt.checker.iat' ]
+
+    jwt.checker.exp:
+        class: Jose\Component\Checker\ExpirationTimeChecker
+        arguments:
+
+    jwt.checker.nbf:
+        class: Jose\Component\Checker\NotBeforeChecker
+        arguments:
+
+    jwt.checker.iat:
+        class: Jose\Component\Checker\IssuedAtChecker
+        arguments:
