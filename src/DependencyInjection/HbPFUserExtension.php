@@ -29,12 +29,7 @@ final class HbPFUserExtension extends Extension implements PrependExtensionInter
     {
         if (!$container->hasExtension('doctrine_mongodb') && !$container->hasExtension('doctrine')) {
             throw new RuntimeException('You must register ORM or ODM (or both) before.');
-        } else if (!$container->hasExtension('rabbit_mq')) {
-            throw new RuntimeException('You must register RabbitMqBundle before.');
         }
-
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/prepend-config'));
-        $loader->load('rabbitmq.yml');
 
         $container->setParameter('src_dir', __DIR__ . '/../..');
     }

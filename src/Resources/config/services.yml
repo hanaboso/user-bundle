@@ -56,10 +56,8 @@ services:
     hbpf.user.mailer:
         class: Hanaboso\UserBundle\Model\Mailer\Mailer
         arguments:
-            - '@rabbit_mq.publisher.pipes.messages'
             - '@EmailServiceBundle\Handler\MailHandler'
             - '%mailer_from%'
-            - '%mailer_async%'
             - '%mailer_builder_id%'
 
     EmailServiceBundle\Transport\Impl\SymfonyMailerTransport:

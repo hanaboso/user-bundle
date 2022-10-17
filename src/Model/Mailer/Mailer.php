@@ -5,8 +5,6 @@ namespace Hanaboso\UserBundle\Model\Mailer;
 use EmailServiceBundle\Exception\MailerException;
 use EmailServiceBundle\Handler\MailHandler;
 use Hanaboso\UserBundle\Model\Messages\UserMessageAbstract;
-use Hanaboso\Utils\String\Json;
-use RabbitMqBundle\Publisher\PublisherInterface;
 
 /**
  * Class Mailer
@@ -26,23 +24,15 @@ final class Mailer
     /**
      * Mailer constructor.
      *
-     * @param PublisherInterface $producer
-     * @param MailHandler        $mailHandler
-     * @param string             $from
-     * @param bool               $async
-     * @param string|null        $builderId
+     * @param MailHandler $mailHandler
+     * @param string      $from
+     * @param string|null $builderId
      */
-    public function __construct(
-        private PublisherInterface $producer,
-        private MailHandler $mailHandler,
-        private string $from,
-        private bool $async = TRUE,
-        ?string $builderId = NULL,
-    )
+    public function __construct(private MailHandler $mailHandler, private string $from, ?string $builderId = NULL)
     {
         $this->builderId = $builderId ?? '';
 
-        if ($this->async === FALSE && empty($this->builderId)) {
+        if (empty($this->builderId)) {
             $this->builderId = self::DEFAULT_MAIL_BUILDER;
         }
     }
@@ -54,14 +44,10 @@ final class Mailer
      */
     public function send(UserMessageAbstract $message): void
     {
-        if ($this->async) {
-            $this->producer->publish(Json::encode($message->getMessage()));
-        } else {
-            $data         = $message->getMessage();
-            $data['from'] = $this->from;
+        $data         = $message->getMessage();
+        $data['from'] = $this->from;
 
-            $this->mailHandler->send($this->builderId, $data);
-        }
+        $this->mailHandler->send($this->builderId, $data);
     }
 
 }

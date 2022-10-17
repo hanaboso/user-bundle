@@ -9,7 +9,6 @@ use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Messages\ActivateMessage;
 use PHPUnit\Framework\TestCase;
-use RabbitMqBundle\Publisher\Publisher;
 
 /**
  * Class MailerTest
@@ -28,38 +27,12 @@ final class MailerTest extends TestCase
      */
     public function testSendSync(): void
     {
-        $producer = $this->createMock(Publisher::class);
-        $producer
-            ->expects(self::never())
-            ->method('publish');
-
         $mailHandler = $this->createMock(MailHandler::class);
         $mailHandler
             ->expects(self::once())
             ->method('send');
 
-        $mailer = new Mailer($producer, $mailHandler, 'from@email.com', FALSE);
-        $mailer->send($this->getMessage());
-    }
-
-    /**
-     * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Mailer\Mailer::send
-     */
-    public function testSendAsync(): void
-    {
-        $producer = $this->createMock(Publisher::class);
-        $producer
-            ->expects(self::once())
-            ->method('publish');
-
-        $mailHandler = $this->createMock(MailHandler::class);
-        $mailHandler
-            ->expects(self::never())
-            ->method('send');
-
-        $mailer = new Mailer($producer, $mailHandler, 'from@email.com');
+        $mailer = new Mailer($mailHandler, 'from@email.com');
         $mailer->send($this->getMessage());
     }
 
