@@ -224,11 +224,7 @@ class SecurityManager
                 if ($claims['exp'] < DateTimeUtils::getUtcDateTime()->getTimestamp()) {
                     $refreshToken = $request->cookies->get(self::REFRESH_TOKEN);
 
-                    $jwtRefreshToken = $this->jwsLoader->loadAndVerifyWithKey(
-                        str_replace('Bearer ', '', $refreshToken),
-                        $this->jwk,
-                        $signature,
-                    );
+                    $jwtRefreshToken = $this->jwsLoader->loadAndVerifyWithKey($refreshToken, $this->jwk,$signature);
 
                     $claims = Json::decode($jwtRefreshToken->getPayload());
                 }
