@@ -11,6 +11,7 @@ use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
+use Symfony\Component\BrowserKit\Cookie;
 use UserBundleTests\ControllerTestCaseAbstract;
 
 /**
@@ -100,9 +101,33 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         [, $jwt] = $this->loginUser('email@example.com', 'passw0rd', 0);
         sleep(2);
+        [, $jwtRefresh] = $this->loginUser();
 
+        $cookie = new Cookie('refreshToken', $jwtRefresh);
+        $this->client->getCookieJar()->set($cookie);
         $this->assertResponse(
             __DIR__ . '/data/UserControllerTest/loggedExpiredTokenRequest.json',
+            ['id' => 1, 'token' => 'jwt'],
+            requestHeadersReplacements: [self::$AUTHORIZATION => $jwt],
+        );
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::jwtVerifyAccessToken
+     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
+     * @covers \Hanaboso\UserBundle\Model\Security\JWTAuthenticator
+     */
+    public function testLoggedUserExpiredAccessTokenAndRefreshToken(): void
+    {
+        [, $jwt] = $this->loginUser('email@example.com', 'passw0rd', 0);
+        sleep(2);
+
+        $cookie = new Cookie('refreshToken', $jwt);
+        $this->client->getCookieJar()->set($cookie);
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/loggedExpiredTokensRequest.json',
             ['id' => 1, 'token' => 'jwt'],
             requestHeadersReplacements: [self::$AUTHORIZATION => $jwt],
         );
