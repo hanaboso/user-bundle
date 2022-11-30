@@ -92,6 +92,25 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     /**
      * @throws Exception
      *
+     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::jwtVerifyAccessToken
+     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
+     * @covers \Hanaboso\UserBundle\Model\Security\JWTAuthenticator
+     */
+    public function testLoggedUserExpiredAccessToken(): void
+    {
+        [, $jwt] = $this->loginUser('email@example.com', 'passw0rd', 0);
+        sleep(2);
+
+        $this->assertResponse(
+            __DIR__ . '/data/UserControllerTest/loggedExpiredTokenRequest.json',
+            ['id' => 1, 'token' => 'jwt'],
+            requestHeadersReplacements: [self::$AUTHORIZATION => $jwt],
+        );
+    }
+
+    /**
+     * @throws Exception
+     *
      * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
      */
     public function testLoggedUserNotLogged(): void

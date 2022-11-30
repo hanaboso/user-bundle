@@ -2,6 +2,7 @@
 
 namespace UserBundleTests;
 
+use Exception;
 use Hanaboso\UserBundle\Document\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher;
@@ -29,6 +30,7 @@ trait JwtUserTrait
      * @param string $password
      *
      * @return User
+     * @throws Exception
      */
     protected function createUser(string $username = 'email@example.com', string $password = 'passw0rd'): User
     {
@@ -45,14 +47,20 @@ trait JwtUserTrait
     /**
      * @param string $username
      * @param string $password
+     * @param int    $expiration
      *
      * @return mixed[]
+     * @throws Exception
      */
-    protected function loginUser(string $username = 'email@example.com', string $password = 'passw0rd'): array
+    protected function loginUser(
+        string $username = 'email@example.com',
+        string $password = 'passw0rd',
+        int $expiration = 3_600,
+    ): array
     {
         $user            = $this->createUser($username, $password);
         $securityManager = self::getContainer()->get('hbpf.user.manager.security');
-        $jwt             = $securityManager->createToken($user->getId(), $user->getEmail(), 3_600);
+        $jwt             = $securityManager->createToken($user->getId(), $user->getEmail(), $expiration);
 
         return [$user, $jwt];
     }
