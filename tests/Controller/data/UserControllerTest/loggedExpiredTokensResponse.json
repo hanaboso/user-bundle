@@ -1,0 +1,7 @@
+{
+    "http": 401,
+    "body": {
+        "message": "Not valid token",
+        "code": 1401
+    }
+}
