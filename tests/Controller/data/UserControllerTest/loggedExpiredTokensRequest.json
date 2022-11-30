@@ -1,0 +1,7 @@
+{
+    "http": "GET /user/logged_user",
+    "headers": {
+        "HTTP_Authorization": "jwt"
+    },
+    "body": []
+}
