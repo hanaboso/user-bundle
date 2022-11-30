@@ -42,10 +42,6 @@ database-create:
 	$(DE) php tests/testApp/bin/console doctrine:database:drop --env=test --force || true
 	$(DE) php tests/testApp/bin/console doctrine:database:create --env=test
 	$(DE) php tests/testApp/bin/console doctrine:schema:create --env=test
-	$(DM) /bin/bash -c "mongo <<< 'use user;'" ; \
-	for i in `seq 1 $$(nproc)`; do \
-		$(DM) /bin/bash -c "mongo <<< 'use user$$i;'" ; \
-	done
 
 # App dev
 init-dev: docker-up-force composer-install

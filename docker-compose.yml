@@ -24,7 +24,7 @@ services:
       - JWT_KEY=1234567890123456789012345678901234567890012345678900123456789012
 
   mongo:
-    image: mongo:5
+    image: mongo:latest
     volumes:
       - mongo:/data/db
 
