@@ -81,6 +81,7 @@ trait JwtUserTrait
 
     /**
      * @param string $jwt
+     * @throws Exception
      */
     protected function injectJwt(string $jwt): void
     {

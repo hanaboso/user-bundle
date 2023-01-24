@@ -86,7 +86,7 @@ class UserManager
         protected SecurityManager $securityManager,
         protected TokenManager $tokenManager,
         protected EventDispatcherInterface $eventDispatcher,
-        private ResourceProvider $provider,
+        private readonly ResourceProvider $provider,
         protected Mailer $mailer,
         string $feHost,
         string $activateLink,

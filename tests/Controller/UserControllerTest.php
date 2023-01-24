@@ -675,16 +675,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     /**
      * @param string $method
      * @param string $exception
-     * @param string $message
      */
-    private function prepareHandlerMock(
-        string $method,
-        string $exception = Exception::class,
-        string $message = 'Something gone wrong!',
-    ): void
+    private function prepareHandlerMock(string $method, string $exception = Exception::class): void
     {
         $handler = self::createMock(UserHandler::class);
-        $handler->method($method)->willThrowException(new $exception($message));
+        $handler->method($method)->willThrowException(new $exception('Something gone wrong!'));
 
         self::getContainer()->set('hbpf.user.handler.user', $handler);
     }

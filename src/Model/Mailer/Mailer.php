@@ -28,7 +28,11 @@ final class Mailer
      * @param string      $from
      * @param string|null $builderId
      */
-    public function __construct(private MailHandler $mailHandler, private string $from, ?string $builderId = NULL)
+    public function __construct(
+        private readonly MailHandler $mailHandler,
+        private readonly string $from,
+        ?string $builderId = NULL,
+    )
     {
         $this->builderId = $builderId ?? '';
 

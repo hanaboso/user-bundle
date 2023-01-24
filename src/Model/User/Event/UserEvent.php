@@ -30,9 +30,9 @@ class UserEvent extends Event
      * @param UserInterface|null $tmpUser
      */
     public function __construct(
-        private UserInterface $user,
-        private ?UserInterface $loggedUser = NULL,
-        private ?UserInterface $tmpUser = NULL,
+        private readonly UserInterface $user,
+        private readonly ?UserInterface $loggedUser = NULL,
+        private readonly ?UserInterface $tmpUser = NULL,
     )
     {
     }

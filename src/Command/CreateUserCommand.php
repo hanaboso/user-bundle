@@ -45,7 +45,7 @@ final class CreateUserCommand extends PasswordCommandAbstract
      */
     public function __construct(
         DatabaseManagerLocator $userDml,
-        private ResourceProvider $provider,
+        private readonly ResourceProvider $provider,
         PasswordHasherFactory $encoderFactory,
     )
     {

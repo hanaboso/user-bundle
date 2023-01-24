@@ -32,7 +32,7 @@ class TokenManager
      * @param DatabaseManagerLocator $userDml
      * @param ResourceProvider       $provider
      */
-    public function __construct(DatabaseManagerLocator $userDml, private ResourceProvider $provider)
+    public function __construct(DatabaseManagerLocator $userDml, private readonly ResourceProvider $provider)
     {
         $this->dm = $userDml->get();
     }

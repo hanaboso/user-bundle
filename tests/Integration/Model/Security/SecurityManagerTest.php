@@ -194,6 +194,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
      * @param string $password
      *
      * @return User
+     * @throws Exception
      */
     protected function createUser(string $username = 'email@example.com', string $password = 'passw0rd'): User
     {
