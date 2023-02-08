@@ -59,7 +59,7 @@ parameters:
 				- Hanaboso\UserBundle\Entity\UserAbstract
 				- Hanaboso\UserBundle\Model\Messages\UserMessageAbstract
 				- Hanaboso\UserBundle\Model\User\Event\UserEvent
-				- Hanaboso\Utils\Enum\EnumAbstract
+				- Hanaboso\UserBundle\EnumAbstract
 				- Hanaboso\Utils\Exception\PipesFrameworkExceptionAbstract
 				- Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
 				- UserBundleTests\ControllerTestCaseAbstract

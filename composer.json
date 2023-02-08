@@ -2,7 +2,7 @@
     "name": "hanaboso/user-bundle",
     "description": "Hanaboso - user-bundle",
     "license": "Apache-2.0",
-    "version": "1.6.3",
+    "version": "1.6.4",
     "require": {
         "php": "^8.1",
         "hanaboso/commons-bundle": "^2.7",
