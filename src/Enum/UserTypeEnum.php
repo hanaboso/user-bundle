@@ -2,8 +2,6 @@
 
 namespace Hanaboso\UserBundle\Enum;
 
-use Hanaboso\Utils\Enum\EnumAbstract;
-
 /**
  * Class UserTypeEnum
  *
