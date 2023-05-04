@@ -18,9 +18,9 @@ class ResourceEnum extends EnumAbstract
      * @var string[]
      */
     protected static array $choices = [
-        self::USER     => 'User entity',
         self::TMP_USER => 'TmpUser entity',
         self::TOKEN    => 'Token entity',
+        self::USER     => 'User entity',
     ];
 
 }

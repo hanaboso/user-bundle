@@ -9,6 +9,10 @@ parameters:
 	excludes_analyse:
 	ignoreErrors:
 		-
+			message: '#is not subtype of type#'
+		-
+			message: '#PHPDoc tag \@var for variable .* contains unknown class#'
+		-
 			message: '#Missing call to parent\:\:setUp\(\) method#'
 			path: tests/Controller/UserControllerTest.php
 		-
@@ -60,6 +64,7 @@ parameters:
 				- Hanaboso\UserBundle\Model\Messages\UserMessageAbstract
 				- Hanaboso\UserBundle\Model\User\Event\UserEvent
 				- Hanaboso\UserBundle\EnumAbstract
+				- Hanaboso\UserBundle\Enum\EnumAbstract
 				- Hanaboso\Utils\Exception\PipesFrameworkExceptionAbstract
 				- Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
 				- UserBundleTests\ControllerTestCaseAbstract

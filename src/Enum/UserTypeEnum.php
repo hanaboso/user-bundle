@@ -17,8 +17,8 @@ final class UserTypeEnum extends EnumAbstract
      * @var string[]
      */
     protected static array $choices = [
-        self::USER     => 'User',
         self::TMP_USER => 'Unactivated user',
+        self::USER     => 'User',
     ];
 
 }

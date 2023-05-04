@@ -34,8 +34,7 @@ composer-outdated:
 
 # Console
 clear-cache:
-	$(DE) rm -rf var/log
-	$(DE) php tests/testApp/bin/console cache:clear --env=test
+	$(DE) rm -rf var
 	$(DE) php tests/testApp/bin/console cache:warmup --env=test
 
 database-create:
@@ -48,6 +47,9 @@ init-dev: docker-up-force composer-install
 
 phpcodesniffer:
 	$(DE) ./vendor/bin/phpcs --parallel=$$(nproc) --standard=./ruleset.xml src tests
+
+phpcodesnifferfix:
+	$(DE) ./vendor/bin/phpcbf --parallel=$$(nproc) --standard=./ruleset.xml src tests
 
 phpstan:
 	$(DE) ./vendor/bin/phpstan analyse -c ./phpstan.neon -l 8 src tests

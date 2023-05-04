@@ -9,6 +9,7 @@ use Doctrine\ORM\Exception\ORMException;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -42,6 +43,7 @@ abstract class PasswordCommandAbstract extends Command
      */
     protected function setPassword(InputInterface $input, OutputInterface $output, UserInterface $user): void
     {
+        /** @var QuestionHelper $helper */
         $helper   = $this->getHelper('question');
         $password = $helper->ask(
             $input,

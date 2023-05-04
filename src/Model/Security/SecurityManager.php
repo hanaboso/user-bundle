@@ -96,7 +96,7 @@ class SecurityManager
      * @return SecurityManager
      * @throws ResourceProviderException
      */
-    public function setUserResource(string $resource): SecurityManager
+    public function setUserResource(string $resource): self
     {
         $this->resourceUser = $resource;
         /** @phpstan-var class-string<User|DmUser> $userClass */
@@ -219,14 +219,14 @@ class SecurityManager
                     $signature,
                 );
 
-                $claims = Json::decode($token->getPayload());
+                $claims = Json::decode($token->getPayload() ?? '{}');
 
                 if ($claims['exp'] < DateTimeUtils::getUtcDateTime()->getTimestamp()) {
-                    $refreshToken = $request->cookies->get(self::REFRESH_TOKEN);
+                    $refreshToken = $request->cookies->get(self::REFRESH_TOKEN) ?? '';
 
                     $jwtRefreshToken = $this->jwsLoader->loadAndVerifyWithKey($refreshToken, $this->jwk, $signature);
 
-                    $claims = Json::decode($jwtRefreshToken->getPayload());
+                    $claims = Json::decode($jwtRefreshToken->getPayload() ?? '{}');
                 }
 
                 $this->claimCheckerManager->check($claims);
@@ -265,8 +265,8 @@ class SecurityManager
         /** @var UserInterface|null $user */
         $user = $this->userRepository->findOneBy(
             [
-                'email'   => $email,
                 'deleted' => FALSE,
+                'email'   => $email,
             ],
         );
 
@@ -304,11 +304,11 @@ class SecurityManager
                     array_merge(
                         $additionalData,
                         [
+                            self::EMAIL       => $email,
                             self::EXP         => DateTimeUtils::getUtcDateTimeImmutable(
                                 sprintf('+%s seconds', $expiration),
                             )->getTimestamp(),
                             self::ID          => $id,
-                            self::EMAIL       => $email,
                             self::PERMISSIONS => $permissions,
                         ],
                     ),
@@ -346,10 +346,10 @@ class SecurityManager
                 $additionalData,
             ),
             [
-                'secure'   => $request->isSecure(),
                 'expires'  => time() + self::REFRESH_TOKEN_EXPIRATION,
-                'samesite' => $this->sameSite,
                 'httponly' => TRUE,
+                'samesite' => $this->sameSite,
+                'secure'   => $request->isSecure(),
             ],
         );
     }

@@ -31,12 +31,12 @@ abstract class UserMessageAbstract
      * @var mixed[]
      */
     protected array $message = [
-        'to'          => '',
-        'subject'     => '',
         'content'     => '',
         'dataContent' => [],
-        'template'    => '',
         'from'        => '',
+        'subject'     => '',
+        'template'    => '',
+        'to'          => '',
     ];
 
     /**
@@ -60,7 +60,7 @@ abstract class UserMessageAbstract
      *
      * @return UserMessageAbstract
      */
-    public function setFrom(string $from): UserMessageAbstract
+    public function setFrom(string $from): self
     {
         $this->from = $from;
 

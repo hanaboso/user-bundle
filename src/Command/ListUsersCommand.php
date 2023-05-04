@@ -72,7 +72,7 @@ final class ListUsersCommand extends Command
         $repo  = $this->repo;
         $table = new Table($output);
         $table
-            ->setHeaders(['Email', 'Created'])
+            ->setHeaders(['Created', 'Email'])
             ->setRows($repo->getArrayOfUsers());
 
         $table->render();

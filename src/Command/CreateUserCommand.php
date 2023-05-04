@@ -14,6 +14,7 @@ use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use LogicException;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -81,6 +82,7 @@ final class CreateUserCommand extends PasswordCommandAbstract
     {
         $input;
 
+        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         $email  = $helper->ask(
             $input,

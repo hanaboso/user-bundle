@@ -33,12 +33,12 @@ final class RegisterMessageTest extends TestCase
         $message = new RegisterMessage($user);
         self::assertEquals(
             [
-                'to'          => 'test@example.com',
-                'subject'     => MessageSubject::USER_REGISTER,
                 'content'     => '',
                 'dataContent' => [],
-                'template'    => '',
                 'from'        => '',
+                'subject'     => MessageSubject::USER_REGISTER,
+                'template'    => '',
+                'to'          => 'test@example.com',
             ],
             $message->getMessage(),
         );

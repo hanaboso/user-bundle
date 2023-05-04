@@ -187,8 +187,8 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
         self::assertEquals(
             [
-                'id'    => $testUser->getId(),
                 'email' => 'user1@example.com',
+                'id'    => $testUser->getId(),
             ],
             $this->handler->delete($testUser->getId())->toArray(),
         );

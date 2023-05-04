@@ -126,8 +126,8 @@ class User extends UserAbstract
     public function toArray(): array
     {
         return [
-            'id'    => $this->getId(),
             'email' => $this->getEmail(),
+            'id'    => $this->getId(),
         ];
     }
 

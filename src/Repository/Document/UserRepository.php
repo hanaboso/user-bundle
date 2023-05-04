@@ -36,8 +36,8 @@ class UserRepository extends DocumentRepository
         /** @var User $user */
         foreach ($arr->toArray() as $user) {
             $res[] = [
-                'email'   => $user->getEmail(),
                 'created' => $user->getCreated()->format('d-m-Y'),
+                'email'   => $user->getEmail(),
             ];
         }
 

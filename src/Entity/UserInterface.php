@@ -18,7 +18,7 @@ interface UserInterface extends SecurityCoreUserInterface
      *
      * @return UserInterface
      */
-    public static function from(TmpUserInterface $tmpUser): UserInterface;
+    public static function from(TmpUserInterface $tmpUser): self;
 
     /**
      * @return string
@@ -40,7 +40,7 @@ interface UserInterface extends SecurityCoreUserInterface
      *
      * @return UserInterface
      */
-    public function setEmail(string $email): UserInterface;
+    public function setEmail(string $email): self;
 
     /**
      * @return DateTime
@@ -52,7 +52,12 @@ interface UserInterface extends SecurityCoreUserInterface
      *
      * @return UserInterface
      */
-    public function setPassword(string $pwd): UserInterface;
+    public function setPassword(string $pwd): self;
+
+    /**
+     * @return string|null
+     */
+    public function getPassword(): ?string;
 
     /**
      * @return TokenInterface|null
@@ -64,7 +69,7 @@ interface UserInterface extends SecurityCoreUserInterface
      *
      * @return UserInterface
      */
-    public function setToken(?TokenInterface $token): UserInterface;
+    public function setToken(?TokenInterface $token): self;
 
     /**
      * @param bool $deleted

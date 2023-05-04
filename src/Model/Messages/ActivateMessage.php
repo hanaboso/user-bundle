@@ -33,7 +33,7 @@ class ActivateMessage extends UserMessageAbstract
      *
      * @return ActivateMessage
      */
-    public function setHost(string $host): ActivateMessage
+    public function setHost(string $host): self
     {
         $this->host = $host;
 
@@ -61,7 +61,7 @@ class ActivateMessage extends UserMessageAbstract
      *
      * @return ActivateMessage
      */
-    public function setSubject(string $subject): ActivateMessage
+    public function setSubject(string $subject): self
     {
         $this->subject = $subject;
 
@@ -73,7 +73,7 @@ class ActivateMessage extends UserMessageAbstract
      *
      * @return ActivateMessage
      */
-    public function setTemplate(?string $template): ActivateMessage
+    public function setTemplate(?string $template): self
     {
         $this->template = $template;
 

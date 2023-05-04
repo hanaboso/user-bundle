@@ -42,7 +42,7 @@ class Token implements TokenInterface
      *
      * @ORM\OneToOne(targetEntity="Hanaboso\UserBundle\Entity\TmpUser", mappedBy="token")
      */
-    private ?TmpUserInterface $tmpUser = NULL;
+    private ?TmpUser $tmpUser = NULL;
 
     /**
      * @var string

@@ -96,8 +96,8 @@ final class JWTAuthenticator extends AbstractAuthenticator
     {
         $request;
         $data = [
-            'message' => $exception->getMessage(),
             'code'    => $exception->getCode(),
+            'message' => $exception->getMessage(),
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);

@@ -39,12 +39,12 @@ final class ResetPasswordMessageTest extends TestCase
             ->setFrom('');
         self::assertEquals(
             [
-                'to'          => 'test@example.com',
-                'subject'     => MessageSubject::USER_RESET_PASSWORD,
                 'content'     => '',
                 'dataContent' => ['link' => '/user//set_password'],
-                'template'    => NULL,
                 'from'        => '',
+                'subject'     => MessageSubject::USER_RESET_PASSWORD,
+                'template'    => NULL,
+                'to'          => 'test@example.com',
             ],
             $message->getMessage(),
         );

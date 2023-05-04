@@ -20,6 +20,7 @@ use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -89,6 +90,7 @@ final class DeleteUserCommand extends Command
         if ($repo->getUserCount() <= 1) {
             $output->writeln('Cannot delete when there is last one or none active users remaining.');
         } else {
+            /** @var QuestionHelper $helper */
             $helper = $this->getHelper('question');
             $user   = $helper->ask(
                 $input,

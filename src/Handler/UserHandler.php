@@ -67,8 +67,8 @@ class UserHandler implements EventSubscriberInterface
         [$user, $token] = $this->userManager->login($data);
 
         return [
-            'user'  => $user->toArray(),
             'token' => $token,
+            'user'  => $user->toArray(),
         ];
     }
 
@@ -81,8 +81,8 @@ class UserHandler implements EventSubscriberInterface
         [$user, $token] = $this->userManager->loggedUser();
 
         return [
-            'user'  => $user->toArray(),
             'token' => $token,
+            'user'  => $user->toArray(),
         ];
     }
 
@@ -213,10 +213,10 @@ class UserHandler implements EventSubscriberInterface
     {
         $exception = $event->getThrowable();
         $body      = [
-            'status'     => 'ERROR',
             'error_code' => $exception->getCode(),
-            'type'       => $exception::class,
             'message'    => $exception->getMessage(),
+            'status'     => 'ERROR',
+            'type'       => $exception::class,
         ];
 
         if ($exception instanceof AuthenticationException ||

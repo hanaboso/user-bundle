@@ -41,12 +41,12 @@ final class ActivateMessageTest extends TestCase
             ->setFrom('');
         self::assertEquals(
             [
-                'to'          => 'test@example.com',
-                'subject'     => MessageSubject::USER_ACTIVATE,
                 'content'     => '',
                 'dataContent' => ['link' => $tkn->getHash()],
-                'template'    => '',
                 'from'        => '',
+                'subject'     => MessageSubject::USER_ACTIVATE,
+                'template'    => '',
+                'to'          => 'test@example.com',
             ],
             $message->getMessage(),
         );

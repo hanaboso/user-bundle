@@ -41,11 +41,11 @@ final class ListUsersCommandTest extends DatabaseTestCaseAbstract
 
         self::assertEquals(
             sprintf(
-                '+------------------+------------+
-| Email            | Created    |
-+------------------+------------+
-| user@example.com | %s |
-+------------------+------------+
+                '+------------+------------------+
+| Created    | Email            |
++------------+------------------+
+| 04-05-2023 | user@example.com |
++------------+------------------+
 ',
                 DateTimeUtils::getUtcDateTime()->format('d-m-Y'),
             ),

@@ -27,7 +27,7 @@ interface TokenInterface
      *
      * @return TokenInterface
      */
-    public function setUser(UserInterface $user): TokenInterface;
+    public function setUser(UserInterface $user): self;
 
     /**
      * @return TmpUserInterface|null
@@ -39,7 +39,7 @@ interface TokenInterface
      *
      * @return TokenInterface
      */
-    public function setTmpUser(?TmpUserInterface $tmpUser): TokenInterface;
+    public function setTmpUser(?TmpUserInterface $tmpUser): self;
 
     /**
      * @return UserInterface|TmpUserInterface
@@ -51,7 +51,7 @@ interface TokenInterface
      *
      * @return TokenInterface
      */
-    public function setUserOrTmpUser(UserInterface|TmpUserInterface $user): TokenInterface;
+    public function setUserOrTmpUser(UserInterface|TmpUserInterface $user): self;
 
     /**
      * @return string

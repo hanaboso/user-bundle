@@ -32,7 +32,7 @@ class ResetPasswordMessage extends UserMessageAbstract
      *
      * @return ResetPasswordMessage
      */
-    public function setHost(string $host): ResetPasswordMessage
+    public function setHost(string $host): self
     {
         $this->host = $host;
 
@@ -59,7 +59,7 @@ class ResetPasswordMessage extends UserMessageAbstract
      *
      * @return ResetPasswordMessage
      */
-    public function setSubject(string $subject): ResetPasswordMessage
+    public function setSubject(string $subject): self
     {
         $this->subject = $subject;
 
@@ -71,7 +71,7 @@ class ResetPasswordMessage extends UserMessageAbstract
      *
      * @return ResetPasswordMessage
      */
-    public function setTemplate(?string $template): ResetPasswordMessage
+    public function setTemplate(?string $template): self
     {
         $this->template = $template;
 
