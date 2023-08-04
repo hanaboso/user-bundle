@@ -44,7 +44,7 @@ final class ListUsersCommandTest extends DatabaseTestCaseAbstract
                 '+------------+------------------+
 | Created    | Email            |
 +------------+------------------+
-| 04-05-2023 | user@example.com |
+| %s | user@example.com |
 +------------+------------------+
 ',
                 DateTimeUtils::getUtcDateTime()->format('d-m-Y'),

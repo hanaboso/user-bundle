@@ -29,7 +29,7 @@ services:
       - mongo:/data/db
 
   mariadb:
-      image: mariadb:latest
+      image: mariadb:10
       command: "mysqld --innodb_flush_method=nosync"
       environment:
        MYSQL_ROOT_PASSWORD: root
