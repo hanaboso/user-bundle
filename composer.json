@@ -2,27 +2,27 @@
     "name": "hanaboso/user-bundle",
     "description": "Hanaboso - user-bundle",
     "license": "Apache-2.0",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "require": {
         "php": "^8.2",
         "hanaboso/commons-bundle": "^2.9",
         "hanaboso/email-service-bundle": "^1.3",
         "hanaboso/rest-bundle": "^1.2",
-        "symfony/yaml": "^v6.2",
-        "web-token/jwt-checker": "^3.1",
-        "web-token/jwt-core": "^3.1",
-        "web-token/jwt-key-mgmt": "^3.1",
-        "web-token/jwt-signature": "^3.1",
-        "web-token/jwt-signature-algorithm-hmac": "^3.1"
+        "symfony/yaml": "^v6.3",
+        "web-token/jwt-checker": "^3.2",
+        "web-token/jwt-core": "^3.2",
+        "web-token/jwt-key-mgmt": "^3.2",
+        "web-token/jwt-signature": "^3.2",
+        "web-token/jwt-signature-algorithm-hmac": "^3.2"
     },
     "require-dev": {
         "ext-apcu": "*",
-        "doctrine/doctrine-bundle": "^2.9",
-        "doctrine/mongodb-odm-bundle": "^4.5",
-        "doctrine/orm": "^2.15",
+        "doctrine/doctrine-bundle": "^2.10",
+        "doctrine/mongodb-odm-bundle": "^4.6",
+        "doctrine/orm": "^2.16",
         "hanaboso/php-check-utils": "^1.5",
         "symfony/monolog-bundle": "^v3.8",
-        "symfony/security-bundle": "^v6.2"
+        "symfony/security-bundle": "^v6.3"
     },
     "suggest": {
         "doctrine/doctrine-bundle": "Install me, if you using MySQL.",

@@ -15,6 +15,7 @@ use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use LogicException;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -66,7 +67,9 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
     {
         $this
             ->setName(self::CMD_NAME)
-            ->setDescription('Changes user\'s password.');
+            ->setDescription('Changes user\'s password.')
+            ->addArgument(self::EMAIL, InputArgument::OPTIONAL)
+            ->addArgument(self::PASSWORD, InputArgument::OPTIONAL);
     }
 
     /**
@@ -79,27 +82,28 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $input;
+        $user = $input->getArgument(self::EMAIL);
+        if (!$user) {
+            /** @var QuestionHelper $helper */
+            $helper = $this->getHelper('question');
+            $user   = $helper->ask(
+                $input,
+                $output,
+                (new Question('User email: '))
+                    ->setValidator(
+                        function (?string $email): UserInterface {
+                            /** @var UserInterface|null $email */
+                            $email = $this->repo->findOneBy(['email' => $email]);
 
-        /** @var QuestionHelper $helper */
-        $helper = $this->getHelper('question');
-        $user   = $helper->ask(
-            $input,
-            $output,
-            (new Question('User email: '))
-                ->setValidator(
-                    function (?string $email): UserInterface {
-                        /** @var UserInterface|null $email */
-                        $email = $this->repo->findOneBy(['email' => $email]);
+                            if (!$email) {
+                                throw new LogicException('There is no user for given email!');
+                            }
 
-                        if (!$email) {
-                            throw new LogicException('There is no user for given email!');
-                        }
-
-                        return $email;
-                    },
-                ),
-        );
+                            return $email;
+                        },
+                    ),
+            );
+        }
 
         $this->setPassword($input, $output, $user);
         $output->writeln('Password changed.');

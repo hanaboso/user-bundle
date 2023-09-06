@@ -15,6 +15,7 @@ use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
 use LogicException;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -66,7 +67,9 @@ final class CreateUserCommand extends PasswordCommandAbstract
     {
         $this
             ->setName(self::CMD_NAME)
-            ->setDescription('Create new user password.');
+            ->setDescription('Create new user password.')
+            ->addArgument(self::EMAIL, InputArgument::OPTIONAL)
+            ->addArgument(self::PASSWORD, InputArgument::OPTIONAL);
     }
 
     /**
@@ -80,31 +83,33 @@ final class CreateUserCommand extends PasswordCommandAbstract
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $input;
 
-        /** @var QuestionHelper $helper */
-        $helper = $this->getHelper('question');
-        $email  = $helper->ask(
-            $input,
-            $output,
-            (new Question('Creating user, select user email: '))
-                ->setValidator(
-                    function (?string $email): string {
-                        /** @var UserInterface|null $user */
-                        $user = $this->repo->findOneBy(['email' => $email]);
+        $email = $input->getArgument(self::EMAIL);
+        if (!$email) {
+            /** @var QuestionHelper $helper */
+            $helper = $this->getHelper('question');
+            $email  = $helper->ask(
+                $input,
+                $output,
+                (new Question('Creating user, select user email: '))
+                    ->setValidator(
+                        function (?string $email): string {
+                            /** @var UserInterface|null $user */
+                            $user = $this->repo->findOneBy(['email' => $email]);
 
-                        if (!$email) {
-                            throw new LogicException('Email cannot be empty!');
-                        }
+                            if (!$email) {
+                                throw new LogicException('Email cannot be empty!');
+                            }
 
-                        if ($user) {
-                            throw new LogicException('User with given email already exist!');
-                        }
+                            if ($user) {
+                                throw new LogicException('User with given email already exist!');
+                            }
 
-                        return $email;
-                    },
-                ),
-        );
+                            return $email;
+                        },
+                    ),
+            );
+        }
 
         $userNamespace = $this->provider->getResource(ResourceEnum::USER);
 

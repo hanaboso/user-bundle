@@ -23,6 +23,9 @@ use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 abstract class PasswordCommandAbstract extends Command
 {
 
+    protected const PASSWORD = 'password';
+    protected const EMAIL    = 'email';
+
     /**
      * @var DocumentManager|EntityManager
      */
@@ -43,39 +46,42 @@ abstract class PasswordCommandAbstract extends Command
      */
     protected function setPassword(InputInterface $input, OutputInterface $output, UserInterface $user): void
     {
-        /** @var QuestionHelper $helper */
-        $helper   = $this->getHelper('question');
-        $password = $helper->ask(
-            $input,
-            $output,
-            (new Question('User password: '))
-                ->setValidator(
-                    static function (?string $answer): string {
-                        if (!$answer) {
-                            throw new LogicException('Password cannot be empty!');
-                        }
+        $password = $input->getArgument(self::PASSWORD);
+        if (!$password) {
+            /** @var QuestionHelper $helper */
+            $helper   = $this->getHelper('question');
+            $password = $helper->ask(
+                $input,
+                $output,
+                (new Question('User password: '))
+                    ->setValidator(
+                        static function (?string $answer): string {
+                            if (!$answer) {
+                                throw new LogicException('Password cannot be empty!');
+                            }
 
-                        return $answer;
-                    },
-                )
-                ->setHidden(TRUE),
-        );
+                            return $answer;
+                        },
+                    )
+                    ->setHidden(TRUE),
+            );
 
-        $password = $helper->ask(
-            $input,
-            $output,
-            (new Question('User password again: '))
-                ->setValidator(
-                    static function (?string $answer) use ($password): ?string {
-                        if ($answer !== $password) {
-                            throw new LogicException('Both passwords must be same!');
-                        }
+            $password = $helper->ask(
+                $input,
+                $output,
+                (new Question('User password again: '))
+                    ->setValidator(
+                        static function (?string $answer) use ($password): ?string {
+                            if ($answer !== $password) {
+                                throw new LogicException('Both passwords must be same!');
+                            }
 
-                        return $answer;
-                    },
-                )
-                ->setHidden(TRUE),
-        );
+                            return $answer;
+                        },
+                    )
+                    ->setHidden(TRUE),
+            );
+        }
 
         $user->setPassword($this->encoder->hash($password));
         $this->dm->flush();
