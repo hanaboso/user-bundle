@@ -28,16 +28,14 @@ abstract class UserAbstract implements UserInterface
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     protected string $email;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(type="datetime")
      */
+    #[ORM\Column(type: 'datetime')]
     protected DateTime $created;
 
     /**

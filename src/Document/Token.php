@@ -17,9 +17,8 @@ use LogicException;
  * Class Token
  *
  * @package Hanaboso\UserBundle\Document
- *
- * @ODM\Document(repositoryClass="Hanaboso\UserBundle\Repository\Document\TokenRepository")
  */
+#[ODM\Document(repositoryClass: 'Hanaboso\UserBundle\Repository\Document\TokenRepository')]
 class Token implements TokenInterface
 {
 
@@ -27,30 +26,26 @@ class Token implements TokenInterface
 
     /**
      * @var DateTime
-     *
-     * @ODM\Field(type="date")
      */
+    #[ODM\Field(type: 'date')]
     private DateTime $created;
 
     /**
      * @var UserInterface|null
-     *
-     * @ODM\ReferenceOne(targetDocument="Hanaboso\UserBundle\Document\User")
      */
+    #[ODM\ReferenceOne(targetDocument: 'Hanaboso\UserBundle\Document\User')]
     private ?UserInterface $user = NULL;
 
     /**
      * @var TmpUserInterface|null
-     *
-     * @ODM\ReferenceOne(targetDocument="Hanaboso\UserBundle\Document\TmpUser")
      */
+    #[ODM\ReferenceOne(targetDocument: 'Hanaboso\UserBundle\Document\TmpUser')]
     private ?TmpUserInterface $tmpUser = NULL;
 
     /**
      * @var string
-     *
-     * @ODM\Field(type="string")
      */
+    #[ODM\Field(type: 'string')]
     private string $hash;
 
     /**

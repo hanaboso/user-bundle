@@ -30,23 +30,20 @@ abstract class UserAbstract implements UserInterface
 
     /**
      * @var string
-     *
-     * @ODM\Field(type="string")
      */
+    #[ODM\Field(type: 'string')]
     protected string $email;
 
     /**
      * @var DateTime
-     *
-     * @ODM\Field(type="date")
      */
+    #[ODM\Field(type: 'date')]
     protected DateTime $created;
 
     /**
      * @var TokenInterface|null
-     *
-     * @ODM\ReferenceOne(targetDocument="Hanaboso\UserBundle\Document\Token")
      */
+    #[ODM\ReferenceOne(targetDocument: 'Hanaboso\UserBundle\Document\Token')]
     protected ?TokenInterface $token = NULL;
 
     /**

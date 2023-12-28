@@ -9,18 +9,16 @@ use Hanaboso\UserBundle\Enum\UserTypeEnum;
  * Class TmpUser
  *
  * @package Hanaboso\UserBundle\Entity
- *
- * @ORM\Table(name="tmp_user")
- * @ORM\Entity(repositoryClass="Hanaboso\UserBundle\Repository\Entity\TmpUserRepository")
  */
+#[ORM\Entity(repositoryClass: 'Hanaboso\UserBundle\Repository\Entity\TmpUserRepository')]
+#[ORM\Table(name: 'tmp_user')]
 class TmpUser extends UserAbstract implements TmpUserInterface
 {
 
     /**
      * @var TokenInterface|null
-     *
-     * @ORM\OneToOne(targetEntity="Hanaboso\UserBundle\Entity\Token", inversedBy="tmpUser")
      */
+    #[ORM\OneToOne(inversedBy: 'tmpUser', targetEntity: 'Hanaboso\UserBundle\Entity\Token')]
     protected ?TokenInterface $token = NULL;
 
     /**

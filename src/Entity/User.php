@@ -13,34 +13,30 @@ use Hanaboso\Utils\Exception\DateTimeException;
  * Class User
  *
  * @package Hanaboso\UserBundle\Entity
- *
- * @ORM\Table(name="`user`")
- * @InheritanceType("SINGLE_TABLE")
- * @ORM\Entity(repositoryClass="Hanaboso\UserBundle\Repository\Entity\UserRepository")
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\HasLifecycleCallbacks()]
+#[ORM\Entity(repositoryClass: 'Hanaboso\UserBundle\Repository\Entity\UserRepository')]
+#[InheritanceType('SINGLE_TABLE')]
+#[ORM\Table(name: '`user`')]
 class User extends UserAbstract
 {
 
     /**
      * @var TokenInterface|null
-     *
-     * @ORM\OneToOne(targetEntity="Hanaboso\UserBundle\Entity\Token", inversedBy="user")
      */
+    #[ORM\OneToOne(inversedBy: 'user', targetEntity: 'Hanaboso\UserBundle\Entity\Token')]
     protected ?TokenInterface $token = NULL;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
      */
+    #[ORM\Column(type: 'string', nullable: TRUE)]
     protected ?string $password = NULL;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(type="datetime")
      */
+    #[ORM\Column(type: 'datetime')]
     protected DateTime $updated;
 
     /**
@@ -112,9 +108,9 @@ class User extends UserAbstract
     }
 
     /**
-     * @ORM\PreFlush()
      * @throws DateTimeException
      */
+    #[ORM\PreFlush()]
     public function preFlush(): void
     {
         $this->updated = DateTimeUtils::getUtcDateTime();

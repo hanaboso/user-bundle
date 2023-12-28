@@ -12,24 +12,21 @@ use Hanaboso\UserBundle\Enum\UserTypeEnum;
  * Class User
  *
  * @package Hanaboso\UserBundle\Document
- *
- * @ODM\Document(repositoryClass="Hanaboso\UserBundle\Repository\Document\UserRepository")
  */
+#[ODM\Document(repositoryClass: 'Hanaboso\UserBundle\Repository\Document\UserRepository')]
 class User extends UserAbstract
 {
 
     /**
      * @var string
-     *
-     * @ODM\Field(type="string")
      */
+    #[ODM\Field(type: 'string')]
     protected string $password;
 
     /**
      * @var DateTime
-     *
-     * @ODM\Field(type="date")
      */
+    #[ODM\Field(type: 'date')]
     private DateTime $updated;
 
     /**

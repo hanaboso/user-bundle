@@ -20,7 +20,7 @@ doctrine:
         proxy_namespace: ORMProxies
         mappings:
             UserEntity:
-                type: annotation
+                type: attribute
                 is_bundle: false
                 dir: "%src_dir%/src/Entity"
                 prefix: Hanaboso\UserBundle\Entity

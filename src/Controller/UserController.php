@@ -36,12 +36,11 @@ class UserController
     }
 
     /**
-     * @Route("/user/login", methods={"POST", "OPTIONS"})
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[Route('/user/login', methods: ['POST', 'OPTIONS'])]
     public function loginAction(Request $request): Response
     {
         try {
@@ -54,10 +53,9 @@ class UserController
     }
 
     /**
-     * @Route("/user/logged_user", methods={"GET", "OPTIONS"})
-     *
      * @return Response
      */
+    #[Route('/user/logged_user', methods: ['GET', 'OPTIONS'])]
     public function loggedUserAction(): Response
     {
         try {
@@ -70,10 +68,9 @@ class UserController
     }
 
     /**
-     * @Route("/user/logout", methods={"POST", "OPTIONS"})
-     *
      * @return Response
      */
+    #[Route('/user/logout', methods: ['POST', 'OPTIONS'])]
     public function logoutAction(): Response
     {
         try {
@@ -86,12 +83,11 @@ class UserController
     }
 
     /**
-     * @Route("/user/register", methods={"POST", "OPTIONS"})
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[Route('/user/register', methods: ['POST', 'OPTIONS'])]
     public function registerAction(Request $request): Response
     {
         try {
@@ -104,12 +100,11 @@ class UserController
     }
 
     /**
-     * @Route("/user/change_password", methods={"POST", "OPTIONS"})
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[Route('/user/change_password', methods: ['POST', 'OPTIONS'])]
     public function changePasswordAction(Request $request): Response
     {
         try {
@@ -122,12 +117,11 @@ class UserController
     }
 
     /**
-     * @Route("/user/reset_password", methods={"POST", "OPTIONS"})
-     *
      * @param Request $request
      *
      * @return Response
      */
+    #[Route('/user/reset_password', methods: ['POST', 'OPTIONS'])]
     public function resetPasswordAction(Request $request): Response
     {
         try {
@@ -140,12 +134,11 @@ class UserController
     }
 
     /**
-     * @Route("/user/{token}/activate", requirements={"token": "\w+"}, methods={"POST", "OPTIONS"})
-     *
      * @param string $token
      *
      * @return Response
      */
+    #[Route('/user/{token}/activate', requirements: ['token' => '\w+'], methods: ['POST', 'OPTIONS'])]
     public function activateAction(string $token): Response
     {
         try {
@@ -158,12 +151,11 @@ class UserController
     }
 
     /**
-     * @Route("/user/{token}/verify", requirements={"token": "\w+"}, methods={"POST", "OPTIONS"})
-     *
      * @param string $token
      *
      * @return Response
      */
+    #[Route('/user/{token}/verify', requirements: ['token' => '\w+'], methods: ['POST', 'OPTIONS'])]
     public function verifyAction(string $token): Response
     {
         try {
@@ -176,13 +168,12 @@ class UserController
     }
 
     /**
-     * @Route("/user/{token}/set_password", requirements={"token": "\w+"}, methods={"POST", "OPTIONS"})
-     *
      * @param Request $request
      * @param string  $token
      *
      * @return Response
      */
+    #[Route('/user/{token}/set_password', requirements: ['token' => '\w+'], methods: ['POST', 'OPTIONS'])]
     public function setPasswordAction(Request $request, string $token): Response
     {
         try {
@@ -195,12 +186,11 @@ class UserController
     }
 
     /**
-     * @Route("/user/{id}/delete", methods={"DELETE", "OPTIONS"})
-     *
      * @param string $id
      *
      * @return Response
      */
+    #[Route('/user/{id}/delete', methods: ['DELETE', 'OPTIONS'])]
     public function deleteAction(string $id): Response
     {
         try {

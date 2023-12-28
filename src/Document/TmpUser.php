@@ -11,9 +11,8 @@ use Hanaboso\UserBundle\Enum\UserTypeEnum;
  * Class TmpUser
  *
  * @package Hanaboso\UserBundle\Document
- *
- * @ODM\Document(repositoryClass="Hanaboso\UserBundle\Repository\Document\TmpUserRepository")
  */
+#[ODM\Document(repositoryClass: 'Hanaboso\UserBundle\Repository\Document\TmpUserRepository')]
 class TmpUser extends UserAbstract implements TmpUserInterface
 {
 

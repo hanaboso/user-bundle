@@ -14,10 +14,9 @@ use LogicException;
  * Class Token
  *
  * @package Hanaboso\UserBundle\Entity
- *
- * @ORM\Table(name="token")
- * @ORM\Entity(repositoryClass="Hanaboso\UserBundle\Repository\Entity\TokenRepository")
  */
+#[ORM\Entity(repositoryClass: 'Hanaboso\UserBundle\Repository\Entity\TokenRepository')]
+#[ORM\Table(name: 'token')]
 class Token implements TokenInterface
 {
 
@@ -25,30 +24,26 @@ class Token implements TokenInterface
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(type="date")
      */
+    #[ORM\Column(type: 'date')]
     private DateTime $created;
 
     /**
      * @var UserInterface|null
-     *
-     * @ORM\OneToOne(targetEntity="Hanaboso\UserBundle\Entity\User", mappedBy="token")
      */
+    #[ORM\OneToOne(mappedBy: 'token', targetEntity: 'Hanaboso\UserBundle\Entity\User')]
     private ?UserInterface $user = NULL;
 
     /**
      * @var TmpUserInterface|null
-     *
-     * @ORM\OneToOne(targetEntity="Hanaboso\UserBundle\Entity\TmpUser", mappedBy="token")
      */
+    #[ORM\OneToOne(mappedBy: 'token', targetEntity: 'Hanaboso\UserBundle\Entity\TmpUser')]
     private ?TmpUser $tmpUser = NULL;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private string $hash;
 
     /**
