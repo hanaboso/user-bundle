@@ -6,15 +6,15 @@ use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Model\User\Event\UserEvent;
+use PHPUnit\Framework\Attributes\CoversClass;
 use UserBundleTests\KernelTestCaseAbstract;
 
 /**
  * Class UserEventTest
  *
  * @package UserBundleTests\Unit\Model\User
- *
- * @covers  \Hanaboso\UserBundle\Model\User\Event\UserEvent
  */
+#[CoversClass(UserEvent::class)]
 final class UserEventTest extends KernelTestCaseAbstract
 {
 

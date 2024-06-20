@@ -6,7 +6,9 @@ use Exception;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Messages\ActivateMessage;
+use Hanaboso\UserBundle\Model\Messages\UserMessageAbstract;
 use Hanaboso\UserBundle\Model\MessageSubject;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -14,17 +16,14 @@ use PHPUnit\Framework\TestCase;
  * Class ActivateMessageTest
  *
  * @package UserBundleTests\Unit\Model\Messages
- *
- * @covers  \Hanaboso\UserBundle\Model\Messages\ActivateMessage
- * @covers  \Hanaboso\UserBundle\Model\Messages\UserMessageAbstract
  */
+#[CoversClass(ActivateMessage::class)]
+#[CoversClass(UserMessageAbstract::class)]
 final class ActivateMessageTest extends TestCase
 {
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Messages\ActivateMessage::getMessage
      */
     public function testGetMessage(): void
     {

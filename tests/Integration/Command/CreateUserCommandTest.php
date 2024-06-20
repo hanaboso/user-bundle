@@ -3,8 +3,10 @@
 namespace UserBundleTests\Integration\Command;
 
 use Exception;
+use Hanaboso\UserBundle\Command\CreateUserCommand;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Entity\UserInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use UserBundleTests\DatabaseTestCaseAbstract;
@@ -13,9 +15,8 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  * Class CreateUserCommandTest
  *
  * @package UserBundleTests\Integration\Command
- *
- * @covers  \Hanaboso\UserBundle\Command\CreateUserCommand
  */
+#[CoversClass(CreateUserCommand::class)]
 final class CreateUserCommandTest extends DatabaseTestCaseAbstract
 {
 
@@ -26,8 +27,6 @@ final class CreateUserCommandTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Command\CreateUserCommand::execute
      */
     public function testExecute(): void
     {

@@ -5,7 +5,9 @@ namespace UserBundleTests\Unit\Model\Messages;
 use Exception;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Messages\RegisterMessage;
+use Hanaboso\UserBundle\Model\Messages\UserMessageAbstract;
 use Hanaboso\UserBundle\Model\MessageSubject;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -13,17 +15,14 @@ use PHPUnit\Framework\TestCase;
  * Class RegisterMessageTest
  *
  * @package UserBundleTests\Unit\Model\Messages
- *
- * @covers  \Hanaboso\UserBundle\Model\Messages\RegisterMessage
- * @covers  \Hanaboso\UserBundle\Model\Messages\UserMessageAbstract
  */
+#[CoversClass(RegisterMessage::class)]
+#[CoversClass(UserMessageAbstract::class)]
 final class RegisterMessageTest extends TestCase
 {
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Messages\RegisterMessage::getMessage
      */
     public function testGetMessage(): void
     {

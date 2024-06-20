@@ -5,18 +5,19 @@ namespace UserBundleTests\Unit\Entity;
 use Exception;
 use Hanaboso\UserBundle\Entity\TmpUser;
 use Hanaboso\UserBundle\Entity\User;
+use Hanaboso\UserBundle\Entity\UserAbstract;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 use Hanaboso\Utils\Date\DateTimeUtils;
+use PHPUnit\Framework\Attributes\CoversClass;
 use UserBundleTests\KernelTestCaseAbstract;
 
 /**
  * Class UserTest
  *
  * @package UserBundleTests\Unit\Entity
- *
- * @covers  \Hanaboso\UserBundle\Entity\User
- * @covers  \Hanaboso\UserBundle\Entity\UserAbstract
  */
+#[CoversClass(User::class)]
+#[CoversClass(UserAbstract::class)]
 final class UserTest extends KernelTestCaseAbstract
 {
 

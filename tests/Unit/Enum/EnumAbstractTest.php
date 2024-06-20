@@ -2,7 +2,9 @@
 
 namespace UserBundleTests\Unit\Enum;
 
+use Hanaboso\UserBundle\Enum\EnumAbstract;
 use Hanaboso\Utils\Exception\EnumException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -10,11 +12,12 @@ use PHPUnit\Framework\TestCase;
  *
  * @package UserBundleTests\Unit\Enum
  */
+#[CoversClass(EnumAbstract::class)]
 final class EnumAbstractTest extends TestCase
 {
 
     /**
-     * @covers \Hanaboso\UserBundle\Enum\EnumAbstract::getChoices
+     * @return void
      */
     public function testGetChoices(): void
     {
@@ -22,8 +25,6 @@ final class EnumAbstractTest extends TestCase
     }
 
     /**
-     * @covers \Hanaboso\UserBundle\Enum\EnumAbstract::isValid
-     *
      * @throws EnumException
      */
     public function testIsValid(): void
@@ -32,8 +33,6 @@ final class EnumAbstractTest extends TestCase
     }
 
     /**
-     * @covers \Hanaboso\UserBundle\Enum\EnumAbstract::isValid
-     *
      * @throws EnumException
      */
     public function testIsValidErr(): void

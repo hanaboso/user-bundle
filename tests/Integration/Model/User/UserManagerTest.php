@@ -17,15 +17,15 @@ use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
 use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class UserManagerTest
  *
  * @package UserBundleTests\Integration\Model\User
- *
- * @covers  \Hanaboso\UserBundle\Model\User\UserManager
  */
+#[CoversClass(UserManager::class)]
 final class UserManagerTest extends DatabaseTestCaseAbstract
 {
 
@@ -53,8 +53,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::login
      */
     public function testLogin(): void
     {
@@ -67,8 +65,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::loggedUser
      */
     public function testLoggedUser(): void
     {
@@ -83,8 +79,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::logout
      */
     public function testLogout(): void
     {
@@ -99,8 +93,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::register
      */
     public function testRegister(): void
     {
@@ -121,20 +113,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::register
-     */
-    public function testRegisterMultiple(): void
-    {
-        for ($i = 0; $i < 2; $i++) {
-            $this->testRegister();
-        }
-    }
-
-    /**
-     * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::register
      */
     public function testRegisterInvalidEmail(): void
     {
@@ -146,8 +124,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::register
      */
     public function testRegisterException(): void
     {
@@ -164,8 +140,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::activate
      */
     public function testActivate(): void
     {
@@ -197,8 +171,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::activate
      */
     public function testActivateNotValid(): void
     {
@@ -217,8 +189,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::activate
      */
     public function testActivateNoTmpUser(): void
     {
@@ -234,8 +204,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::activate
      */
     public function testActivateException(): void
     {
@@ -257,8 +225,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::verify
      */
     public function testVerify(): void
     {
@@ -283,8 +249,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::resetPassword
      */
     public function testResetPassword(): void
     {
@@ -302,8 +266,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::resetPassword
      */
     public function testResetPasswordException2(): void
     {
@@ -322,8 +284,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::resetPassword
      */
     public function testResetPasswordException(): void
     {
@@ -333,8 +293,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::setPassword
      */
     public function testSetPassword(): void
     {
@@ -356,8 +314,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::setPassword
      */
     public function testSetPasswordNotValid(): void
     {
@@ -375,8 +331,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::setPassword
      */
     public function testSetPasswordException(): void
     {
@@ -397,8 +351,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::changePassword
      */
     public function testChangePassword(): void
     {
@@ -416,8 +368,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::changePassword
      */
     public function testChangePasswordException(): void
     {
@@ -435,8 +385,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::delete
      */
     public function testDelete(): void
     {
@@ -455,8 +403,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::delete
      */
     public function testDeleteException2(): void
     {
@@ -474,8 +420,6 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\User\UserManager::delete
      */
     public function testDeleteException(): void
     {

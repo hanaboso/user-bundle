@@ -8,15 +8,15 @@ use Exception;
 use Hanaboso\UserBundle\Entity\Token;
 use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Repository\Entity\TokenRepository;
+use PHPUnit\Framework\Attributes\CoversClass;
 use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class TokenRepositoryTest
  *
  * @package UserBundleTests\Integration\Repository\Entity
- *
- * @covers  \Hanaboso\UserBundle\Repository\Entity\TokenRepository
  */
+#[CoversClass(TokenRepository::class)]
 final class TokenRepositoryTest extends DatabaseTestCaseAbstract
 {
 
@@ -27,8 +27,6 @@ final class TokenRepositoryTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Repository\Entity\TokenRepository::getFreshToken
      */
     public function testGetFreshToken(): void
     {
@@ -49,8 +47,6 @@ final class TokenRepositoryTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Repository\Entity\TokenRepository::getExistingTokens
      */
     public function testGetExistingTokens(): void
     {

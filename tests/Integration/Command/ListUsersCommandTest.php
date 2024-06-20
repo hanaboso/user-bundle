@@ -3,8 +3,10 @@
 namespace UserBundleTests\Integration\Command;
 
 use Exception;
+use Hanaboso\UserBundle\Command\ListUsersCommand;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\Utils\Date\DateTimeUtils;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use UserBundleTests\DatabaseTestCaseAbstract;
@@ -13,9 +15,8 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  * Class ListUsersCommandTest
  *
  * @package UserBundleTests\Integration\Command
- *
- * @covers  \Hanaboso\UserBundle\Command\ListUsersCommand
  */
+#[CoversClass(ListUsersCommand::class)]
 final class ListUsersCommandTest extends DatabaseTestCaseAbstract
 {
 
@@ -26,8 +27,6 @@ final class ListUsersCommandTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Command\ListUsersCommand::execute
      */
     public function testExecute(): void
     {

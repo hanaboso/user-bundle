@@ -66,12 +66,12 @@ phpcontroller:
 
 phpcoverage:
 	$(DE) sed -i 's/TRUE/FALSE/g' src/Command/PasswordCommandAbstract.php
-	$(DE) ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist --coverage-html var/coverage --coverage-filter src tests
+	$(DE) ./vendor/bin/paratest -c ./vendor/hanaboso/php-check-utils/phpunit.xml.dist --coverage-html var/coverage --cache-directory var/cache/coverage --coverage-filter src tests
 	$(DE) sed -i 's/FALSE/TRUE/g' src/Command/PasswordCommandAbstract.php
 
 phpcoverage-ci:
 	$(DE) sed -i 's/TRUE/FALSE/g' src/Command/PasswordCommandAbstract.php
-	$(DE) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -c 99 -p $$(nproc)
+	$(DE) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -c 99 -p 1
 	$(DE) sed -i 's/FALSE/TRUE/g' src/Command/PasswordCommandAbstract.php
 
 test: docker-up-force composer-install fasttest

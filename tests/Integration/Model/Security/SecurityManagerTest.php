@@ -10,6 +10,7 @@ use Hanaboso\UserBundle\Repository\Document\UserRepository;
 use Jose\Component\Checker\ClaimCheckerManager;
 use Jose\Component\Checker\InvalidClaimException;
 use LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
@@ -19,9 +20,8 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  * Class SecurityManagerTest
  *
  * @package UserBundleTests\Integration\Model\Security
- *
- * @covers  \Hanaboso\UserBundle\Model\Security\SecurityManager
  */
+#[CoversClass(SecurityManager::class)]
 final class SecurityManagerTest extends DatabaseTestCaseAbstract
 {
 
@@ -32,8 +32,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::login
      */
     public function testLogin(): void
     {
@@ -44,8 +42,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::login
      */
     public function testLoginLoggedException(): void
     {
@@ -61,8 +57,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::login
      */
     public function testLoginInvalidEmail(): void
     {
@@ -75,8 +69,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::login
      */
     public function testLoginInvalidPassword(): void
     {
@@ -89,8 +81,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::getLoggedUser
      */
     public function testGetLoggedUser(): void
     {
@@ -106,8 +96,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::getLoggedUser
      */
     public function testGetLoggedUserException(): void
     {
@@ -126,8 +114,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::getLoggedUser
      */
     public function testJwtNullException(): void
     {
@@ -143,8 +129,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::getLoggedUser
      */
     public function testJwtFailParseException(): void
     {
@@ -165,8 +149,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::encodePassword
      */
     public function testEncodePassword(): void
     {
@@ -178,8 +160,6 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::validateUser
      */
     public function testValidateUserException(): void
     {

@@ -10,6 +10,7 @@ use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -22,6 +23,7 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  *
  * @covers  \Hanaboso\UserBundle\Handler\UserHandler
  */
+#[CoversClass(UserHandler::class)]
 final class UserHandlerTest extends DatabaseTestCaseAbstract
 {
 
@@ -34,8 +36,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::login
      */
     public function testLogin(): void
     {
@@ -52,8 +52,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::loggedUser
      */
     public function testLoggedUser(): void
     {
@@ -68,8 +66,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::logout
      */
     public function testLogout(): void
     {
@@ -83,8 +79,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::register
      */
     public function testRegister(): void
     {
@@ -98,8 +92,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::activate
      */
     public function testActivate(): void
     {
@@ -117,8 +109,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::verify
      */
     public function testVerify(): void
     {
@@ -134,8 +124,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::setPassword
      */
     public function testSetPassword(): void
     {
@@ -147,8 +135,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::changePassword
      */
     public function testChangePassword(): void
     {
@@ -162,8 +148,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::resetPassword
      */
     public function testResetPassword(): void
     {
@@ -174,8 +158,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::delete
      */
     public function testDelete(): void
     {
@@ -196,8 +178,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::delete
      */
     public function testDeleteException(): void
     {
@@ -209,7 +189,7 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
     }
 
     /**
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::getSubscribedEvents
+     * @return void
      */
     public function testGetSubscribedEvents(): void
     {
@@ -228,8 +208,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::onCoreException
      */
     public function testOnCoreException(): void
     {
@@ -243,8 +221,6 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Handler\UserHandler::onCoreException
      */
     public function testOnCoreExceptionSecond(): void
     {

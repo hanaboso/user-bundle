@@ -6,18 +6,19 @@ use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
+use Hanaboso\UserBundle\Document\UserAbstract;
+use PHPUnit\Framework\Attributes\CoversClass;
 use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class DocumentTest
  *
  * @package UserBundleTests\Integration\Document
- *
- * @covers  \Hanaboso\UserBundle\Document\TmpUser
- * @covers  \Hanaboso\UserBundle\Document\Token
- * @covers  \Hanaboso\UserBundle\Document\User
- * @covers  \Hanaboso\UserBundle\Document\UserAbstract
  */
+#[CoversClass(TmpUser::class)]
+#[CoversClass(Token::class)]
+#[CoversClass(User::class)]
+#[CoversClass(UserAbstract::class)]
 final class DocumentTest extends DatabaseTestCaseAbstract
 {
 

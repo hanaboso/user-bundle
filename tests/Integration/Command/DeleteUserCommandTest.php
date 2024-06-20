@@ -3,7 +3,9 @@
 namespace UserBundleTests\Integration\Command;
 
 use Exception;
+use Hanaboso\UserBundle\Command\DeleteUserCommand;
 use Hanaboso\UserBundle\Document\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use UserBundleTests\DatabaseTestCaseAbstract;
@@ -12,9 +14,8 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  * Class DeleteUserCommandTest
  *
  * @package UserBundleTests\Integration\Command
- *
- * @covers  \Hanaboso\UserBundle\Command\DeleteUserCommand
  */
+#[CoversClass(DeleteUserCommand::class)]
 final class DeleteUserCommandTest extends DatabaseTestCaseAbstract
 {
 
@@ -25,8 +26,6 @@ final class DeleteUserCommandTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Command\DeleteUserCommand::execute
      */
     public function testExecute(): void
     {
@@ -55,8 +54,6 @@ Deleting user, select user email: User deleted.
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Command\DeleteUserCommand::execute
      */
     public function testExecuteException(): void
     {

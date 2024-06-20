@@ -8,6 +8,7 @@ use Hanaboso\UserBundle\Entity\Token;
 use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Messages\ActivateMessage;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,13 +18,12 @@ use PHPUnit\Framework\TestCase;
  *
  * @covers  \Hanaboso\UserBundle\Model\Mailer\Mailer
  */
+#[CoversClass(Mailer::class)]
 final class MailerTest extends TestCase
 {
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Mailer\Mailer::send
      */
     public function testSendSync(): void
     {

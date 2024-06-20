@@ -1,5 +1,3 @@
-version: '3.5'
-
 services:
   app:
     image: hanabosocom/php-dev:php-8.3-alpine

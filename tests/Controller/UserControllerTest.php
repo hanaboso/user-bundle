@@ -9,8 +9,11 @@ use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
+use Hanaboso\UserBundle\Model\Security\JWTAuthenticator;
+use Hanaboso\UserBundle\Model\Security\SecurityManager;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\BrowserKit\Cookie;
 use UserBundleTests\ControllerTestCaseAbstract;
 
@@ -18,16 +21,15 @@ use UserBundleTests\ControllerTestCaseAbstract;
  * Class UserControllerTest
  *
  * @package UserBundleTests\Controller
- *
- * @covers  \Hanaboso\UserBundle\Controller\UserController
  */
+#[CoversClass(UserController::class)]
+#[CoversClass(JWTAuthenticator::class)]
+#[CoversClass(SecurityManager::class)]
 final class UserControllerTest extends ControllerTestCaseAbstract
 {
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loginAction
      */
     public function testLogin(): void
     {
@@ -41,8 +43,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loginAction
      */
     public function testLoginNotFoundEmail(): void
     {
@@ -53,8 +53,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loginAction
      */
     public function testLoginNotFoundPassword(): void
     {
@@ -65,8 +63,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loginAction
      */
     public function testLoginMissingParameter(): void
     {
@@ -75,9 +71,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
-     * @covers \Hanaboso\UserBundle\Model\Security\JWTAuthenticator
      */
     public function testLoggedUser(): void
     {
@@ -92,10 +85,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::jwtVerifyAccessToken
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
-     * @covers \Hanaboso\UserBundle\Model\Security\JWTAuthenticator
      */
     public function testLoggedUserExpiredAccessToken(): void
     {
@@ -114,10 +103,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Security\SecurityManager::jwtVerifyAccessToken
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
-     * @covers \Hanaboso\UserBundle\Model\Security\JWTAuthenticator
      */
     public function testLoggedUserExpiredAccessTokenAndRefreshToken(): void
     {
@@ -135,8 +120,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
      */
     public function testLoggedUserNotLogged(): void
     {
@@ -149,8 +132,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
      */
     public function testLoggedUserException(): void
     {
@@ -163,8 +144,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
      */
     public function testLoggedUserNotLoggedError(): void
     {
@@ -180,8 +159,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
      */
     public function testLoggedUserExceptionError(): void
     {
@@ -197,9 +174,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::loggedUserAction
-     * @covers \Hanaboso\UserBundle\Model\Security\JWTAuthenticator
      */
     public function testLoggedUserException2(): void
     {
@@ -208,8 +182,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::logoutAction
      */
     public function testLogout(): void
     {
@@ -223,8 +195,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::logoutAction
      */
     public function testLogoutDirectExceptionSecurity(): void
     {
@@ -241,8 +211,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::logoutAction
      */
     public function testLogoutDirectException(): void
     {
@@ -259,8 +227,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::registerAction
      */
     public function testRegister(): void
     {
@@ -271,8 +237,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::registerAction
      */
     public function testRegisterNotUniqueEmail(): void
     {
@@ -285,8 +249,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::registerAction
      */
     public function testRegisterException(): void
     {
@@ -297,8 +259,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::activateAction
      */
     public function testActivate(): void
     {
@@ -318,8 +278,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::activateAction
      */
     public function testActivateNotValid(): void
     {
@@ -335,8 +293,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::activateAction
      */
     public function testActivateException(): void
     {
@@ -351,8 +307,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::verifyAction
      */
     public function testVerify(): void
     {
@@ -373,8 +327,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::verifyAction
      */
     public function testVerifyNotValid(): void
     {
@@ -390,8 +342,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::verifyAction
      */
     public function testVerifyException(): void
     {
@@ -406,8 +356,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::setPasswordAction
      */
     public function testSetPassword(): void
     {
@@ -428,8 +376,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::setPasswordAction
      */
     public function testSetPasswordNotValid(): void
     {
@@ -450,8 +396,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::setPasswordAction
      */
     public function testSetPasswordException(): void
     {
@@ -466,8 +410,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::changePasswordAction
      */
     public function testChangePassword(): void
     {
@@ -485,8 +427,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::changePasswordAction
      */
     public function testChangePasswordNotLogged(): void
     {
@@ -502,8 +442,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::changePasswordAction
      */
     public function testChangePasswordException(): void
     {
@@ -519,8 +457,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::resetPasswordAction
      */
     public function testResetPassword(): void
     {
@@ -538,8 +474,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::resetPasswordAction
      */
     public function testResetPasswordNotFoundEmail(): void
     {
@@ -556,8 +490,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::resetPasswordAction
      */
     public function testResetPasswordException(): void
     {
@@ -568,8 +500,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::resetPasswordAction
      */
     public function testResetPasswordErrorException(): void
     {
@@ -580,8 +510,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::deleteAction
      */
     public function testDelete(): void
     {
@@ -601,8 +529,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::deleteAction
      */
     public function testDeleteMissing(): void
     {
@@ -613,8 +539,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::deleteAction
      */
     public function testDeleteException(): void
     {
@@ -630,8 +554,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Controller\UserController::deleteAction
      */
     public function testDeleteYourself(): void
     {

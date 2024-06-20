@@ -3,8 +3,11 @@
 namespace UserBundleTests\Integration\Command;
 
 use Exception;
+use Hanaboso\UserBundle\Command\ChangePasswordCommand;
+use Hanaboso\UserBundle\Command\PasswordCommandAbstract;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Entity\UserInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use UserBundleTests\DatabaseTestCaseAbstract;
@@ -13,10 +16,9 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  * Class ChangePasswordCommandTest
  *
  * @package UserBundleTests\Integration\Command
- *
- * @covers  \Hanaboso\UserBundle\Command\ChangePasswordCommand
- * @covers  \Hanaboso\UserBundle\Command\PasswordCommandAbstract
  */
+#[CoversClass(ChangePasswordCommand::class)]
+#[CoversClass(PasswordCommandAbstract::class)]
 final class ChangePasswordCommandTest extends DatabaseTestCaseAbstract
 {
 
@@ -27,8 +29,6 @@ final class ChangePasswordCommandTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Command\ChangePasswordCommand::execute
      */
     public function testExecute(): void
     {

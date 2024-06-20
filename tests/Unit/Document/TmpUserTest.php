@@ -5,15 +5,15 @@ namespace UserBundleTests\Unit\Document;
 use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
+use PHPUnit\Framework\Attributes\CoversClass;
 use UserBundleTests\KernelTestCaseAbstract;
 
 /**
  * Class TmpUserTest
  *
  * @package UserBundleTests\Unit\Document
- *
- * @covers  \Hanaboso\UserBundle\Document\TmpUser
  */
+#[CoversClass(TmpUser::class)]
 final class TmpUserTest extends KernelTestCaseAbstract
 {
 

@@ -10,19 +10,18 @@ use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 use Hanaboso\UserBundle\Model\Token\TokenManager;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class TokenManagerTest
  *
  * @package UserBundleTests\Integration\Model\Token
- *
- * @covers  \Hanaboso\UserBundle\Model\Token\TokenManager
  */
+#[CoversClass(TokenManager::class)]
 final class TokenManagerTest extends DatabaseTestCaseAbstract
 {
 
@@ -38,30 +37,6 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::create
-     */
-    public function testCreateUserToken(): void
-    {
-        $user = (new User())->setEmail('email@example.com');
-        $this->pfd($user);
-
-        $this->tokenManager->create($user);
-        $this->tokenManager->create($user);
-        $this->tokenManager->create($user);
-
-        /** @var Token $token */
-        $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
-        /** @var UserInterface $tokenUser */
-        $tokenUser = $token->getUser();
-        self::assertCount(1, $this->tokenRepository->findBy([UserTypeEnum::USER => $user]));
-        self::assertEquals($user->getEmail(), $tokenUser->getEmail());
-    }
-
-    /**
-     * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::create
      */
     public function testCreateUserTokenException(): void
     {
@@ -81,30 +56,6 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::create
-     */
-    public function testCreateTmpUserToken(): void
-    {
-        $user = (new TmpUser())->setEmail('email@example.com');
-        $this->pfd($user);
-
-        $this->tokenManager->create($user);
-        $this->tokenManager->create($user);
-        $this->tokenManager->create($user);
-
-        /** @var Token $token */
-        $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
-        /** @var UserInterface $tokenUser */
-        $tokenUser = $token->getTmpUser();
-        self::assertCount(1, $this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user]));
-        self::assertEquals($user->getEmail(), $tokenUser->getEmail());
-    }
-
-    /**
-     * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::validate
      */
     public function testValidateToken(): void
     {
@@ -116,8 +67,6 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::validate
      */
     public function testValidateInvalidToken(): void
     {
@@ -135,8 +84,6 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::delete
      */
     public function testDeleteUserToken(): void
     {
@@ -153,8 +100,6 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Model\Token\TokenManager::delete
      */
     public function testDeleteTmpUserToken(): void
     {

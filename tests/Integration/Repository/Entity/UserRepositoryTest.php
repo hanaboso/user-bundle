@@ -5,22 +5,20 @@ namespace UserBundleTests\Integration\Repository\Entity;
 use Exception;
 use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Repository\Entity\UserRepository;
+use PHPUnit\Framework\Attributes\CoversClass;
 use UserBundleTests\DatabaseTestCaseAbstract;
 
 /**
  * Class UserRepositoryTest
  *
  * @package UserBundleTests\Integration\Repository\Entity
- *
- * @covers  \Hanaboso\UserBundle\Repository\Entity\UserRepository
  */
+#[CoversClass(UserRepository::class)]
 final class UserRepositoryTest extends DatabaseTestCaseAbstract
 {
 
     /**
      * @throws Exception
-     *
-     * @covers \Hanaboso\UserBundle\Repository\Entity\UserRepository::getArrayOfUsers
      */
     public function testGetArrayOfUsers(): void
     {
