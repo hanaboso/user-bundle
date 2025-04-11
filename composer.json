@@ -2,13 +2,13 @@
     "name": "hanaboso/user-bundle",
     "description": "Hanaboso - user-bundle",
     "license": "Apache-2.0",
-    "version": "1.9.0",
+    "version": "1.10.0",
     "require": {
-        "php": "^8.3",
-        "hanaboso/commons-bundle": "^2.11",
-        "hanaboso/email-service-bundle": "^1.5",
-        "hanaboso/rest-bundle": "^1.4",
-        "symfony/yaml": "^7.1",
+        "php": "^8.4",
+        "hanaboso/commons-bundle": "^2.12",
+        "hanaboso/email-service-bundle": "^1.6",
+        "hanaboso/rest-bundle": "^1.5",
+        "symfony/yaml": "^7.2",
         "web-token/jwt-checker": "^3.4",
         "web-token/jwt-core": "^3.4",
         "web-token/jwt-key-mgmt": "^3.4",
@@ -17,12 +17,12 @@
     },
     "require-dev": {
         "ext-apcu": "*",
-        "doctrine/doctrine-bundle": "^2.12",
-        "doctrine/mongodb-odm-bundle": "^5.0",
-        "doctrine/orm": "^2.19",
-        "hanaboso/php-check-utils": "^1.6",
+        "doctrine/doctrine-bundle": "^2.14",
+        "doctrine/mongodb-odm-bundle": "^5.3",
+        "doctrine/orm": "^2.20",
+        "hanaboso/php-check-utils": "^1.7",
         "symfony/monolog-bundle": "^3.10",
-        "symfony/security-bundle": "^7.1"
+        "symfony/security-bundle": "^7.2"
     },
     "suggest": {
         "doctrine/doctrine-bundle": "Install me, if you using MySQL.",

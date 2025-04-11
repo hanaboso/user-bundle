@@ -10,6 +10,6 @@ namespace Hanaboso\UserBundle\Model\User\Event;
 final class LoginUserEvent extends UserEvent
 {
 
-    public const NAME = self::USER_LOGIN;
+    public const string NAME = self::USER_LOGIN;
 
 }

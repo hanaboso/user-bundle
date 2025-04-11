@@ -12,9 +12,9 @@ use Hanaboso\Utils\Exception\PipesFrameworkExceptionAbstract;
 final class ResourceProviderException extends PipesFrameworkExceptionAbstract
 {
 
-    public const RESOURCE_NOT_EXIST = self::OFFSET + 1;
-    public const RULESET_NOT_EXIST  = self::OFFSET + 2;
+    public const int RESOURCE_NOT_EXIST = self::OFFSET + 1;
+    public const int RULESET_NOT_EXIST  = self::OFFSET + 2;
 
-    protected const OFFSET = 1_900;
+    protected const int OFFSET = 1_900;
 
 }

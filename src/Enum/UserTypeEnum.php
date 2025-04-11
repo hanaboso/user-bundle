@@ -10,8 +10,8 @@ namespace Hanaboso\UserBundle\Enum;
 final class UserTypeEnum extends EnumAbstract
 {
 
-    public const USER     = 'user';
-    public const TMP_USER = 'tmpUser';
+    public const string USER     = 'user';
+    public const string TMP_USER = 'tmpUser';
 
     /**
      * @var string[]

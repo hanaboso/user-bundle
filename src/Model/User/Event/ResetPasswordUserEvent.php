@@ -10,6 +10,6 @@ namespace Hanaboso\UserBundle\Model\User\Event;
 final class ResetPasswordUserEvent extends UserEvent
 {
 
-    public const NAME = self::USER_RESET_PASSWORD;
+    public const string NAME = self::USER_RESET_PASSWORD;
 
 }

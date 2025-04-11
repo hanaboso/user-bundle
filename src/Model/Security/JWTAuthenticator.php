@@ -21,7 +21,7 @@ use Throwable;
 final class JWTAuthenticator extends AbstractAuthenticator
 {
 
-    private const EMAIL = 'email';
+    private const string EMAIL = 'email';
 
     /**
      * JWTAuthenticator constructor.

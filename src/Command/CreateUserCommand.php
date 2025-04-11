@@ -29,7 +29,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 final class CreateUserCommand extends PasswordCommandAbstract
 {
 
-    private const CMD_NAME = 'user:create';
+    private const string CMD_NAME = 'user:create';
 
     /**
      * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>

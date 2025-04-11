@@ -24,7 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class ListUsersCommand extends Command
 {
 
-    private const CMD_NAME = 'user:list';
+    private const string CMD_NAME = 'user:list';
 
     /**
      * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>

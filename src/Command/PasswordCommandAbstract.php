@@ -23,8 +23,8 @@ use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 abstract class PasswordCommandAbstract extends Command
 {
 
-    protected const PASSWORD = 'password';
-    protected const EMAIL    = 'email';
+    protected const string PASSWORD = 'password';
+    protected const string EMAIL    = 'email';
 
     /**
      * @var DocumentManager|EntityManager

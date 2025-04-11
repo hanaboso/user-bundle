@@ -29,7 +29,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 final class ChangePasswordCommand extends PasswordCommandAbstract
 {
 
-    private const CMD_NAME = 'user:password:change';
+    private const string CMD_NAME = 'user:password:change';
 
     /**
      * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>

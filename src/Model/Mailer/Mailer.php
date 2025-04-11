@@ -14,7 +14,7 @@ use Hanaboso\UserBundle\Model\Messages\UserMessageAbstract;
 final class Mailer
 {
 
-    private const DEFAULT_MAIL_BUILDER = 'generic';
+    private const string DEFAULT_MAIL_BUILDER = 'generic';
 
     /**
      * @var string

@@ -10,9 +10,9 @@ namespace Hanaboso\UserBundle\Enum;
 class ResourceEnum extends EnumAbstract
 {
 
-    public const USER     = 'user';
-    public const TMP_USER = 'tmp_user';
-    public const TOKEN    = 'token';
+    public const string USER     = 'user';
+    public const string TMP_USER = 'tmp_user';
+    public const string TOKEN    = 'token';
 
     /**
      * @var string[]

@@ -12,9 +12,9 @@ use Hanaboso\Utils\Exception\PipesFrameworkExceptionAbstract;
 final class TokenManagerException extends PipesFrameworkExceptionAbstract
 {
 
-    public const TOKEN_NOT_VALID    = self::OFFSET + 1;
-    public const TOKEN_ALREADY_USED = self::OFFSET + 2;
+    public const int TOKEN_NOT_VALID    = self::OFFSET + 1;
+    public const int TOKEN_ALREADY_USED = self::OFFSET + 2;
 
-    protected const OFFSET = 1_100;
+    protected const int OFFSET = 1_100;
 
 }

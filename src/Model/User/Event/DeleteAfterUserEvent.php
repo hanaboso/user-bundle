@@ -10,6 +10,6 @@ namespace Hanaboso\UserBundle\Model\User\Event;
 final class DeleteAfterUserEvent extends UserEvent
 {
 
-    public const NAME = self::USER_DELETE_AFTER;
+    public const string NAME = self::USER_DELETE_AFTER;
 
 }

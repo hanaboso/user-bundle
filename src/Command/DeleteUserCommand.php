@@ -33,7 +33,7 @@ use Symfony\Component\Console\Question\Question;
 final class DeleteUserCommand extends Command
 {
 
-    private const CMD_NAME = 'user:delete';
+    private const string CMD_NAME = 'user:delete';
 
     /**
      * @var DocumentManager|EntityManager

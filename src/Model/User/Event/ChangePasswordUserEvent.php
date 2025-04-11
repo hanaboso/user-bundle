@@ -10,6 +10,6 @@ namespace Hanaboso\UserBundle\Model\User\Event;
 final class ChangePasswordUserEvent extends UserEvent
 {
 
-    public const NAME = self::USER_CHANGE_PASSWORD;
+    public const string NAME = self::USER_CHANGE_PASSWORD;
 
 }

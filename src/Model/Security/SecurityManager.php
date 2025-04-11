@@ -35,14 +35,14 @@ use Throwable;
 class SecurityManager
 {
 
-    private const ACCESS_TOKEN_EXPIRATION  = 420;
-    private const REFRESH_TOKEN_EXPIRATION = 900;
-    private const REFRESH_TOKEN            = 'refreshToken';
-    private const AUTHORIZATION            = 'Authorization';
-    private const ID                       = 'id';
-    private const EXP                      = 'exp';
-    private const EMAIL                    = 'email';
-    private const PERMISSIONS              = 'permissions';
+    private const int ACCESS_TOKEN_EXPIRATION  = 420;
+    private const int REFRESH_TOKEN_EXPIRATION = 900;
+    private const string REFRESH_TOKEN         = 'refreshToken';
+    private const string AUTHORIZATION         = 'Authorization';
+    private const string ID                    = 'id';
+    private const string EXP                   = 'exp';
+    private const string EMAIL                 = 'email';
+    private const string PERMISSIONS           = 'permissions';
 
     /**
      * @var string
