@@ -5,7 +5,6 @@ namespace UserBundleTests\Integration\Command;
 use Exception;
 use Hanaboso\UserBundle\Command\CreateUserCommand;
 use Hanaboso\UserBundle\Document\User;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -30,7 +29,7 @@ final class CreateUserCommandTest extends DatabaseTestCaseAbstract
      */
     public function testExecute(): void
     {
-        $user = (new User())->setEmail('another-user@example.com');
+        $user = new User()->setEmail('another-user@example.com');
 
         $this->dm->persist($user);
         $this->dm->flush();
@@ -41,10 +40,10 @@ final class CreateUserCommandTest extends DatabaseTestCaseAbstract
         );
         $this->tester->execute([]);
 
-        /** @var UserInterface $user */
+        /** @var User $user */
         $user = $this->dm->getRepository(User::class)->findOneBy(['email' => 'user@example.com']);
 
-        self::assertEquals(
+        self::assertSame(
             'Creating user, select user email:  Email cannot be empty! 
 Creating user, select user email:  User with given email already exist! 
 Creating user, select user email: User password:  Password cannot be empty! 
@@ -63,7 +62,11 @@ User password again: User created.
     {
         parent::setUp();
 
-        $this->tester = new CommandTester((new Application(self::$kernel))->get('user:create'));
+        if(self::$kernel === NULL){
+            self::fail();
+        }
+
+        $this->tester = new CommandTester(new Application(self::$kernel)->get('user:create'));
     }
 
 }

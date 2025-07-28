@@ -6,7 +6,6 @@ use Exception;
 use Hanaboso\UserBundle\Command\ChangePasswordCommand;
 use Hanaboso\UserBundle\Command\PasswordCommandAbstract;
 use Hanaboso\UserBundle\Document\User;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -32,7 +31,7 @@ final class ChangePasswordCommandTest extends DatabaseTestCaseAbstract
      */
     public function testExecute(): void
     {
-        $user = (new User())->setEmail('user@example.com');
+        $user = new User()->setEmail('user@example.com');
 
         $this->dm->persist($user);
         $this->dm->flush();
@@ -41,10 +40,10 @@ final class ChangePasswordCommandTest extends DatabaseTestCaseAbstract
         $this->tester->setInputs(['', 'user@example.com', '', 'password', 'Unknown', 'password']);
         $this->tester->execute([]);
 
-        /** @var UserInterface $user */
+        /** @var User $user */
         $user = $this->dm->getRepository(User::class)->findOneBy(['email' => 'user@example.com']);
 
-        self::assertEquals(
+        self::assertSame(
             'User email:  There is no user for given email! 
 User email: User password:  Password cannot be empty! 
 User password: User password again:  Both passwords must be same! 
@@ -62,7 +61,11 @@ User password again: Password changed.
     {
         parent::setUp();
 
-        $this->tester = new CommandTester((new Application(self::$kernel))->get('user:password:change'));
+        if(self::$kernel === NULL){
+            self::fail();
+        }
+
+        $this->tester = new CommandTester(new Application(self::$kernel)->get('user:password:change'));
     }
 
 }

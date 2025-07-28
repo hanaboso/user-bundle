@@ -4,8 +4,9 @@ namespace Hanaboso\UserBundle\Repository\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Hanaboso\UserBundle\Entity\TmpUser;
 use Hanaboso\UserBundle\Entity\Token;
-use Hanaboso\UserBundle\Entity\UserInterface;
+use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 use Hanaboso\Utils\Date\DateTimeUtils;
 use Hanaboso\Utils\Exception\DateTimeException;
@@ -42,11 +43,11 @@ class TokenRepository extends EntityRepository
     }
 
     /**
-     * @param UserInterface $user
+     * @param User|TmpUser $user
      *
      * @return Token[]
      */
-    public function getExistingTokens(UserInterface $user): array
+    public function getExistingTokens(User|TmpUser $user): array
     {
         return $this->createQueryBuilder('t')
             ->join($user->getType() === UserTypeEnum::USER ? 't.user' : 't.tmpUser', 'u')

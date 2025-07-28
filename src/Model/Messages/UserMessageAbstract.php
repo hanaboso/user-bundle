@@ -2,7 +2,10 @@
 
 namespace Hanaboso\UserBundle\Model\Messages;
 
-use Hanaboso\UserBundle\Entity\UserInterface;
+use Hanaboso\UserBundle\Document\TmpUser as DocumentTmpUser;
+use Hanaboso\UserBundle\Document\User as DocumentUser;
+use Hanaboso\UserBundle\Entity\TmpUser;
+use Hanaboso\UserBundle\Entity\User as EntityUser;
 
 /**
  * Class UserMessageAbstract
@@ -47,9 +50,9 @@ abstract class UserMessageAbstract
     /**
      * UserMessageAbstract constructor.
      *
-     * @param UserInterface $user
+     * @param EntityUser|DocumentUser|TmpUser|DocumentTmpUser $user
      */
-    public function __construct(protected UserInterface $user)
+    public function __construct(protected EntityUser|DocumentUser|TmpUser|DocumentTmpUser $user)
     {
         $this->message['subject']  = $this->subject;
         $this->message['template'] = $this->template;

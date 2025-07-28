@@ -28,7 +28,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
     /**
      * @var TokenManager
      */
-    private $tokenManager;
+    private TokenManager $tokenManager;
 
     /**
      * @var ObjectRepository<Token>
@@ -40,7 +40,8 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
      */
     public function testCreateUserTokenException(): void
     {
-        $user = (new User())->setEmail('email@example.com');
+        $user = new User();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
         $dm = $this->createMock(DocumentManager::class);
@@ -87,7 +88,8 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
      */
     public function testDeleteUserToken(): void
     {
-        $user = (new User())->setEmail('email@example.com');
+        $user = new User();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
         /** @var Token $token */
@@ -103,7 +105,8 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
      */
     public function testDeleteTmpUserToken(): void
     {
-        $user = (new TmpUser())->setEmail('email@example.com');
+        $user = new TmpUser();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
         /** @var Token $token */

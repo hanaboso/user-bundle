@@ -8,7 +8,6 @@ use Exception;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Document\User as DmUser;
 use Hanaboso\UserBundle\Entity\User;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
@@ -167,12 +166,12 @@ class SecurityManager
     }
 
     /**
-     * @param UserInterface $user
-     * @param mixed[]       $data
+     * @param User|DmUser $user
+     * @param mixed[]     $data
      *
      * @throws SecurityManagerException
      */
-    public function validateUser(UserInterface $user, array $data): void
+    public function validateUser(User|DmUser $user, array $data): void
     {
         try {
             if (!$this->encoder->verify($user->getPassword() ?? '', $data['password'])) {
@@ -243,11 +242,11 @@ class SecurityManager
     }
 
     /**
-     * @param UserInterface $user
+     * @param User|DmUser $user
      *
      * @return mixed[]
      */
-    public function getPermissions(UserInterface $user): array
+    public function getPermissions(User|DmUser $user): array
     {
         $user;
 
@@ -257,12 +256,12 @@ class SecurityManager
     /**
      * @param string $email
      *
-     * @return UserInterface
+     * @return User|DmUser
      * @throws SecurityManagerException
      */
-    public function getUser(string $email): UserInterface
+    public function getUser(string $email): User|DmUser
     {
-        /** @var UserInterface|null $user */
+        /** @var User|DmUser|null $user */
         $user = $this->userRepository->findOneBy(
             [
                 'deleted' => FALSE,
@@ -281,7 +280,7 @@ class SecurityManager
     }
 
     /**
-     * @param string         $id
+     * @param string|int     $id
      * @param string         $email
      * @param int            $expiration
      * @param string[]       $permissions
@@ -291,7 +290,7 @@ class SecurityManager
      * @throws DateTimeException
      */
     public function createToken(
-        string $id,
+        string|int $id,
         string $email,
         int $expiration,
         array $permissions = [],
@@ -325,12 +324,12 @@ class SecurityManager
      */
 
     /**
-     * @param UserInterface $user
-     * @param string[]      $additionalData
+     * @param User|DmUser $user
+     * @param string[]    $additionalData
      *
      * @throws DateTimeException
      */
-    private function setNewRefreshToken(UserInterface $user, array $additionalData = []): void
+    private function setNewRefreshToken(User|DmUser $user, array $additionalData = []): void
     {
         /** @var Request $request */
         $request     = $this->requestStack->getCurrentRequest();

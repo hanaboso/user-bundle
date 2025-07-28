@@ -7,7 +7,6 @@ use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
-use Hanaboso\Utils\Exception\PipesFrameworkException;
 use Hanaboso\Utils\Traits\ControllerTrait;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +46,7 @@ class UserController
             return $this->getResponse($this->userHandler->login($request->request->all()));
         } catch (SecurityManagerException $e) {
             return $this->getErrorResponse($e, 400);
-        } catch (PipesFrameworkException | Throwable $e) {
+        } catch (Throwable $e) {
             return $this->getErrorResponse($e);
         }
     }

@@ -30,7 +30,7 @@ final class ListUsersCommandTest extends DatabaseTestCaseAbstract
      */
     public function testExecute(): void
     {
-        $user = (new User())->setEmail('user@example.com');
+        $user = new User()->setEmail('user@example.com');
 
         $this->dm->persist($user);
         $this->dm->flush();
@@ -59,7 +59,11 @@ final class ListUsersCommandTest extends DatabaseTestCaseAbstract
     {
         parent::setUp();
 
-        $this->tester = new CommandTester((new Application(self::$kernel))->get('user:list'));
+        if(self::$kernel === NULL){
+            self::fail();
+        }
+
+        $this->tester = new CommandTester(new Application(self::$kernel)->get('user:list'));
     }
 
 }

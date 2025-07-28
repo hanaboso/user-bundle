@@ -3,13 +3,11 @@
 namespace Hanaboso\UserBundle\Command;
 
 use Doctrine\ODM\MongoDB\MongoDBException;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository as OdmRepo;
 use Doctrine\ORM\EntityRepository as OrmRepo;
 use Doctrine\ORM\Exception\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Document\User as DmUser;
 use Hanaboso\UserBundle\Entity\User;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
@@ -32,9 +30,9 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
     private const string CMD_NAME = 'user:password:change';
 
     /**
-     * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
+     * @var OrmRepo<User>
      */
-    private OrmRepo|OdmRepo $repo;
+    private $repo;
 
     /**
      * ChangePasswordCommand constructor.
@@ -53,7 +51,7 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
     {
         parent::__construct();
 
-        /** @phpstan-var class-string<User|DmUser> $userClass */
+        /** @phpstan-var class-string<User> $userClass */
         $userClass     = $provider->getResource(ResourceEnum::USER);
         $this->dm      = $userDml->get();
         $this->repo    = $this->dm->getRepository($userClass);
@@ -89,10 +87,10 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
             $user   = $helper->ask(
                 $input,
                 $output,
-                (new Question('User email: '))
+                new Question('User email: ')
                     ->setValidator(
-                        function (?string $email): UserInterface {
-                            /** @var UserInterface|null $email */
+                        function (?string $email): User|DmUser {
+                            /** @var User|DmUser|null $email */
                             $email = $this->repo->findOneBy(['email' => $email]);
 
                             if (!$email) {

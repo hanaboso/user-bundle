@@ -22,10 +22,10 @@ class User extends UserAbstract
 {
 
     /**
-     * @var TokenInterface|null
+     * @var Token|null
      */
     #[ORM\OneToOne(inversedBy: 'user', targetEntity: 'Hanaboso\UserBundle\Entity\Token')]
-    protected ?TokenInterface $token = NULL;
+    protected ?Token $token = NULL;
 
     /**
      * @var string|null
@@ -38,6 +38,19 @@ class User extends UserAbstract
      */
     #[ORM\Column(type: 'datetime')]
     protected DateTime $updated;
+
+    /**
+     * @param self|TmpUser $tmpUser
+     *
+     * @return self
+     */
+    public static function from(self|TmpUser $tmpUser): self
+    {
+        $user = new self();
+        $user->setEmail($tmpUser->getEmail());
+
+        return $user;
+    }
 
     /**
      * @return string
@@ -58,9 +71,9 @@ class User extends UserAbstract
     /**
      * @param string $pwd
      *
-     * @return UserInterface
+     * @return self
      */
-    public function setPassword(string $pwd): UserInterface
+    public function setPassword(string $pwd): self
     {
         $this->password = $pwd;
 
@@ -78,9 +91,9 @@ class User extends UserAbstract
     /**
      * @param DateTime $updated
      *
-     * @return UserInterface
+     * @return self
      */
-    public function setUpdated(DateTime $updated): UserInterface
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
@@ -88,19 +101,19 @@ class User extends UserAbstract
     }
 
     /**
-     * @return TokenInterface|null
+     * @return Token|null
      */
-    public function getToken(): ?TokenInterface
+    public function getToken(): ?Token
     {
         return $this->token;
     }
 
     /**
-     * @param TokenInterface|null $token
+     * @param Token|null $token
      *
-     * @return UserInterface
+     * @return self
      */
-    public function setToken(?TokenInterface $token): UserInterface
+    public function setToken(?Token $token): self
     {
         $this->token = $token;
 
@@ -125,16 +138,6 @@ class User extends UserAbstract
             'email' => $this->getEmail(),
             'id'    => $this->getId(),
         ];
-    }
-
-    /**
-     * @param TmpUserInterface $tmpUser
-     *
-     * @return UserInterface
-     */
-    public static function from(TmpUserInterface $tmpUser): UserInterface
-    {
-        return (new self())->setEmail($tmpUser->getEmail());
     }
 
 }

@@ -3,8 +3,9 @@
 namespace Hanaboso\UserBundle\Repository\Document;
 
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
-use Hanaboso\UserBundle\Entity\UserInterface;
+use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 use Hanaboso\Utils\Date\DateTimeUtils;
 use Hanaboso\Utils\Exception\DateTimeException;
@@ -38,11 +39,11 @@ class TokenRepository extends DocumentRepository
     }
 
     /**
-     * @param UserInterface $user
+     * @param User|TmpUser $user
      *
      * @return Token[]
      */
-    public function getExistingTokens(UserInterface $user): array
+    public function getExistingTokens(User|TmpUser $user): array
     {
         return $this->findBy([$user->getType() === UserTypeEnum::USER ? 'user' : 'tmpUser' => $user]);
     }

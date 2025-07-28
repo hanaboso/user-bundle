@@ -108,7 +108,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         /** @var TmpUser $tmpUser */
         $tmpUser = $tokens[0]->getTmpUser();
         self::assertCount(1, $tokens);
-        self::assertEquals('email@example.com', $tmpUser->getEmail());
+        self::assertSame('email@example.com', $tmpUser->getEmail());
     }
 
     /**
@@ -157,7 +157,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
         self::assertCount(0, $users);
         self::assertCount(1, $tmpUsers);
-        self::assertEquals('email@example.com', $tmpUsers[0]->getEmail());
+        self::assertSame('email@example.com', $tmpUsers[0]->getEmail());
 
         $this->userManager->activate($token->getHash());
 
@@ -166,7 +166,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
 
         self::assertCount(0, $tmpUsers);
         self::assertCount(1, $users);
-        self::assertEquals('email@example.com', $users[0]->getEmail());
+        self::assertSame('email@example.com', $users[0]->getEmail());
     }
 
     /**
@@ -239,12 +239,12 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $tmpUsers = $this->tmpUserRepository->findBy(['email' => 'email@example.com']);
 
         self::assertCount(1, $tmpUsers);
-        self::assertEquals('email@example.com', $tmpUsers[0]->getEmail());
+        self::assertSame('email@example.com', $tmpUsers[0]->getEmail());
 
         $this->dm->clear();
         $res = $this->userManager->verify($token->getHash());
 
-        self::assertEquals($tmpUsers[0]->getEmail(), $res->getEmail());
+        self::assertSame($tmpUsers[0]->getEmail(), $res->getEmail());
     }
 
     /**
@@ -261,7 +261,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         /** @var Token[] $tokens */
         $tokens = $this->tokenRepository->findBy(['user' => $user]);
         self::assertCount(1, $tokens);
-        self::assertEquals('email@example.com', $tokens[0]->getUserOrTmpUser()->getEmail());
+        self::assertSame('email@example.com', $tokens[0]->getUserOrTmpUser()->getEmail());
     }
 
     /**
@@ -296,10 +296,11 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testSetPassword(): void
     {
-        $user = (new User())->setEmail('email@example.com');
+        $user = new User();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setUser($user);
+        $token = new Token()->setUser($user);
         $this->pfd($token);
 
         $this->userManager->setPassword($token->getHash(), ['password' => 'passw0rd']);
@@ -308,7 +309,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $users = $this->userRepository->findBy(['email' => 'email@example.com']);
 
         self::assertCount(1, $users);
-        self::assertEquals('email@example.com', $users[0]->getEmail());
+        self::assertSame('email@example.com', $users[0]->getEmail());
         self::assertTrue($this->getEncoder()->verify($users[0]->getPassword(), 'passw0rd'));
     }
 
@@ -317,10 +318,11 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testSetPasswordNotValid(): void
     {
-        $user = (new User())->setEmail('email@example.com');
+        $user = new User();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setUser($user);
+        $token = new Token()->setUser($user);
         $this->setProperty($token, 'created', new DateTime('yesterday midnight'));
         $this->pfd($token);
 
@@ -334,10 +336,11 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
      */
     public function testSetPasswordException(): void
     {
-        $user = (new User())->setEmail('email@example.com');
+        $user = new User();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setUser($user);
+        $token = new Token()->setUser($user);
         $this->pfd($token);
 
         $dm = $this->createMock(DocumentManager::class);
@@ -362,7 +365,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $users = $this->userRepository->findBy(['email' => 'email@example.com']);
 
         self::assertCount(1, $users);
-        self::assertEquals('email@example.com', $users[0]->getEmail());
+        self::assertSame('email@example.com', $users[0]->getEmail());
         self::assertTrue($this->getEncoder()->verify($users[0]->getPassword(), 'Passw0rd'));
     }
 

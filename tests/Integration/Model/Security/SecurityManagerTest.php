@@ -36,7 +36,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     public function testLogin(): void
     {
         $user = $this->createUser();
-        self::assertEquals('email@example.com', $user->getEmail());
+        self::assertSame('email@example.com', $user->getEmail());
         self::assertTrue($this->getEncoder()->verify($user->getPassword(), 'passw0rd'));
     }
 
@@ -47,7 +47,7 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
     {
         $user = $this->createUser();
 
-        self::assertEquals('email@example.com', $user->getEmail());
+        self::assertSame('email@example.com', $user->getEmail());
         self::assertTrue($this->getEncoder()->verify($user->getPassword(), 'passw0rd'));
 
         $repository = self::createMock(UserRepository::class);
@@ -166,7 +166,9 @@ final class SecurityManagerTest extends DatabaseTestCaseAbstract
         self::expectException(SecurityManagerException::class);
         self::expectExceptionCode(SecurityManagerException::USER_OR_PASSWORD_NOT_VALID);
 
-        $this->securityManager->validateUser((new User())->setEmail('user@example.com'), ['password' => 'Passw0rd']);
+        $user = new User();
+        $user->setEmail('email@example.com');
+        $this->securityManager->validateUser($user, ['password' => 'Passw0rd']);
     }
 
     /**

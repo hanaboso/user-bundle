@@ -33,14 +33,14 @@ final class TokenTest extends KernelTestCaseAbstract
             $token->setUserOrTmpUser($unknownUser);
             self::fail('Something gone wrong!');
         } catch (Throwable $throwable) {
-            self::assertEquals("Unknown user type 'Unknown'!", $throwable->getMessage());
+            self::assertSame("Unknown user type 'Unknown'!", $throwable->getMessage());
         }
 
         try {
             $token->getUserOrTmpUser();
             self::fail('Something gone wrong!');
         } catch (Throwable $throwable) {
-            self::assertEquals('User is not set.', $throwable->getMessage());
+            self::assertSame('User is not set.', $throwable->getMessage());
         }
 
         $token->setUserOrTmpUser(new TmpUser())->getUserOrTmpUser();

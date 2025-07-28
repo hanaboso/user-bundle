@@ -30,16 +30,17 @@ final class DocumentTest extends DatabaseTestCaseAbstract
         $tokenRepository = $this->dm->getRepository(Token::class);
 
         /** @var User $user */
-        $user = (new User())->setEmail('email@example.com');
+        $user = new User()->setEmail('email@example.com');
 
         /** @var TmpUser $tmpUser */
-        $tmpUser = (new TmpUser())->setEmail('email@example.com');
+        $tmpUser = new TmpUser()->setEmail('email@example.com');
 
         $this->dm->persist($user);
         $this->dm->persist($tmpUser);
         $this->dm->flush();
 
-        $token = (new Token())
+        /** @var Token $token */
+        $token = new Token()
             ->setTmpUser($tmpUser)
             ->setUser($user);
 
@@ -50,7 +51,7 @@ final class DocumentTest extends DatabaseTestCaseAbstract
         /** @var Token $existingToken */
         $existingToken = $tokenRepository->find($token->getId());
 
-        self::assertEquals(
+        self::assertSame(
             $token->getCreated()->format('d. m. Y H:i:s'),
             $existingToken->getCreated()->format('d. m. Y H:i:s'),
         );
@@ -60,8 +61,8 @@ final class DocumentTest extends DatabaseTestCaseAbstract
         $tmpTokenUser  = $token->getTmpUser();
         $eTmpTokenUser = $existingToken->getTmpUser();
 
-        self::assertEquals($tokenUser?->getEmail(), $eTokenUser?->getEmail());
-        self::assertEquals($tmpTokenUser?->getEmail(), $eTmpTokenUser?->getEmail());
+        self::assertSame($tokenUser?->getEmail(), $eTokenUser?->getEmail());
+        self::assertSame($tmpTokenUser?->getEmail(), $eTmpTokenUser?->getEmail());
     }
 
 }

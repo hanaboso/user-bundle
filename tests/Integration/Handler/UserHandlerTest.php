@@ -7,7 +7,6 @@ use Hanaboso\PhpCheckUtils\PhpUnit\Traits\CustomAssertTrait;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
-use Hanaboso\UserBundle\Entity\TokenInterface;
 use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -97,7 +96,7 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
     {
         $this->handler->register(['email' => 'user@example.com']);
 
-        /** @var TokenInterface $token */
+        /** @var Token $token */
         $token = $this->dm->getRepository(Token::class)->findAll()[0];
         $this->handler->activate($token->getHash());
 
@@ -115,7 +114,7 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
         $data = ['email' => 'user@example.com'];
         $this->handler->register($data);
 
-        /** @var TokenInterface $token */
+        /** @var Token $token */
         $token = $this->dm->getRepository(Token::class)->findAll()[0];
         $res   = $this->handler->verify($token->getHash());
 
@@ -127,7 +126,7 @@ final class UserHandlerTest extends DatabaseTestCaseAbstract
      */
     public function testSetPassword(): void
     {
-        $token = (new Token())->setUser($this->createUser());
+        $token = new Token()->setUser($this->createUser());
         $this->pfd($token);
 
         self::assertEquals([], $this->handler->setPassword($token->getHash(), ['password' => 'anotherPassw0rd']));

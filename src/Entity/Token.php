@@ -17,7 +17,7 @@ use LogicException;
  */
 #[ORM\Entity(repositoryClass: 'Hanaboso\UserBundle\Repository\Entity\TokenRepository')]
 #[ORM\Table(name: 'token')]
-class Token implements TokenInterface
+class Token
 {
 
     use IdTrait;
@@ -29,13 +29,13 @@ class Token implements TokenInterface
     private DateTime $created;
 
     /**
-     * @var UserInterface|null
+     * @var User|null
      */
     #[ORM\OneToOne(mappedBy: 'token', targetEntity: 'Hanaboso\UserBundle\Entity\User')]
-    private ?UserInterface $user = NULL;
+    private ?User $user = NULL;
 
     /**
-     * @var TmpUserInterface|null
+     * @var TmpUser|null
      */
     #[ORM\OneToOne(mappedBy: 'token', targetEntity: 'Hanaboso\UserBundle\Entity\TmpUser')]
     private ?TmpUser $tmpUser = NULL;
@@ -66,19 +66,19 @@ class Token implements TokenInterface
     }
 
     /**
-     * @return UserInterface|null
+     * @return User|null
      */
-    public function getUser(): ?UserInterface
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
     /**
-     * @param UserInterface $user
+     * @param User $user
      *
-     * @return TokenInterface
+     * @return self
      */
-    public function setUser(UserInterface $user): TokenInterface
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
@@ -86,19 +86,19 @@ class Token implements TokenInterface
     }
 
     /**
-     * @return TmpUserInterface|null
+     * @return TmpUser|null
      */
-    public function getTmpUser(): ?TmpUserInterface
+    public function getTmpUser(): ?TmpUser
     {
         return $this->tmpUser;
     }
 
     /**
-     * @param TmpUserInterface|null $tmpUser
+     * @param TmpUser|null $tmpUser
      *
-     * @return TokenInterface
+     * @return self
      */
-    public function setTmpUser(?TmpUserInterface $tmpUser): TokenInterface
+    public function setTmpUser(?TmpUser $tmpUser): self
     {
         $this->tmpUser = $tmpUser;
 
@@ -106,9 +106,9 @@ class Token implements TokenInterface
     }
 
     /**
-     * @return UserInterface|TmpUserInterface
+     * @return User|TmpUser
      */
-    public function getUserOrTmpUser(): UserInterface|TmpUserInterface
+    public function getUserOrTmpUser(): User|TmpUser
     {
         if ($this->user) {
             return $this->user;
@@ -120,16 +120,18 @@ class Token implements TokenInterface
     }
 
     /**
-     * @param UserInterface|TmpUserInterface $user
+     * @param User|TmpUser $user
      *
-     * @return TokenInterface
+     * @return self
      */
-    public function setUserOrTmpUser(UserInterface|TmpUserInterface $user): TokenInterface
+    public function setUserOrTmpUser(User|TmpUser $user): self
     {
         if ($user->getType() === UserTypeEnum::USER) {
-            $this->setUser($user);
+            /** @var User $u */
+            $u = $user;
+            $this->setUser($u);
         } else if ($user->getType() === UserTypeEnum::TMP_USER) {
-            /** @var TmpUserInterface $tmpUser */
+            /** @var TmpUser $tmpUser */
             $tmpUser = $user;
             $this->setTmpUser($tmpUser);
         } else {

@@ -7,10 +7,9 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Exception;
 use Hanaboso\CommonsBundle\Database\Traits\Document\DeletedTrait;
 use Hanaboso\CommonsBundle\Database\Traits\Document\IdTrait;
-use Hanaboso\UserBundle\Entity\TokenInterface;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\Utils\Date\DateTimeUtils;
 use Hanaboso\Utils\Exception\DateTimeException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class UserAbstract
@@ -41,10 +40,10 @@ abstract class UserAbstract implements UserInterface
     protected DateTime $created;
 
     /**
-     * @var TokenInterface|null
+     * @var Token|null
      */
     #[ODM\ReferenceOne(targetDocument: 'Hanaboso\UserBundle\Document\Token')]
-    protected ?TokenInterface $token = NULL;
+    protected ?Token $token = NULL;
 
     /**
      * UserAbstract constructor.
@@ -67,9 +66,9 @@ abstract class UserAbstract implements UserInterface
     /**
      * @param string $email
      *
-     * @return UserInterface|User|TmpUser
+     * @return self
      */
-    public function setEmail(string $email): UserInterface|User|TmpUser
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -85,27 +84,30 @@ abstract class UserAbstract implements UserInterface
     }
 
     /**
-     * @return TokenInterface|null
+     * @return Token|null
      */
-    public function getToken(): ?TokenInterface
+    public function getToken(): ?Token
     {
         return $this->token;
     }
 
     /**
-     * @return string
+     * @return non-empty-string
      */
     public function getUserIdentifier(): string
     {
-        return $this->email;
+        /** @var non-empty-string $email */
+        $email = $this->email;
+
+        return $email;
     }
 
     /**
-     * @param TokenInterface|null $token
+     * @param Token|null $token
      *
-     * @return UserInterface
+     * @return self
      */
-    public function setToken(?TokenInterface $token): UserInterface
+    public function setToken(?Token $token): self
     {
         $this->token = $token;
 

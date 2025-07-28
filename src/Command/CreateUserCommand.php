@@ -3,13 +3,11 @@
 namespace Hanaboso\UserBundle\Command;
 
 use Doctrine\ODM\MongoDB\MongoDBException;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository as OdmRepo;
 use Doctrine\ORM\EntityRepository as OrmRepo;
 use Doctrine\ORM\Exception\ORMException;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
 use Hanaboso\UserBundle\Document\User as DmUser;
 use Hanaboso\UserBundle\Entity\User;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Provider\ResourceProviderException;
@@ -32,9 +30,9 @@ final class CreateUserCommand extends PasswordCommandAbstract
     private const string CMD_NAME = 'user:create';
 
     /**
-     * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
+     * @var OrmRepo<User>
      */
-    private OrmRepo|OdmRepo $repo;
+    private $repo;
 
     /**
      * CreateUserCommand constructor.
@@ -53,7 +51,7 @@ final class CreateUserCommand extends PasswordCommandAbstract
     {
         parent::__construct();
 
-        /** @phpstan-var class-string<User|DmUser> $userClass */
+        /** @phpstan-var class-string<User> $userClass */
         $userClass     = $provider->getResource(ResourceEnum::USER);
         $this->dm      = $userDml->get();
         $this->repo    = $this->dm->getRepository($userClass);
@@ -91,10 +89,10 @@ final class CreateUserCommand extends PasswordCommandAbstract
             $email  = $helper->ask(
                 $input,
                 $output,
-                (new Question('Creating user, select user email: '))
+                new Question('Creating user, select user email: ')
                     ->setValidator(
                         function (?string $email): string {
-                            /** @var UserInterface|null $user */
+                            /** @var User|DmUser|null $user */
                             $user = $this->repo->findOneBy(['email' => $email]);
 
                             if (!$email) {
@@ -113,7 +111,7 @@ final class CreateUserCommand extends PasswordCommandAbstract
 
         $userNamespace = $this->provider->getResource(ResourceEnum::USER);
 
-        /** @var UserInterface $user */
+        /** @var User|DmUser $user */
         $user = new $userNamespace();
         $user->setEmail($email);
         $this->dm->persist($user);

@@ -2,10 +2,8 @@
 
 namespace Hanaboso\UserBundle\Command;
 
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository as OdmRepo;
 use Doctrine\ORM\EntityRepository as OrmRepo;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
-use Hanaboso\UserBundle\Document\User as DmUser;
 use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
@@ -27,9 +25,9 @@ final class ListUsersCommand extends Command
     private const string CMD_NAME = 'user:list';
 
     /**
-     * @var OrmRepo<User|DmUser>|OdmRepo<User|DmUser>
+     * @var OrmRepo<User>
      */
-    private OrmRepo|OdmRepo $repo;
+    private $repo;
 
     /**
      * ListUsersCommand constructor.
@@ -43,7 +41,7 @@ final class ListUsersCommand extends Command
     {
         parent::__construct();
 
-        /** @phpstan-var class-string<User|DmUser> $userClass */
+        /** @phpstan-var class-string<User> $userClass */
         $userClass  = $provider->getResource(ResourceEnum::USER);
         $dm         = $userDml->get();
         $this->repo = $dm->getRepository($userClass);

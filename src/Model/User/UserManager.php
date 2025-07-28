@@ -5,8 +5,10 @@ namespace Hanaboso\UserBundle\Model\User;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
-use Hanaboso\UserBundle\Entity\TmpUserInterface;
-use Hanaboso\UserBundle\Entity\UserInterface;
+use Hanaboso\UserBundle\Document\TmpUser as DocumentTmpUser;
+use Hanaboso\UserBundle\Document\User as DocumentUser;
+use Hanaboso\UserBundle\Entity\TmpUser;
+use Hanaboso\UserBundle\Entity\User as EntityUser;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Messages\ActivateMessage;
@@ -160,22 +162,19 @@ class UserManager
         }
 
         try {
-            /** @var UserInterface|null $user */
+            /** @var EntityUser|DocumentUser|null $user */
             $user = $this->tmpUserRepository->findOneBy(['email' => $data['email']]);
 
             if (!$user) {
                 $class = $this->provider->getResource(ResourceEnum::TMP_USER);
-                /** @var TmpUserInterface $user */
+                /** @var TmpUser|DocumentTmpUser $user */
                 $user = new $class();
                 $user->setEmail($data['email']);
                 $this->dm->persist($user);
                 $this->dm->flush();
             }
 
-            $token = $this->tokenManager->create($user);
-            $user->setToken($token);
-            $token->setTmpUser($user);
-            $this->dm->flush();
+            $this->tokenManager->create($user);
 
             $msg = new ActivateMessage($user);
             $msg->setHost($this->activateLink);
@@ -190,11 +189,11 @@ class UserManager
     /**
      * @param string $token
      *
-     * @return UserInterface
+     * @return EntityUser|DocumentUser
      * @throws TokenManagerException
      * @throws UserManagerException
      */
-    public function activate(string $token): UserInterface
+    public function activate(string $token): EntityUser|DocumentUser
     {
         $token = $this->tokenManager->validate($token);
 
@@ -203,11 +202,12 @@ class UserManager
         }
 
         try {
-            /** @var UserInterface $class */
+            /** @phpstan-var class-string<EntityUser|DocumentUser> $class */
             $class = $this->provider->getResource(ResourceEnum::USER);
-            /** @var TmpUserInterface $tmpUser */
+            /** @var TmpUser $tmpUser */
             $tmpUser = $token->getTmpUser();
-            $user    = $class::from($tmpUser)->setToken($token);
+            $user    = $class::from($tmpUser);
+            $user->setToken($token);
             $this->dm->persist($user);
             $this->eventDispatcher->dispatch(
                 new ActivateUserEvent($user, NULL, $token->getTmpUser()),
@@ -227,10 +227,10 @@ class UserManager
     /**
      * @param string $token
      *
-     * @return UserInterface
+     * @return EntityUser|DocumentUser|TmpUser|DocumentTmpUser
      * @throws TokenManagerException
      */
-    public function verify(string $token): UserInterface
+    public function verify(string $token): EntityUser|DocumentUser|TmpUser|DocumentTmpUser
     {
         return $this->tokenManager->validate($token)->getUserOrTmpUser();
     }
@@ -290,7 +290,7 @@ class UserManager
      */
     public function resetPassword(array $data): void
     {
-        /** @var UserInterface|null $user */
+        /** @var EntityUser|DocumentUser|null $user */
         $user = $this->userRepository->findOneBy(['email' => $data['email']]);
         // Disable enumerate list of used e-mails
         if (!$user) {
@@ -311,13 +311,13 @@ class UserManager
     }
 
     /**
-     * @param UserInterface $user
+     * @param EntityUser|DocumentUser $user
      *
-     * @return UserInterface
+     * @return EntityUser|DocumentUser
      * @throws SecurityManagerException
      * @throws UserManagerException
      */
-    public function delete(UserInterface $user): UserInterface
+    public function delete(EntityUser|DocumentUser $user): EntityUser|DocumentUser
     {
         [$loggedUser,] = $this->securityManager->getLoggedUser();
         $this->eventDispatcher->dispatch(

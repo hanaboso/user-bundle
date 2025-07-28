@@ -51,8 +51,8 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
         $em   = self::getContainer()->get('doctrine.orm.default_entity_manager');
         $user = new User();
         $user
-            ->setEmail('eml')
-            ->setPassword('pwd');
+            ->setPassword('pwd')
+            ->setEmail('eml');
         $em->persist($user);
         $em->flush($user);
 

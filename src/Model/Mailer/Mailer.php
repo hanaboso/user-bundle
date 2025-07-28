@@ -36,7 +36,7 @@ final class Mailer
     {
         $this->builderId = $builderId ?? '';
 
-        if (empty($this->builderId)) {
+        if ($this->builderId === '') {
             $this->builderId = self::DEFAULT_MAIL_BUILDER;
         }
     }

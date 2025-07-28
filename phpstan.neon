@@ -5,8 +5,7 @@ parameters:
 #	doctrine:
 #		objectManagerLoader: tests/DocumentManagerLoader.php
 	symfony:
-		container_xml_path: %rootDir%/../../../var/cache/test/UserBundleTests_KernelTestDebugContainer.xml
-	excludes_analyse:
+		containerXmlPath: %rootDir%/../../../var/cache/test/UserBundleTests_KernelTestDebugContainer.xml
 	ignoreErrors:
 		-
 			message: '#is not subtype of type#'

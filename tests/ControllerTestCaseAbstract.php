@@ -5,7 +5,7 @@ namespace UserBundleTests;
 use Exception;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\ControllerTestTrait;
 use Hanaboso\PhpCheckUtils\PhpUnit\Traits\DatabaseTestTrait;
-use Hanaboso\UserBundle\Entity\UserInterface;
+use Hanaboso\UserBundle\Document\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -21,9 +21,9 @@ abstract class ControllerTestCaseAbstract extends WebTestCase
     use JwtUserTrait;
 
     /**
-     * @var UserInterface
+     * @var User
      */
-    protected UserInterface $loggedUser;
+    protected User $loggedUser;
 
     /**
      * @throws Exception

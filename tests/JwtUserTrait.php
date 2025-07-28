@@ -37,8 +37,8 @@ trait JwtUserTrait
         $password = $this->getEncoder()->hash($password);
         $user     = new User();
         $user
-            ->setEmail($username)
-            ->setPassword($password);
+            ->setPassword($password)
+            ->setEmail($username);
         $this->pfd($user);
 
         return $user;

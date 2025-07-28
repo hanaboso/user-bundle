@@ -29,12 +29,12 @@ final class UserTest extends KernelTestCaseAbstract
         $timestamp = DateTimeUtils::getUtcDateTime();
 
         $tmpUser = new TmpUser();
-        $tmpUser->setEmail('');
+        $tmpUser->setEmail('a');
         $tmpUser->setDeleted(TRUE);
 
         $user = new User();
-        $user->setEmail('');
-        $this->setProperty($user, 'id', '');
+        $user->setEmail('a');
+        $this->setProperty($user, 'id', 1);
 
         $user->setPassword('aa');
         $user->setUpdated($timestamp);
@@ -43,19 +43,19 @@ final class UserTest extends KernelTestCaseAbstract
         $user->setDeleted(TRUE);
         $user->preFlush();
 
-        self::assertEquals(UserTypeEnum::USER, $user->getType());
-        self::assertEquals('', User::from($tmpUser)->getEmail());
-        self::assertEquals('', $user->getEmail());
-        self::assertEquals('aa', $user->getPassword());
-        self::assertEquals('', $user->getUsername());
-        self::assertEquals('', $user->getSalt());
-        self::assertEquals('', $user->getUserIdentifier());
+        self::assertSame(UserTypeEnum::USER, $user->getType());
+        self::assertSame('a', User::from($tmpUser)->getEmail());
+        self::assertSame('a', $user->getEmail());
+        self::assertSame('aa', $user->getPassword());
+        self::assertSame('a', $user->getUsername());
+        self::assertSame('', $user->getSalt());
+        self::assertSame('a', $user->getUserIdentifier());
         self::assertEquals(['admin'], $user->getRoles());
-        self::assertEquals(
+        self::assertSame(
             $timestamp->format(DateTimeUtils::DATE_TIME),
             $user->getUpdated()->format(DateTimeUtils::DATE_TIME),
         );
-        self::assertEquals(['id' => '', 'email' => ''], $user->toArray());
+        self::assertEquals(['id' => 1, 'email' => 'a'], $user->toArray());
 
         $user->eraseCredentials();
         self::assertEmpty($user->getPassword());

@@ -1,66 +1,72 @@
 parameters:
-    public.services: false
+  public.services: false
 
-    jwt_key: '%env(string:JWT_KEY)%'
+  jwt_key: '%env(string:JWT_KEY)%'
 
 services:
-    _defaults:
-        public: '%public.services%'
+  _defaults:
+    public: '%public.services%'
 
-    jws.loader:
-        class: Jose\Component\Signature\JWSLoader
-        arguments:
-            - '@jws.manager.serializer'
-            - '@jws.verifier'
-            - null
+  jws.loader:
+    class: Jose\Component\Signature\JWSLoader
+    arguments:
+      - '@jws.manager.serializer'
+      - '@jws.verifier'
+      - null
 
-    jws.builder:
-        class: Jose\Component\Signature\JWSBuilder
-        arguments:
-            - '@jwt.manager.algorithm'
+  jws.builder:
+    class: Jose\Component\Signature\JWSBuilder
+    arguments:
+      - '@jwt.manager.algorithm'
 
-    jws.manager.serializer:
-        class: Jose\Component\Signature\Serializer\JWSSerializerManager
-        arguments:
-            - [ '@jws.serializer.compact' ]
+  jws.manager.serializer:
+    class: Jose\Component\Signature\Serializer\JWSSerializerManager
+    arguments:
+      - [ '@jws.serializer.compact' ]
 
-    jws.serializer.compact:
-        class: Jose\Component\Signature\Serializer\CompactSerializer
-        arguments:
+  jws.serializer.compact:
+    class: Jose\Component\Signature\Serializer\CompactSerializer
+    arguments:
 
-    jws.verifier:
-        class: Jose\Component\Signature\JWSVerifier
-        arguments:
-            - '@jwt.manager.algorithm'
+  jws.verifier:
+    class: Jose\Component\Signature\JWSVerifier
+    arguments:
+      - '@jwt.manager.algorithm'
 
-    jwt.manager.algorithm:
-        class: Jose\Component\Core\AlgorithmManager
-        arguments:
-            - [ '@jwt.algorithm.hs512' ]
+  jwt.manager.algorithm:
+    class: Jose\Component\Core\AlgorithmManager
+    arguments:
+      - [ '@jwt.algorithm.hs512' ]
 
-    jwt.jwk:
-        class: Jose\Component\Core\JWK
-        factory: [ 'Jose\Component\KeyManagement\JWKFactory', 'createFromSecret' ]
-        arguments:
-            - '%jwt_key%'
+  jwt.jwk:
+    class: Jose\Component\Core\JWK
+    factory: [ 'Jose\Component\KeyManagement\JWKFactory', 'createFromSecret' ]
+    arguments:
+      - '%jwt_key%'
 
-    jwt.algorithm.hs512:
-        class: Jose\Component\Signature\Algorithm\HS512
-        arguments:
+  jwt.algorithm.hs512:
+    class: Jose\Component\Signature\Algorithm\HS512
+    arguments:
 
-    jwt.manager.checker:
-        class: Jose\Component\Checker\ClaimCheckerManager
-        arguments:
-            - [ '@jwt.checker.exp', '@jwt.checker.nbf', '@jwt.checker.iat' ]
+  jwt.manager.checker:
+    class: Jose\Component\Checker\ClaimCheckerManager
+    arguments:
+      - [ '@jwt.checker.exp', '@jwt.checker.nbf', '@jwt.checker.iat' ]
 
-    jwt.checker.exp:
-        class: Jose\Component\Checker\ExpirationTimeChecker
-        arguments:
+  jwt.clock:
+    class: Symfony\Component\Clock\Clock
 
-    jwt.checker.nbf:
-        class: Jose\Component\Checker\NotBeforeChecker
-        arguments:
+  jwt.checker.exp:
+    class: Jose\Component\Checker\ExpirationTimeChecker
+    arguments:
+      - '@jwt.clock'
 
-    jwt.checker.iat:
-        class: Jose\Component\Checker\IssuedAtChecker
-        arguments:
+  jwt.checker.nbf:
+    class: Jose\Component\Checker\NotBeforeChecker
+    arguments:
+      - '@jwt.clock'
+
+  jwt.checker.iat:
+    class: Jose\Component\Checker\IssuedAtChecker
+    arguments:
+      - '@jwt.clock'

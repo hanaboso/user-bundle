@@ -4,8 +4,6 @@ namespace Hanaboso\UserBundle\Document;
 
 use DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
-use Hanaboso\UserBundle\Entity\TmpUserInterface;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 
 /**
@@ -30,6 +28,19 @@ class User extends UserAbstract
     private DateTime $updated;
 
     /**
+     * @param TmpUser $tmpUser
+     *
+     * @return self
+     */
+    public static function from(TmpUser $tmpUser): self
+    {
+        $user = new self();
+        $user->setEmail($tmpUser->getEmail());
+
+        return $user;
+    }
+
+    /**
      * @return string
      */
     public function getType(): string
@@ -48,9 +59,9 @@ class User extends UserAbstract
     /**
      * @param string $pwd
      *
-     * @return UserInterface
+     * @return self
      */
-    public function setPassword(string $pwd): UserInterface
+    public function setPassword(string $pwd): self
     {
         $this->password = $pwd;
 
@@ -68,9 +79,9 @@ class User extends UserAbstract
     /**
      * @param DateTime $updated
      *
-     * @return UserInterface
+     * @return self
      */
-    public function setUpdated(DateTime $updated): UserInterface
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
@@ -86,16 +97,6 @@ class User extends UserAbstract
             'email' => $this->getEmail(),
             'id'    => $this->getId(),
         ];
-    }
-
-    /**
-     * @param TmpUserInterface $tmpUser
-     *
-     * @return UserInterface
-     */
-    public static function from(TmpUserInterface $tmpUser): UserInterface
-    {
-        return (new self())->setEmail($tmpUser->getEmail());
     }
 
 }

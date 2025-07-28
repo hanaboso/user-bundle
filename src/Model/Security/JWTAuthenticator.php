@@ -90,9 +90,9 @@ final class JWTAuthenticator extends AbstractAuthenticator
      * @param Request                 $request
      * @param AuthenticationException $exception
      *
-     * @return Response|null
+     * @return Response
      */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         $request;
         $data = [

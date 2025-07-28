@@ -26,10 +26,10 @@ final class TmpUserTest extends KernelTestCaseAbstract
         $user->setEmail('');
         $this->setProperty($user, 'id', '');
 
-        self::assertEquals(UserTypeEnum::TMP_USER, $user->getType());
-        self::assertEquals('', $user->setPassword('')->getPassword());
+        self::assertSame(UserTypeEnum::TMP_USER, $user->getType());
+        self::assertSame('', $user->setPassword('')->getPassword());
         self::assertEquals(['id' => '', 'email' => ''], $user->toArray());
-        self::assertEquals('', TmpUser::from($user)->getPassword());
+        self::assertSame('', TmpUser::from($user)->getPassword());
     }
 
 }

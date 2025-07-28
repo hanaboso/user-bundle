@@ -29,8 +29,8 @@ final class DeleteUserCommandTest extends DatabaseTestCaseAbstract
      */
     public function testExecute(): void
     {
-        $user        = (new User())->setEmail('user@example.com');
-        $anotherUser = (new User())->setEmail('another-user@example.com');
+        $user        = new User()->setEmail('user@example.com');
+        $anotherUser = new User()->setEmail('another-user@example.com');
 
         $this->dm->persist($user);
         $this->dm->persist($anotherUser);
@@ -42,7 +42,7 @@ final class DeleteUserCommandTest extends DatabaseTestCaseAbstract
 
         $user = $this->dm->getRepository(User::class)->findOneBy(['email' => 'user@example.com']);
 
-        self::assertEquals(
+        self::assertSame(
             'Deleting user, select user email:  Email cannot be empty! 
 Deleting user, select user email:  User with given email already exist! 
 Deleting user, select user email: User deleted.
@@ -59,7 +59,7 @@ Deleting user, select user email: User deleted.
     {
         $this->tester->execute([]);
 
-        self::assertEquals(
+        self::assertSame(
             'Cannot delete when there is last one or none active users remaining.
 ',
             $this->tester->getDisplay(),
@@ -73,7 +73,11 @@ Deleting user, select user email: User deleted.
     {
         parent::setUp();
 
-        $this->tester = new CommandTester((new Application(self::$kernel))->get('user:delete'));
+        if(self::$kernel === NULL){
+            self::fail();
+        }
+
+        $this->tester = new CommandTester(new Application(self::$kernel)->get('user:delete'));
     }
 
 }

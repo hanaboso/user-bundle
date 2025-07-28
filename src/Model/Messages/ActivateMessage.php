@@ -2,7 +2,8 @@
 
 namespace Hanaboso\UserBundle\Model\Messages;
 
-use Hanaboso\UserBundle\Entity\TokenInterface;
+use Hanaboso\UserBundle\Document\Token as DmToken;
+use Hanaboso\UserBundle\Entity\Token;
 use Hanaboso\UserBundle\Model\MessageSubject;
 
 /**
@@ -46,7 +47,7 @@ class ActivateMessage extends UserMessageAbstract
     public function getMessage(): array
     {
         $this->message['to'] = $this->user->getEmail();
-        /** @var TokenInterface|null $token */
+        /** @var Token|DmToken|null $token */
         $token = $this->user->getToken();
 
         $this->message['dataContent']['link'] = sprintf($this->host, $token ? $token->getHash() : '');

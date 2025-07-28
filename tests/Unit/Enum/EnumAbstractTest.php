@@ -29,7 +29,7 @@ final class EnumAbstractTest extends TestCase
      */
     public function testIsValid(): void
     {
-        self::assertEquals('first', TestEnum::isValid('first'));
+        self::assertSame('first', TestEnum::isValid('first'));
     }
 
     /**

@@ -9,6 +9,7 @@ use Hanaboso\CommonsBundle\Database\Traits\Entity\DeletedTrait;
 use Hanaboso\CommonsBundle\Database\Traits\Entity\IdTrait;
 use Hanaboso\Utils\Date\DateTimeUtils;
 use Hanaboso\Utils\Exception\DateTimeException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class UserAbstract
@@ -57,19 +58,22 @@ abstract class UserAbstract implements UserInterface
     }
 
     /**
-     * @return string
+     * @return non-empty-string
      */
     public function getUserIdentifier(): string
     {
-        return $this->email;
+        /** @var non-empty-string $email */
+        $email = $this->email;
+
+        return $email;
     }
 
     /**
      * @param string $email
      *
-     * @return UserInterface|User|TmpUser
+     * @return self
      */
-    public function setEmail(string $email): UserInterface|User|TmpUser
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 

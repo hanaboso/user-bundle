@@ -5,7 +5,8 @@ namespace Hanaboso\UserBundle\Handler;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
-use Hanaboso\UserBundle\Entity\UserInterface;
+use Hanaboso\UserBundle\Document\User as DmUser;
+use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
@@ -194,12 +195,12 @@ class UserHandler implements EventSubscriberInterface
     /**
      * @param string $id
      *
-     * @return UserInterface
+     * @return User|DmUser
      * @throws ResourceProviderException
      * @throws SecurityManagerException
      * @throws UserManagerException
      */
-    public function delete(string $id): UserInterface
+    public function delete(string $id): User|DmUser
     {
         return $this->userManager->delete($this->getUser($id));
     }
@@ -233,7 +234,7 @@ class UserHandler implements EventSubscriberInterface
     }
 
     /**
-     * @return array<string, array<int|string, array<int|string, int|string>|int|string>|string>
+     * @return array<string, list<array{0: string, 1?: int}|int|string>|string>
      */
     public static function getSubscribedEvents(): array
     {
@@ -247,18 +248,18 @@ class UserHandler implements EventSubscriberInterface
     /**
      * @param string $id
      *
-     * @return UserInterface
+     * @return User|DmUser
      * @throws UserManagerException
      * @throws ResourceProviderException
      */
-    private function getUser(string $id): UserInterface
+    private function getUser(string $id): User|DmUser
     {
         /**
          * @template    T of object
          * @phpstan-var class-string<T> $userClass
          */
         $userClass = $this->provider->getResource(ResourceEnum::USER);
-        /** @var UserInterface|null $user */
+        /** @var User|DmUser|null $user */
         $user = $this->dm->getRepository($userClass)->findOneBy(['id' => $id]);
 
         if (!$user) {

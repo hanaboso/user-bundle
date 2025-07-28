@@ -206,7 +206,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $controller = self::getContainer()->get('Hanaboso\UserBundle\Controller\UserController');
         $response   = $controller->logoutAction();
 
-        self::assertEquals(401, $response->getStatusCode());
+        self::assertSame(401, $response->getStatusCode());
     }
 
     /**
@@ -222,7 +222,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $controller = self::getContainer()->get('Hanaboso\UserBundle\Controller\UserController');
         $response   = $controller->logoutAction();
 
-        self::assertEquals(500, $response->getStatusCode());
+        self::assertSame(500, $response->getStatusCode());
     }
 
     /**
@@ -262,11 +262,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
      */
     public function testActivate(): void
     {
-        /** @var TmpUser $user */
-        $user = (new TmpUser())->setEmail('email@example.com');
+        $user = new TmpUser();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setTmpUser($user);
+        $token = new Token()->setTmpUser($user);
         $this->pfd($token);
 
         $this->assertResponse(
@@ -281,11 +281,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
      */
     public function testActivateNotValid(): void
     {
-        /** @var TmpUser $user */
-        $user = (new TmpUser())->setEmail('email@example.com');
+        $user = new TmpUser();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setTmpUser($user);
+        $token = new Token()->setTmpUser($user);
         $this->pfd($token);
 
         $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedActivateRequest.json', [], ['token' => '123']);
@@ -310,11 +310,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
      */
     public function testVerify(): void
     {
-        /** @var TmpUser $user */
-        $user = (new TmpUser())->setEmail('email@example.com');
+        $user = new TmpUser();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setTmpUser($user);
+        $token = new Token()->setTmpUser($user);
         $this->pfd($token);
         $this->dm->clear();
 
@@ -330,11 +330,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
      */
     public function testVerifyNotValid(): void
     {
-        /** @var TmpUser $user */
-        $user = (new TmpUser())->setEmail('email@example.com');
+        $user = new TmpUser();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setTmpUser($user);
+        $token = new Token()->setTmpUser($user);
         $this->pfd($token);
 
         $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedVerifyRequest.json', [], ['token' => '123']);
@@ -361,10 +361,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $this->loginUser();
 
-        $user = (new User())->setEmail('email@example.com');
+        $user = new User();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setUser($user);
+        $token = new Token()->setUser($user);
         $this->pfd($token);
 
         $this->assertResponse(
@@ -381,10 +382,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $this->loginUser();
 
-        $user = (new User())->setEmail('email@example.com');
+        $user = new User();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setUser($user);
+        $token = new Token()->setUser($user);
         $this->pfd($token);
 
         $this->assertResponse(
@@ -463,10 +465,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->prepareMailerMock();
         $this->loginUser();
 
-        $user = (new User())->setEmail('email@example.com');
+        $user = new User();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setUser($user);
+        $token = new Token()->setUser($user);
         $this->pfd($token);
 
         $this->assertResponse(__DIR__ . '/data/UserControllerTest/resetPasswordRequest.json');
@@ -479,10 +482,11 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     {
         $this->loginUser();
 
-        $user = (new User())->setEmail('email@example.com');
+        $user = new User();
+        $user->setEmail('email@example.com');
         $this->pfd($user);
 
-        $token = (new Token())->setUser($user);
+        $token = new Token()->setUser($user);
         $this->pfd($token);
 
         $this->assertResponse(__DIR__ . '/data/UserControllerTest/failedResetPasswordRequest.json');
@@ -514,9 +518,10 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     public function testDelete(): void
     {
         [, $jwt] = $this->loginUser();
-        $user    = (new User())
-            ->setEmail('email@example.com')
-            ->setPassword('passw0rd');
+
+        $user = new User()
+            ->setPassword('passw0rd')
+            ->setEmail('email@example.com');
         $this->pfd($user);
 
         $this->assertResponse(

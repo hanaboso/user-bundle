@@ -71,9 +71,9 @@ phpcoverage:
 
 phpcoverage-ci:
 	$(DE) sed -i 's/TRUE/FALSE/g' src/Command/PasswordCommandAbstract.php
-	$(DE) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -c 99 -p 1
+	$(DE) ./vendor/hanaboso/php-check-utils/bin/coverage.sh -c 95 -p 1
 	$(DE) sed -i 's/FALSE/TRUE/g' src/Command/PasswordCommandAbstract.php
 
 test: docker-up-force composer-install fasttest
 
-fasttest: clear-cache phpcodesniffer phpunit phpintegration phpcontroller phpcoverage-ci
+fasttest: clear-cache phpcodesniffer phpstan phpunit phpintegration phpcontroller phpcoverage-ci

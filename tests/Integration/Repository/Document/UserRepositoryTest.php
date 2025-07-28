@@ -47,13 +47,13 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
     {
         $user = new User();
         $user
-            ->setEmail('eml')
-            ->setPassword('pwd');
+            ->setPassword('pwd')
+            ->setEmail('eml');
         $this->pfd($user);
         $user = new User();
         $user
-            ->setEmail('eml2')
-            ->setPassword('pwd');
+            ->setPassword('pwd')
+            ->setEmail('eml2');
         $this->pfd($user);
 
         /** @var UserRepository $rep */

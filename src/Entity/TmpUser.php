@@ -12,14 +12,26 @@ use Hanaboso\UserBundle\Enum\UserTypeEnum;
  */
 #[ORM\Entity(repositoryClass: 'Hanaboso\UserBundle\Repository\Entity\TmpUserRepository')]
 #[ORM\Table(name: 'tmp_user')]
-class TmpUser extends UserAbstract implements TmpUserInterface
+class TmpUser extends UserAbstract
 {
 
     /**
-     * @var TokenInterface|null
+     * @var Token|null
      */
     #[ORM\OneToOne(inversedBy: 'tmpUser', targetEntity: 'Hanaboso\UserBundle\Entity\Token')]
-    protected ?TokenInterface $token = NULL;
+    protected ?Token $token = NULL;
+
+    /**
+     * @param self $tmpUser
+     *
+     * @return self
+     */
+    public static function from(self $tmpUser): self
+    {
+        $tmpUser;
+
+        return new self();
+    }
 
     /**
      * @return string
@@ -42,9 +54,9 @@ class TmpUser extends UserAbstract implements TmpUserInterface
     /**
      * @param string $pwd
      *
-     * @return UserInterface
+     * @return self
      */
-    public function setPassword(string $pwd): UserInterface
+    public function setPassword(string $pwd): self
     {
         $pwd;
 
@@ -52,19 +64,19 @@ class TmpUser extends UserAbstract implements TmpUserInterface
     }
 
     /**
-     * @return TokenInterface|null
+     * @return Token|null
      */
-    public function getToken(): ?TokenInterface
+    public function getToken(): ?Token
     {
         return $this->token;
     }
 
     /**
-     * @param TokenInterface|null $token
+     * @param Token|null $token
      *
-     * @return UserInterface
+     * @return self
      */
-    public function setToken(?TokenInterface $token): UserInterface
+    public function setToken(?Token $token): self
     {
         $this->token = $token;
 
@@ -80,18 +92,6 @@ class TmpUser extends UserAbstract implements TmpUserInterface
             'email' => $this->getEmail(),
             'id'    => $this->getId(),
         ];
-    }
-
-    /**
-     * @param TmpUserInterface $tmpUser
-     *
-     * @return UserInterface
-     */
-    public static function from(TmpUserInterface $tmpUser): UserInterface
-    {
-        $tmpUser;
-
-        return new self();
     }
 
 }

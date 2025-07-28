@@ -5,8 +5,12 @@ namespace Hanaboso\UserBundle\Model\Token;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManager;
 use Hanaboso\CommonsBundle\Database\Locator\DatabaseManagerLocator;
-use Hanaboso\UserBundle\Entity\TokenInterface;
-use Hanaboso\UserBundle\Entity\UserInterface;
+use Hanaboso\UserBundle\Document\TmpUser as DmTmpUser;
+use Hanaboso\UserBundle\Document\Token as DocumentToken;
+use Hanaboso\UserBundle\Document\User as DmUser;
+use Hanaboso\UserBundle\Entity\TmpUser;
+use Hanaboso\UserBundle\Entity\Token as EntityToken;
+use Hanaboso\UserBundle\Entity\User;
 use Hanaboso\UserBundle\Enum\ResourceEnum;
 use Hanaboso\UserBundle\Provider\ResourceProvider;
 use Hanaboso\UserBundle\Repository\Document\TokenRepository as DocumentTokenRepository;
@@ -38,17 +42,17 @@ class TokenManager
     }
 
     /**
-     * @param UserInterface $user
+     * @param User|DmUser|TmpUser|DmTmpUser $user
      *
-     * @return TokenInterface
+     * @return EntityToken|DocumentToken
      * @throws TokenManagerException
      */
-    public function create(UserInterface $user): TokenInterface
+    public function create(User|DmUser|TmpUser|DmTmpUser $user): EntityToken|DocumentToken
     {
         try {
             $class = $this->provider->getResource(ResourceEnum::TOKEN);
             $this->removeExistingTokens($user);
-            /** @var TokenInterface $token */
+            /** @var EntityToken|DocumentToken $token */
             $token = new $class();
             $token->setUserOrTmpUser($user);
             $user->setToken($token);
@@ -65,10 +69,10 @@ class TokenManager
     /**
      * @param string $hash
      *
-     * @return TokenInterface
+     * @return EntityToken|DocumentToken
      * @throws TokenManagerException
      */
-    public function validate(string $hash): TokenInterface
+    public function validate(string $hash): EntityToken|DocumentToken
     {
         try {
             /**
@@ -94,21 +98,21 @@ class TokenManager
     }
 
     /**
-     * @param TokenInterface $token
+     * @param EntityToken|DocumentToken $token
      *
      * @throws TokenManagerException
      */
-    public function delete(TokenInterface $token): void
+    public function delete(EntityToken|DocumentToken $token): void
     {
         $this->removeExistingTokens($token->getUserOrTmpUser());
     }
 
     /**
-     * @param UserInterface $user
+     * @param User|DmUser|TmpUser|DmTmpUser $user
      *
      * @throws TokenManagerException
      */
-    private function removeExistingTokens(UserInterface $user): void
+    private function removeExistingTokens(User|DmUser|TmpUser|DmTmpUser $user): void
     {
         try {
             /**

@@ -54,7 +54,7 @@ final class ResourceProviderTest extends KernelTestCaseAbstract
      */
     public function testGetResource(): void
     {
-        self::assertEquals('value', (new ResourceProvider(['resources' => ['key' => 'value']]))->getResource('key'));
+        self::assertSame('value', (new ResourceProvider(['resources' => ['key' => 'value']]))->getResource('key'));
     }
 
     /**

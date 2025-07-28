@@ -3,8 +3,6 @@
 namespace Hanaboso\UserBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
-use Hanaboso\UserBundle\Entity\TmpUserInterface;
-use Hanaboso\UserBundle\Entity\UserInterface;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 
 /**
@@ -13,8 +11,20 @@ use Hanaboso\UserBundle\Enum\UserTypeEnum;
  * @package Hanaboso\UserBundle\Document
  */
 #[ODM\Document(repositoryClass: 'Hanaboso\UserBundle\Repository\Document\TmpUserRepository')]
-class TmpUser extends UserAbstract implements TmpUserInterface
+class TmpUser extends UserAbstract
 {
+
+    /**
+     * @param self $tmpUser
+     *
+     * @return self
+     */
+    public static function from(self $tmpUser): self
+    {
+        $tmpUser;
+
+        return new self();
+    }
 
     /**
      * @return string
@@ -37,9 +47,9 @@ class TmpUser extends UserAbstract implements TmpUserInterface
     /**
      * @param string $pwd
      *
-     * @return UserInterface
+     * @return self
      */
-    public function setPassword(string $pwd): UserInterface
+    public function setPassword(string $pwd): self
     {
         $pwd;
 
@@ -55,18 +65,6 @@ class TmpUser extends UserAbstract implements TmpUserInterface
             'email' => $this->getEmail(),
             'id'    => $this->getId(),
         ];
-    }
-
-    /**
-     * @param TmpUserInterface $tmpUser
-     *
-     * @return UserInterface
-     */
-    public static function from(TmpUserInterface $tmpUser): UserInterface
-    {
-        $tmpUser;
-
-        return new self();
     }
 
 }

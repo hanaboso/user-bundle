@@ -2,7 +2,8 @@
 
 namespace Hanaboso\UserBundle\Model\User\Event;
 
-use Hanaboso\UserBundle\Entity\UserInterface;
+use Hanaboso\UserBundle\Document\UserAbstract as DocumentUserAbstract;
+use Hanaboso\UserBundle\Entity\UserAbstract;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -25,38 +26,38 @@ class UserEvent extends Event
     /**
      * UserEvent constructor.
      *
-     * @param UserInterface      $user
-     * @param UserInterface|null $loggedUser
-     * @param UserInterface|null $tmpUser
+     * @param UserAbstract|DocumentUserAbstract      $user
+     * @param UserAbstract|DocumentUserAbstract|null $loggedUser
+     * @param UserAbstract|DocumentUserAbstract|null $tmpUser
      */
     public function __construct(
-        private readonly UserInterface $user,
-        private readonly ?UserInterface $loggedUser = NULL,
-        private readonly ?UserInterface $tmpUser = NULL,
+        private readonly UserAbstract|DocumentUserAbstract $user,
+        private readonly UserAbstract|DocumentUserAbstract|null $loggedUser = NULL,
+        private readonly UserAbstract|DocumentUserAbstract|null $tmpUser = NULL,
     )
     {
     }
 
     /**
-     * @return UserInterface
+     * @return UserAbstract|DocumentUserAbstract
      */
-    public function getUser(): UserInterface
+    public function getUser(): UserAbstract|DocumentUserAbstract
     {
         return $this->user;
     }
 
     /**
-     * @return UserInterface
+     * @return UserAbstract|DocumentUserAbstract
      */
-    public function getLoggedUser(): UserInterface
+    public function getLoggedUser(): UserAbstract|DocumentUserAbstract
     {
         return $this->loggedUser ?? $this->user;
     }
 
     /**
-     * @return UserInterface|null
+     * @return UserAbstract|DocumentUserAbstract|null
      */
-    public function getTmpUser(): ?UserInterface
+    public function getTmpUser(): UserAbstract|DocumentUserAbstract|null
     {
         return $this->tmpUser;
     }
