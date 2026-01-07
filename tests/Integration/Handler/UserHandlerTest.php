@@ -9,6 +9,7 @@ use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Handler\UserHandler;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
@@ -22,6 +23,7 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  *
  * @covers  \Hanaboso\UserBundle\Handler\UserHandler
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(UserHandler::class)]
 final class UserHandlerTest extends DatabaseTestCaseAbstract
 {

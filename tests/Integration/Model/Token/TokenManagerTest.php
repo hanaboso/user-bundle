@@ -4,7 +4,6 @@ namespace UserBundleTests\Integration\Model\Token;
 
 use DateTime;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
@@ -13,6 +12,7 @@ use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Enum\UserTypeEnum;
 use Hanaboso\UserBundle\Model\Token\TokenManager;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use UserBundleTests\DatabaseTestCaseAbstract;
 
@@ -21,6 +21,7 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  *
  * @package UserBundleTests\Integration\Model\Token
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(TokenManager::class)]
 final class TokenManagerTest extends DatabaseTestCaseAbstract
 {
@@ -45,7 +46,7 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
         $this->pfd($user);
 
         $dm = $this->createMock(DocumentManager::class);
-        $dm->method('persist')->willThrowException(new ORMException());
+        $dm->method('persist')->willThrowException(new Exception());
 
         $manager = clone $this->tokenManager;
 
