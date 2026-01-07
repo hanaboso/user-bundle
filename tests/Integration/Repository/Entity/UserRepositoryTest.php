@@ -30,7 +30,7 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
                 ->setPassword('pwd')
                 ->setEmail(sprintf('user%s', $i));
             $em->persist($user);
-            $em->flush($user);
+            $em->flush();
         }
         $em->clear();
 
@@ -54,7 +54,7 @@ final class UserRepositoryTest extends DatabaseTestCaseAbstract
             ->setPassword('pwd')
             ->setEmail('eml');
         $em->persist($user);
-        $em->flush($user);
+        $em->flush();
 
         /** @var UserRepository<User> $rep */
         $rep = $em->getRepository(User::class);

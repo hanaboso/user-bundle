@@ -10,6 +10,7 @@ use Hanaboso\UserBundle\Repository\Document\UserRepository;
 use Jose\Component\Checker\ClaimCheckerManager;
 use Jose\Component\Checker\InvalidClaimException;
 use LogicException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -21,6 +22,7 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  *
  * @package UserBundleTests\Integration\Model\Security
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(SecurityManager::class)]
 final class SecurityManagerTest extends DatabaseTestCaseAbstract
 {

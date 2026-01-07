@@ -13,6 +13,7 @@ use Hanaboso\UserBundle\Model\Security\JWTAuthenticator;
 use Hanaboso\UserBundle\Model\Security\SecurityManager;
 use Hanaboso\UserBundle\Model\Security\SecurityManagerException;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\BrowserKit\Cookie;
 use UserBundleTests\ControllerTestCaseAbstract;
@@ -22,6 +23,7 @@ use UserBundleTests\ControllerTestCaseAbstract;
  *
  * @package UserBundleTests\Controller
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(UserController::class)]
 #[CoversClass(JWTAuthenticator::class)]
 #[CoversClass(SecurityManager::class)]
@@ -575,10 +577,6 @@ final class UserControllerTest extends ControllerTestCaseAbstract
     /**
      * @throws Exception
      */
-
-    /**
-     * @throws Exception
-     */
     protected function setUp(): void
     {
         // Intentionally not calling parent setUp
@@ -587,7 +585,7 @@ final class UserControllerTest extends ControllerTestCaseAbstract
         $this->clearMongo();
     }
 
-    /**
+    /*
      * ------------------------------------- HELPERS ------------------------------------------
      */
 

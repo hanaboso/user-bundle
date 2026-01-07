@@ -8,6 +8,7 @@ use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Messages\ActivateMessage;
 use Hanaboso\UserBundle\Model\Messages\UserMessageAbstract;
 use Hanaboso\UserBundle\Model\MessageSubject;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -17,6 +18,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @package UserBundleTests\Unit\Model\Messages
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(ActivateMessage::class)]
 #[CoversClass(UserMessageAbstract::class)]
 final class ActivateMessageTest extends TestCase

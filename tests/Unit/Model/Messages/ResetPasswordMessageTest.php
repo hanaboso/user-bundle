@@ -7,6 +7,7 @@ use Hanaboso\UserBundle\Document\User;
 use Hanaboso\UserBundle\Model\Messages\ResetPasswordMessage;
 use Hanaboso\UserBundle\Model\Messages\UserMessageAbstract;
 use Hanaboso\UserBundle\Model\MessageSubject;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -19,6 +20,7 @@ use PHPUnit\Framework\TestCase;
  * @covers  \Hanaboso\UserBundle\Model\Messages\ResetPasswordMessage
  * @covers  \Hanaboso\UserBundle\Model\Messages\UserMessageAbstract
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(ResetPasswordMessage::class)]
 #[CoversClass(UserMessageAbstract::class)]
 final class ResetPasswordMessageTest extends TestCase

@@ -4,7 +4,6 @@ namespace UserBundleTests\Integration\Model\User;
 
 use DateTime;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ObjectRepository;
 use EmailServiceBundle\Exception\MailerException;
 use Exception;
@@ -17,6 +16,7 @@ use Hanaboso\UserBundle\Model\Mailer\Mailer;
 use Hanaboso\UserBundle\Model\Token\TokenManagerException;
 use Hanaboso\UserBundle\Model\User\UserManager;
 use Hanaboso\UserBundle\Model\User\UserManagerException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use UserBundleTests\DatabaseTestCaseAbstract;
 
@@ -25,6 +25,7 @@ use UserBundleTests\DatabaseTestCaseAbstract;
  *
  * @package UserBundleTests\Integration\Model\User
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(UserManager::class)]
 final class UserManagerTest extends DatabaseTestCaseAbstract
 {
@@ -130,7 +131,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $this->prepareMailerMock();
 
         $dm = $this->createMock(DocumentManager::class);
-        $dm->method('persist')->willThrowException(new ORMException());
+        $dm->method('persist')->willThrowException(new Exception());
         $manager = clone $this->userManager;
         $this->setProperty($manager, 'dm', $dm);
 
@@ -215,7 +216,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $this->pfd($token);
 
         $dm = $this->createMock(DocumentManager::class);
-        $dm->method('persist')->willThrowException(new ORMException());
+        $dm->method('persist')->willThrowException(new Exception());
         $manager = clone $this->userManager;
         $this->setProperty($manager, 'dm', $dm);
 
@@ -344,7 +345,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $this->pfd($token);
 
         $dm = $this->createMock(DocumentManager::class);
-        $dm->method('remove')->willThrowException(new ORMException());
+        $dm->method('remove')->willThrowException(new Exception());
         $manager = clone $this->userManager;
         $this->setProperty($manager, 'dm', $dm);
 
@@ -378,7 +379,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $this->injectJwt($jwt);
 
         $dm = $this->createMock(DocumentManager::class);
-        $dm->method('flush')->willThrowException(new ORMException());
+        $dm->method('flush')->willThrowException(new Exception());
         $manager = clone $this->userManager;
         $this->setProperty($manager, 'dm', $dm);
 
@@ -413,7 +414,7 @@ final class UserManagerTest extends DatabaseTestCaseAbstract
         $this->injectJwt($jwt);
 
         $dm = $this->createMock(DocumentManager::class);
-        $dm->method('flush')->willThrowException(new ORMException());
+        $dm->method('flush')->willThrowException(new Exception());
         $manager = clone $this->userManager;
         $this->setProperty($manager, 'dm', $dm);
 
