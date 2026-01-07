@@ -319,7 +319,7 @@ class SecurityManager
         return $this->jwsLoader->getSerializerManager()->serialize(CompactSerializer::NAME, $jws);
     }
 
-    /**
+    /*
      * ------------------------------------------- HELPERS ---------------------------------
      */
 

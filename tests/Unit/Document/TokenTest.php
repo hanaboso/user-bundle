@@ -6,6 +6,7 @@ use Exception;
 use Hanaboso\UserBundle\Document\TmpUser;
 use Hanaboso\UserBundle\Document\Token;
 use Hanaboso\UserBundle\Document\User;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Throwable;
 use UserBundleTests\KernelTestCaseAbstract;
@@ -15,6 +16,7 @@ use UserBundleTests\KernelTestCaseAbstract;
  *
  * @package UserBundleTests\Unit\Document
  */
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(Token::class)]
 final class TokenTest extends KernelTestCaseAbstract
 {

@@ -5,19 +5,17 @@ doctrine:
         default_connection: default
         connections:
             default:
-                driver:   pdo_mysql
-                host:     '%env(string:MARIADB_DSN)%'
-                dbname:   '%env(string:MARIADB_DB)%'
-                user:     '%env(string:MARIADB_USER)%'
-                password: '%env(string:MARIADB_PASS)%'
+                driver:         pdo_mysql
+                host:           '%env(string:MARIADB_DSN)%'
+                dbname:         '%env(string:MARIADB_DB)%'
+                user:           '%env(string:MARIADB_USER)%'
+                password:       '%env(string:MARIADB_PASS)%'
+                server_version: 'mariadb-10.11.15'
     orm:
         default_entity_manager: ~
-        auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
         naming_strategy: doctrine.orm.naming_strategy.underscore
         connection: default
-        proxy_dir: "%kernel.cache_dir%/doctrine/orm/Proxies"
-        proxy_namespace: ORMProxies
         mappings:
             UserEntity:
                 type: attribute
