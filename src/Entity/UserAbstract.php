@@ -19,8 +19,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 abstract class UserAbstract implements UserInterface
 {
 
-    use IdTrait;
     use DeletedTrait;
+    use IdTrait;
 
     /**
      * @var string|null

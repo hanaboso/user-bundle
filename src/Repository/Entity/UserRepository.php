@@ -40,8 +40,8 @@ class UserRepository extends EntityRepository
 
     /**
      * @return int
-     * @throws NoResultException
      * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function getUserCount(): int
     {
