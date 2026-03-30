@@ -75,9 +75,9 @@ final class CreateUserCommand extends PasswordCommandAbstract
      * @param OutputInterface $output
      *
      * @return int
-     * @throws ResourceProviderException
-     * @throws ORMException
      * @throws MongoDBException
+     * @throws ORMException
+     * @throws ResourceProviderException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

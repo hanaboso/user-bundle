@@ -76,10 +76,10 @@ final class DeleteUserCommand extends Command
      * @param OutputInterface $output
      *
      * @return int
-     * @throws NoResultException
-     * @throws NonUniqueResultException
-     * @throws ORMException
      * @throws MongoDBException
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     * @throws ORMException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

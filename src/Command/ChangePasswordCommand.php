@@ -75,8 +75,8 @@ final class ChangePasswordCommand extends PasswordCommandAbstract
      * @param OutputInterface $output
      *
      * @return int
-     * @throws ORMException
      * @throws MongoDBException
+     * @throws ORMException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

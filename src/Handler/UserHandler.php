@@ -58,9 +58,9 @@ class UserHandler implements EventSubscriberInterface
      * @param mixed[] $data
      *
      * @return mixed[]
+     * @throws DateTimeException
      * @throws PipesFrameworkException
      * @throws SecurityManagerException
-     * @throws DateTimeException
      */
     public function login(array $data): array
     {
@@ -249,8 +249,8 @@ class UserHandler implements EventSubscriberInterface
      * @param string $id
      *
      * @return User|DmUser
-     * @throws UserManagerException
      * @throws ResourceProviderException
+     * @throws UserManagerException
      */
     private function getUser(string $id): User|DmUser
     {

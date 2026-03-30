@@ -117,8 +117,8 @@ class UserManager
      * @param mixed[] $data
      *
      * @return mixed[]
-     * @throws SecurityManagerException
      * @throws DateTimeException
+     * @throws SecurityManagerException
      */
     public function login(array $data): array
     {
