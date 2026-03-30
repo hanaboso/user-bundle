@@ -48,7 +48,7 @@ class ResetPasswordMessage extends UserMessageAbstract
 
         $this->message['to']                  = $this->user->getEmail();
         $this->message['dataContent']['link'] = sprintf($this->host, $token ? $token->getHash() : '');
-        $this->message['subject']             = $this->subject ?? '';
+        $this->message['subject']             = $this->subject;
         $this->message['template']            = $this->template ?? '';
 
         return $this->message;

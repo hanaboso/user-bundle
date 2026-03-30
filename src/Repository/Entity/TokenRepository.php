@@ -25,8 +25,8 @@ class TokenRepository extends EntityRepository
      * @param string $hash
      *
      * @return Token|null
-     * @throws NonUniqueResultException
      * @throws DateTimeException
+     * @throws NonUniqueResultException
      */
     public function getFreshToken(string $hash): ?Token
     {

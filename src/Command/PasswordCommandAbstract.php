@@ -42,8 +42,8 @@ abstract class PasswordCommandAbstract extends Command
      * @param OutputInterface $output
      * @param User|DmUser     $user
      *
-     * @throws ORMException
      * @throws MongoDBException
+     * @throws ORMException
      */
     protected function setPassword(InputInterface $input, OutputInterface $output, User|DmUser $user): void
     {

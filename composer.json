@@ -2,7 +2,7 @@
     "name": "hanaboso/user-bundle",
     "description": "Hanaboso - user-bundle",
     "license": "Apache-2.0",
-    "version": "1.12.0",
+    "version": "1.13.0",
     "require": {
         "php": "^8.4",
         "hanaboso/commons-bundle": "^3.0",
@@ -14,7 +14,7 @@
     "require-dev": {
         "ext-apcu": "*",
         "doctrine/doctrine-bundle": "^3.2",
-        "doctrine/mongodb-odm-bundle": "^5.5",
+        "doctrine/mongodb-odm-bundle": "^5.6",
         "doctrine/orm": "^3.6",
         "hanaboso/php-check-utils": "^2.0",
         "symfony/monolog-bundle": "^4.0",
