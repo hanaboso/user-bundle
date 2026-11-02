@@ -52,7 +52,7 @@ User password again: User created.
 ',
             $this->tester->getDisplay(),
         );
-        self::assertNotEmpty($user->getPassword());
+        self::assertNotSame('', $user->getPassword());
     }
 
     /**

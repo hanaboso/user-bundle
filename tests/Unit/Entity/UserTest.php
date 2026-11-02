@@ -38,11 +38,11 @@ final class UserTest extends KernelTestCaseAbstract
 
         $user->setPassword('aa');
         $user->setUpdated($timestamp);
-        $user->getCreated();
         $user->setToken($user->getToken());
         $user->setDeleted(TRUE);
         $user->preFlush();
 
+        self::assertGreaterThanOrEqual($timestamp, $user->getCreated());
         self::assertSame(UserTypeEnum::USER, $user->getType());
         self::assertSame('a', User::from($tmpUser)->getEmail());
         self::assertSame('a', $user->getEmail());
@@ -58,7 +58,7 @@ final class UserTest extends KernelTestCaseAbstract
         self::assertEquals(['id' => 1, 'email' => 'a'], $user->toArray());
 
         $user->eraseCredentials();
-        self::assertEmpty($user->getPassword());
+        self::assertNull($user->getPassword());
     }
 
 }
