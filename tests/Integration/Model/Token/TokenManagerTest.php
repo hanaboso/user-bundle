@@ -94,8 +94,9 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
         $this->pfd($user);
 
         /** @var Token $token */
-        $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
-        self::assertCount(1, $this->tokenRepository->findBy([UserTypeEnum::USER => $user]));
+        $token  = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
+        $tokens = $this->tokenRepository->findBy([UserTypeEnum::USER => $user]);
+        self::assertCount(1, $tokens);
 
         $this->tokenManager->delete($token);
         self::assertCount(0, $this->tokenRepository->findBy([UserTypeEnum::USER => $user]));
@@ -111,8 +112,9 @@ final class TokenManagerTest extends DatabaseTestCaseAbstract
         $this->pfd($user);
 
         /** @var Token $token */
-        $token = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
-        self::assertCount(1, $this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user]));
+        $token  = $this->tokenRepository->find($this->tokenManager->create($user)->getId());
+        $tokens = $this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user]);
+        self::assertCount(1, $tokens);
 
         $this->tokenManager->delete($token);
         self::assertCount(0, $this->tokenRepository->findBy([UserTypeEnum::TMP_USER => $user]));

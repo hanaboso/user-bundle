@@ -51,7 +51,7 @@ User password again: Password changed.
 ',
             $this->tester->getDisplay(),
         );
-        self::assertNotEmpty($user->getPassword());
+        self::assertNotSame('', $user->getPassword());
     }
 
     /**
